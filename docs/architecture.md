@@ -287,7 +287,7 @@ stored dates remain independent of presentation. Java `LocalDate` values and
 the Budget's `YearMonth` do not gain a time zone.
 
 **Accepted decision (2026-11-04):** store Anchor history timestamps as UTC
-instants using PostgreSQL `timestamptz`, with UTC application/database session
+instants using PostgreSQL `timestamptz(6)`, with UTC application/database session
 configuration. Convert them to `Europe/Moscow` for history display and explicitly
 show the zone alongside every displayed history timestamp. This zone is configured
 for the first release; it does not follow the browser's time zone or the `ru-RU`
@@ -911,15 +911,21 @@ catalog changes need not change a key.
 [PostgreSQL row-lock behavior](https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS)
 supports this protocol; the choice of guard and version belongs to Budget.
 
-After locking the aggregate guard, compute the recording coordinate once as
-`max(clock_timestamp(), previous_changed_at + 1 microsecond)` at `timestamptz(6)`
-precision; use the database clock alone for its first revision. Reuse that value
-for all facts/revision metadata in the command. PostgreSQL's `CURRENT_TIMESTAMP`
-represents transaction start, whereas
+**Accepted decision (2026-11-04):** Budget and category-catalog recording
+coordinates use PostgreSQL `timestamptz(6)` with microsecond precision. For a
+state-changing command, after locking its aggregate guard, compute the coordinate
+once as the later of `clock_timestamp()` and `previous_changed_at + 1 microsecond`.
+For the first revision, use the database clock alone. Reuse the chosen value for
+all changed facts, the guard's last change time and the revision metadata in
+that command. No-op saves do not advance the coordinate or create a revision.
+
+PostgreSQL's `CURRENT_TIMESTAMP` represents transaction start, whereas
 [`clock_timestamp()`](https://www.postgresql.org/docs/current/functions-datetime.html#FUNCTIONS-DATETIME-CURRENT)
 samples the current clock. The monotonic adjustment handles equal/backward clock
-readings. Versions order revisions within one aggregate; timestamps are recording
-coordinates, not exact commit times or a global ordering across aggregates.
+readings within each aggregate. Versions order revisions within one aggregate;
+timestamps are recording coordinates, not exact commit times or a global ordering
+across aggregates. The concrete SQL implementation and its real PostgreSQL
+verification remain open.
 
 ### Current state and recorded history
 
@@ -1073,8 +1079,10 @@ Evidence required when the slice is implemented:
    constraints, rollback of a partial save, and concurrent creation/update.
    Verify one revision for a multi-field change, none for a no-op, and rollback
    of both facts and guard versions after an injected write failure.
-3. History tests for set/clear/set, equal clock readings, consistent multi-query
-   snapshots, and reads before creation and between revisions.
+3. History tests for set/clear/set, equal/backward clock readings, consistent
+   multi-query snapshots, and reads before creation and between revisions.
+   Verify first-revision clock use and one shared `timestamptz(6)` coordinate
+   across each command's changed facts, guard and revision metadata.
    Include category changes, Budget revisions pinned to catalog revisions,
    addition of lines, and archive behavior across existing and new months.
    Cover a populated line on first save, unset versus zero, and clear then
