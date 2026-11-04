@@ -432,9 +432,22 @@ Use the exact starter order from #9 with Russian display labels:
 
 The proposed Settings → Categories screen supports add, rename, reorder and
 archive. Use one owner-scoped catalog shared across months, following #11.
-Seed the ten defaults once; startup must not reset edited labels, order or
-archived state. Category IDs are stable, never derived from labels or positions
-and never reused. Defaults are editable category records, not a permanent limit.
+
+**Accepted decision (2026-11-04):** after successful Flyway migrations, application
+startup invokes a Budget-owned Java initializer for the configured owner's catalog.
+Create the catalog only when it does not yet exist. In one database transaction,
+write its guard and initial revision together with all ten agreed categories and
+their initial facts, preserving the starter labels/order and `ACTIVE` status.
+Generate category IDs with `UUID.randomUUID()` before insertion. Commit the whole
+initial catalog or roll it back; a failure must not leave a partial catalog.
+
+If the owner's catalog already exists, initialization performs no data changes.
+Preserve category IDs, edited labels/order and archived state; do not refill
+defaults based on the number of current or active categories. The initializer
+creates domain data, not database schema.
+
+Category IDs are stable, never derived from labels or positions and never reused.
+Defaults are editable category records, not a permanent limit.
 Retain the reviewed [V3 catalog label policy](https://github.com/finance-lab-project/frontend/blob/main/docs/budget-v3.md):
 trimmed nonempty labels; duplicate labels may exist but identities must differ.
 
@@ -941,9 +954,10 @@ bootstrap; there is no requirement to maintain the old runtime or its V2/V3 back
 formats. Keep the agreed product requirements, architecture decisions and Git
 history. Reuse old examples only when they help verify the new requirements.
 
-The first SQL migration creates the new schema in an empty database, followed by
-initialization of the ten-category catalog. No legacy importer, storage conversion
-or compatibility layer is planned. Versioned migrations still manage subsequent
+Flyway migrations create the new schema in an empty database. After they succeed,
+the Budget Java initializer creates the owner's ten-category catalog once and
+atomically, as specified above. No legacy importer, storage conversion or
+compatibility layer is planned. Versioned migrations still manage subsequent
 changes to the new schema. Weekly off-VM backup and verified recovery remain
 required for data created in the new application.
 
