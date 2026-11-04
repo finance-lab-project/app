@@ -668,8 +668,16 @@ Use primary/foreign keys for anchor, attribute, knot and tie references. History
 tables are unique on `(anchor_id, changed_at)`, with indexes for latest/as-of
 reads. The line-to-budget tie permits only one budget per line.
 
-Some invariants span several Anchor tables. Enforce them through explicit
-operational tables beside the model:
+**Accepted decision (2026-11-04):** use explicit guard/key tables alongside the
+Anchor tables to enforce cross-table uniqueness and reference consistency in
+PostgreSQL. Budget and category-catalog guards also hold the current versions
+used for save-conflict checks. Duplicated key fields must be connected to their
+Anchor facts by composite foreign keys, with unique constraints on the referenced
+column combinations.
+
+This accepts the support-table approach. Concrete DDL, constraint definitions
+and transaction SQL still require design and real PostgreSQL verification.
+Responsibilities and schema sketch:
 
 - A budget key/guard table enforces `UNIQUE(owner_id, month)`, using the same
   first-of-month `DATE` as the static month attribute, and stores the current
