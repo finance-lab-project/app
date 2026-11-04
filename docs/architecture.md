@@ -602,7 +602,7 @@ constraints below remain a proposed SQL sketch.
 | Static category tie | `budget.line_category(line_id, category_id)`; exactly one category for a spending line, none for other kinds |
 | Historized attribute | `budget.line_amount(line_id, changed_at, amount)` |
 | Historized knotted attribute | `budget.line_amount_state(line_id, changed_at, state)` with `SET` / `UNSET` |
-| Knots | Line kind, currency, amount state and category status in the Budget schema; fixed values seeded through Flyway migrations |
+| Knots | Line kind, currency, amount state and category status in the Budget schema; stable `TEXT` code keys, seeded through Flyway migrations |
 
 **Accepted decision (2026-11-04):** seed the fixed Anchor knot values through
 Budget's versioned Flyway SQL migrations before the Java category initializer runs:
@@ -613,6 +613,14 @@ Budget's versioned Flyway SQL migrations before the Java category initializer ru
 | Currency | `RUB` |
 | Amount state | `SET`, `UNSET` |
 | Category status | `ACTIVE`, `ARCHIVED` |
+
+**Accepted decision (2026-11-04):** each of these four knot tables uses its stable
+text code directly as a PostgreSQL `TEXT` primary key. Referencing columns use
+`TEXT` foreign keys to the corresponding knot table. Use the seeded codes such
+as `SPENDING`, `RUB`, `SET` and `ACTIVE` directly, without additional numeric
+knot IDs. Codes are storage identifiers; Russian display labels remain a
+presentation concern. The UUID identities of Budget, BudgetLine and Category
+anchors are unchanged.
 
 Changes to these fixed lookup values are maintained through migrations.
 Application operations and the Java initializer reference the seeded rows;
@@ -764,11 +772,11 @@ executed migration. `CategoryMapping` belongs to the Budget module and describes
 | Historized name | `budget.category_name(category_id, changed_at, name)` | String |
 | Historized display position | `budget.category_position(category_id, changed_at, position)` | Integer |
 | Historized status | `budget.category_status_history(category_id, changed_at, status_code)` | Explicit mapping from a domain status to a knot code |
-| Status knot | `budget.category_status(status_code)` | `ACTIVE`, `ARCHIVED` |
+| Status knot | `budget.category_status(status_code)`; `status_code` is a `TEXT` primary key | `ACTIVE`, `ARCHIVED` |
 
 Each attribute references the category anchor. Static owner has one row per
-category; each history table uses `(category_id, changed_at)` as its key. Status
-codes reference the knot. The spending-line-to-category tie belongs to the Budget
+category; each history table uses `(category_id, changed_at)` as its key. The
+history's `status_code` is a `TEXT` foreign key to the status knot's code. The spending-line-to-category tie belongs to the Budget
 line mapping, so a category does not contain or cascade-save its monthly lines.
 Reviewed migrations create these tables/constraints; descriptors identify their
 columns, codecs, relationships and history coordinate for generated runtime SQL.
