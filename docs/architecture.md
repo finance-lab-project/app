@@ -247,8 +247,8 @@ The market, language, RUB-only scope, two-decimal input limit, technical amount
 range, comma/dot decimal input, optional space grouping, surrounding-space
 trimming, leading-zero normalization, fractional shorthand, Russian display
 formatting and fresh start are confirmed. History uses UTC storage and explicitly
-labelled `Europe/Moscow` display. Remaining parsing details below are proposed
-implementation choices.
+labelled `Europe/Moscow` display. The money-input contract below is accepted;
+date-parsing details remain proposed implementation choices.
 
 | Concern | First-release rule |
 | --- | --- |
@@ -263,8 +263,8 @@ Use the [Unicode Russian locale data](https://github.com/unicode-org/cldr/blob/m
 as the formatting reference. Configure Vaadin component translations explicitly;
 setting a locale alone does not supply all application labels. Its
 [Date Picker format API](https://vaadin.com/docs/latest/components/date-picker/date-formats)
-supports explicit date formatting. Strict Java date parsing uses `dd.MM.uuuu`;
-invalid dates such as `31.02.2026` must not roll into another month.
+supports explicit date formatting. Proposed strict Java date parsing uses
+`dd.MM.uuuu`; invalid dates such as `31.02.2026` must not roll into another month.
 
 Locale belongs to UI/report adapters. Domain objects, ORM mappings, keys and
 stored dates remain independent of presentation. Java `LocalDate` values and
@@ -320,8 +320,14 @@ and cannot be saved. Fractional zeros such as `,00` and `.0` represent
 `SET` with numeric zero, not `UNSET`. Existing precision, range and whitespace
 rules still apply.
 
-The input rules below incorporate these accepted decisions; remaining parser
-details are still proposed:
+**Accepted decision (2026-11-04):** money input uses only ASCII digits `0–9`
+and the accepted space/decimal separators. Reject minus/plus signs, exponent
+notation, currency symbols and other text, including `+100`, `-100`, `1e3`
+and `100 ₽`. Incomplete edits such as `1,` and `1.` remain editable but
+cannot be saved. Together with the decisions above, these are the accepted
+money-input rules; parser implementation and verification remain open.
+
+Consolidated accepted money-input contract:
 
 - Accept ASCII digits as an integer, optionally followed by a comma or dot and
   one or two fractional digits, or use the accepted fractional shorthand above.
@@ -351,8 +357,9 @@ details are still proposed:
 | `1,23` or `1.23` | Numeric `1.23`, displayed as `1,23 ₽` |
 | `,50`, `.50`, `,5` or `.5` | Numeric `0.50`, displayed as `0,50 ₽` |
 | `,00` or `.0` | Numeric `0.00`, displayed as `0,00 ₽`; not unset |
-| `,` or `.` | Incomplete input; cannot be saved |
-| `12 34`, `12 34,56`, `0001 234,50`, `1,234`, `1.234`, `,500`, `.500`, `1,2.3`, `1.2.3`, `1e3`, `-1` | Validation error; nothing saved |
+| `1,`, `1.`, `,` or `.` | Incomplete input; cannot be saved |
+| `+100`, `-100`, `1e3`, `100 ₽` or `100abc` | Validation error; nothing saved |
+| `12 34`, `12 34,56`, `0001 234,50`, `1,234`, `1.234`, `,500`, `.500`, `1,2.3` or `1.2.3` | Validation error; nothing saved |
 
 **Accepted decision (2026-11-04):** store each BudgetLine amount as
 `NUMERIC(19,2)`, with the technical range `0.00` through
@@ -956,7 +963,7 @@ not the complete online release.
 The market, RUB/two-decimal policy, technical amount range, history time-zone
 policy, fresh start, single-account access, cloud provider and shared
 application/database VM are selected; the sizing, cost and backup baseline above
-are defined for planning. Before coding, review the remaining proposed parser
+are defined for planning. Before coding, review the remaining proposed date-parsing
 and authentication integration rules, pin compatible build/runtime dependencies,
 and freeze the selected implementation
 brief. Before deployment, verify capacity, the current resource quote, existing
