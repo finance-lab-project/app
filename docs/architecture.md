@@ -560,10 +560,12 @@ The ten defaults are initial category data, not ten fixed columns.
 
 **Accepted decision (2026-11-04):** use UUID identities for `Budget`
 (`budget_id`), `BudgetLine` (`line_id`) and `Category` (`category_id`).
-Represent them as Java `UUID` values and PostgreSQL `uuid` columns; references
-to these anchors use the same UUID type. The UUID version and generation method
-remain an open design decision. Concrete table layouts and constraints below
-remain a proposed SQL sketch.
+Generate each new identity as UUID v4 in Java with `UUID.randomUUID()` before
+database insertion. Supply the generated ID explicitly to persistence and reuse
+it for the anchor and its references; updates and appended history retain the
+existing anchor identity. Represent these values as Java `UUID` and PostgreSQL
+`uuid`; referencing columns use the same UUID type. Concrete table layouts and
+constraints below remain a proposed SQL sketch.
 
 | Construct | Proposed representation |
 | --- | --- |
