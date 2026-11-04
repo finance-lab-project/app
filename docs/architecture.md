@@ -465,10 +465,26 @@ decision, not simply another timestamp column.
 
 ### Budget model
 
-Model one income amount, a variable set of spending lines and a separate
-investment allocation. Categories have their own identity and editable properties,
-so model them as anchors. Only fixed value sets such as line kind and lifecycle
-status are knots. The ten defaults are initial category data, not ten fixed columns.
+**Accepted decision (2026-11-04):** use one shared `BudgetLine` model within
+the Budget module for income, spending and investment allocation. Its immutable
+kind is `INCOME`, `SPENDING` or `INVESTMENT`. All three kinds use the same
+line anchor, amount history and `SET` / `UNSET` state mechanism.
+
+Each saved monthly Budget has exactly one income line, exactly one investment
+line and one spending line per category represented in that month. A spending
+line references exactly one category owned by the Budget owner; income and
+investment lines have no category. Income and investment remain separate fields
+in the UI and separate terms in totals, represented by distinct instances of
+the shared model.
+
+This keeps amount persistence and history uniform across the three kinds.
+Separate income/spending/investment entity models and parallel sets of Anchor
+tables are not selected. Concrete DDL and constraint enforcement remain design
+work in [budget #1](https://github.com/finance-lab-project/budget/issues/1).
+
+Categories have their own identity and editable properties, so model them as
+anchors. Only fixed value sets such as line kind and lifecycle status are knots.
+The ten defaults are initial category data, not ten fixed columns.
 
 | Construct | Proposed representation |
 | --- | --- |
@@ -477,7 +493,7 @@ status are knots. The ten defaults are initial category data, not ten fixed colu
 | Category anchor | `budget.category(category_id)`; stable UUID identity |
 | Category static attribute | Owner, shared by the category catalog and its monthly budgets |
 | Category historized attributes | Separate name, display-position and `ACTIVE` / `ARCHIVED` status tables |
-| Line anchor | `budget.budget_line(line_id)`; one independently historized monthly amount |
+| Shared BudgetLine anchor | `budget.budget_line(line_id)`; one independently historized monthly amount for any line kind |
 | Static tie | `budget.line_in_budget(line_id, budget_id)`; each line belongs to one budget |
 | Static knotted attribute | Line kind: `INCOME`, `SPENDING` or `INVESTMENT` |
 | Static category tie | `budget.line_category(line_id, category_id)`; exactly one category for a spending line, none for other kinds |
