@@ -255,7 +255,7 @@ rule below are accepted; their implementation and verification remain open.
 | Language | Russian labels, navigation, validation messages, empty states and user-facing reports; explicit `ru-RU` locale |
 | Money display | `1 234,56 ₽`: comma decimal separator, nonbreaking-space grouping, currency symbol after the amount, always two decimal digits |
 | Date display/input | `04.11.2026`: exactly two digits each for day and month, four for year, dot separators and strict calendar validation |
-| Budget month | `ноябрь 2026` in the UI; a `YearMonth` value internally, not a timestamp |
+| Budget month | `ноябрь 2026` in the UI; Java `YearMonth`; stored as a PostgreSQL `DATE` constrained to the first day of the month |
 | Calendar | Russian month/day names and controls, Monday as the first day of the week |
 | Time display | 24-hour time in `Europe/Moscow`; every displayed history timestamp explicitly identifies that zone |
 
@@ -272,6 +272,15 @@ Require a valid calendar date: reject `31.02.2026` rather than silently correcti
 or rolling it into another month. Java parsing uses `dd.MM.uuuu` with strict
 calendar validation and exact-width input validation. Budget selection remains
 month/year (`YearMonth`), without requiring a full date.
+
+**Accepted decision (2026-11-04):** persist the budget month as a PostgreSQL
+`DATE` constrained to the first day of the month. For example, November 2026
+is stored as `2026-11-01`. Java domain values remain `YearMonth`; the persistence
+adapter maps to and from this canonical first-of-month date without time-zone
+conversion. The UI still selects and displays month/year; day `01` is only a
+storage convention. The database must reject dates that are not the first day
+of a month. Use this same representation for the static month attribute and
+the `(owner_id, month)` uniqueness key.
 
 Locale belongs to UI/report adapters. Domain objects, ORM mappings, keys and
 stored dates remain independent of presentation. Java `LocalDate` values and
@@ -570,7 +579,7 @@ constraints below remain a proposed SQL sketch.
 | Construct | Proposed representation |
 | --- | --- |
 | Budget anchor | `budget.budget(budget_id)`; surrogate UUID identity |
-| Budget static attributes | Separate owner, month and currency tables keyed by `budget_id` |
+| Budget static attributes | Separate owner, month and currency tables keyed by `budget_id`; month uses the accepted first-of-month `DATE` representation |
 | Category anchor | `budget.category(category_id)`; stable UUID identity |
 | Category static attribute | Owner, shared by the category catalog and its monthly budgets |
 | Category historized attributes | Separate name, display-position and `ACTIVE` / `ARCHIVED` status tables |
@@ -626,8 +635,9 @@ reads. The line-to-budget tie permits only one budget per line.
 Some invariants span several Anchor tables. Enforce them through explicit
 operational tables beside the model:
 
-- A budget key/guard table enforces `UNIQUE(owner_id, month)` and stores the
-  current aggregate version and last change time.
+- A budget key/guard table enforces `UNIQUE(owner_id, month)`, using the same
+  first-of-month `DATE` as the static month attribute, and stores the current
+  aggregate version and last change time.
 - A line-key table identifies each line once. It enforces uniqueness of
   `(budget_id, category_id)` for spending and `(budget_id, kind)` for income and
   investments. Spending requires a category; other kinds forbid one. Categories
