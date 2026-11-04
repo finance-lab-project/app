@@ -602,7 +602,22 @@ constraints below remain a proposed SQL sketch.
 | Static category tie | `budget.line_category(line_id, category_id)`; exactly one category for a spending line, none for other kinds |
 | Historized attribute | `budget.line_amount(line_id, changed_at, amount)` |
 | Historized knotted attribute | `budget.line_amount_state(line_id, changed_at, state)` with `SET` / `UNSET` |
-| Knots | Line kind, currency, amount state and category status in the Budget schema |
+| Knots | Line kind, currency, amount state and category status in the Budget schema; fixed values seeded through Flyway migrations |
+
+**Accepted decision (2026-11-04):** seed the fixed Anchor knot values through
+Budget's versioned Flyway SQL migrations before the Java category initializer runs:
+
+| Knot | Initial values |
+| --- | --- |
+| Line kind | `INCOME`, `SPENDING`, `INVESTMENT` |
+| Currency | `RUB` |
+| Amount state | `SET`, `UNSET` |
+| Category status | `ACTIVE`, `ARCHIVED` |
+
+Changes to these fixed lookup values are maintained through migrations.
+Application operations and the Java initializer reference the seeded rows;
+they do not seed or edit knot definitions at startup. The Java initializer
+continues to create the owner's editable categories once and atomically.
 
 Anchors hold identity only. Static attributes and ties are immutable through the
 initial application API. Changes to amounts append history; they do not overwrite
@@ -954,9 +969,9 @@ bootstrap; there is no requirement to maintain the old runtime or its V2/V3 back
 formats. Keep the agreed product requirements, architecture decisions and Git
 history. Reuse old examples only when they help verify the new requirements.
 
-Flyway migrations create the new schema in an empty database. After they succeed,
-the Budget Java initializer creates the owner's ten-category catalog once and
-atomically, as specified above. No legacy importer, storage conversion or
+Flyway migrations create the new schema and seed the fixed Anchor knot values
+in an empty database. After they succeed, the Budget Java initializer creates the
+owner's ten-category catalog once and atomically, as specified above. No legacy importer, storage conversion or
 compatibility layer is planned. Versioned migrations still manage subsequent
 changes to the new schema. Weekly off-VM backup and verified recovery remain
 required for data created in the new application.
