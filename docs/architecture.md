@@ -29,6 +29,16 @@ Those choices are confirmed requirements. The concrete module packaging,
 mapping approach, database constraints, and integration boundaries below are
 proposed decisions for review. Examples and identifiers are synthetic.
 
+**Budget schema design status (2026-11-04):** [Budget PR #5](https://github.com/finance-lab-project/budget/pull/5)
+contains the initial Flyway migration draft, schema diagram, frozen implementation
+brief and executable read/write design checks for [issue #1](https://github.com/finance-lab-project/budget/issues/1).
+Flyway applied and validated V1 on disposable PostgreSQL 18.6; all 104 checks passed,
+and a repeat migrate/validate reported no migration necessary. The tested draft
+uses deferred foreign keys for commit-time amount/state pairing and required
+income/investment guard references for complete saved budgets. These concrete
+mechanisms remain review proposals; the PR is unmerged, issue #1 remains open,
+and application/ORM/bootstrap implementation remains separate work.
+
 ## 1. System boundary
 
 One Java application serves the Vaadin UI and executes business operations.
@@ -663,9 +673,10 @@ Separate statements may assemble the pair within one transaction, but an
 incomplete or contradictory pairing must not commit. A rejected commit rolls
 back the transaction, including facts, guard/version changes and revisions.
 Application validation and historical-read integrity checks remain in place.
-The exact deferred SQL mechanism still requires design and verification against
-real PostgreSQL; this decision does not select a particular trigger or constraint
-definition.
+The tested SQL draft in [Budget PR #5](https://github.com/finance-lab-project/budget/pull/5)
+uses two deferred foreign keys with generated constraint-helper columns. Both
+insertion orders and actual commit-time failures/complete rollback passed on
+PostgreSQL. This concrete mechanism remains a review proposal.
 
 For a read at time T, select the latest state at or before T. If it is `UNSET`,
 return an unset amount; if it is `SET`, require the amount recorded at that state's
@@ -691,9 +702,9 @@ used for save-conflict checks. Duplicated key fields must be connected to their
 Anchor facts by composite foreign keys, with unique constraints on the referenced
 column combinations.
 
-This accepts the support-table approach. Concrete DDL, constraint definitions
-and transaction SQL still require design and real PostgreSQL verification.
-Responsibilities and schema sketch:
+This accepts the support-table approach. Concrete DDL and representative
+transaction SQL are now drafted and verified in [Budget PR #5](https://github.com/finance-lab-project/budget/pull/5),
+pending design review. Responsibilities and schema sketch:
 
 - A budget key/guard table enforces `UNIQUE(owner_id, month)`, using the same
   first-of-month `DATE` as the static month attribute, and stores the current
@@ -931,8 +942,9 @@ PostgreSQL's `CURRENT_TIMESTAMP` represents transaction start, whereas
 samples the current clock. The monotonic adjustment handles equal/backward clock
 readings within each aggregate. Versions order revisions within one aggregate;
 timestamps are recording coordinates, not exact commit times or a global ordering
-across aggregates. The concrete SQL implementation and its real PostgreSQL
-verification remain open.
+across aggregates. The SQL design checks in [Budget PR #5](https://github.com/finance-lab-project/budget/pull/5)
+verified first-revision clock use, equal/backward readings, shared microsecond
+coordinates and a write after a future coordinate. Java integration remains open.
 
 ### Current state and recorded history
 
