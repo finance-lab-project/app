@@ -244,9 +244,10 @@ this architecture decision.
 ### Russian presentation and the first Budget value contract
 
 The market, language, RUB-only scope, two-decimal input limit, technical amount
-range, comma/dot decimal input, Russian display formatting and fresh start are
-confirmed. History uses UTC storage and explicitly labelled `Europe/Moscow`
-display. Remaining parsing details below are proposed implementation choices.
+range, comma/dot decimal input, optional space grouping, Russian display
+formatting and fresh start are confirmed. History uses UTC storage and explicitly
+labelled `Europe/Moscow` display. Remaining parsing details below are proposed
+implementation choices.
 
 | Concern | First-release rule |
 | --- | --- |
@@ -286,16 +287,23 @@ nonbreaking-space grouping and two decimal digits. Comma and dot are decimal
 separators only; reject mixed or repeated decimal separators and more than two
 fractional digits. Normalize accepted input to the same exact decimal value.
 
-The input rules below incorporate this decision; remaining parser details
-are still proposed:
+**Accepted decision (2026-11-04):** money input may be ungrouped or use spaces
+to group the integer part in threes. In grouped input, the first group has one
+to three digits and every subsequent group has exactly three digits. Accept
+ordinary space (`U+0020`), nonbreaking space (`U+00A0`) and narrow nonbreaking
+space (`U+202F`) as grouping separators. Validate grouping before removing those
+separators. Both `1 234,56` and `1 234.56` are valid, as is `1234.56`;
+`12 34,56` is invalid. This decision does not change Russian display formatting.
+
+The input rules below incorporate these accepted decisions; remaining parser
+details are still proposed:
 
 - Accept ASCII digits with a required integer part and an optional comma or dot
   followed by one or two digits. Ungrouped integers may have leading zeros; they
   are normalized in the new model rather than preserved as an original spelling.
-- Optionally group the integer part in threes. Grouped numbers start with one to
-  three digits and no leading zero. Accept space (`U+0020`), nonbreaking space
-  (`U+00A0`) and narrow nonbreaking space (`U+202F`) as separators; verify grouping
-  before removing them. Trim those same characters at the ends only.
+- Apply the accepted grouping rule above. The proposed leading-zero policy
+  forbids a leading zero in grouped numbers. The proposed trimming rule removes
+  the same three space characters at the ends only.
 - Empty input after that trimming means `UNSET`; `0`, `0,0`, `0,00`, `0.0` and
   `0.00` mean `SET` with numeric zero. Unset values contribute zero to totals
   but remain unset.
@@ -313,8 +321,9 @@ are still proposed:
 | `0` | Numeric `0.00`, displayed as `0,00 ₽` |
 | `1234` or `1 234` | Numeric `1234.00` |
 | `1234,5`, `1234.5`, `1 234,50` or `1 234.50` | Numeric `1234.50`, displayed as `1 234,50 ₽` |
+| `1 234,56`, `1 234.56`, `1 234,56` or `1234.56` | Numeric `1234.56`, displayed as `1 234,56 ₽` |
 | `1,23` or `1.23` | Numeric `1.23`, displayed as `1,23 ₽` |
-| `12 34`, `1,234`, `1.234`, `1,2.3`, `1.2.3`, `1e3`, `-1`, `,50`, `.50` | Validation error; nothing saved |
+| `12 34`, `12 34,56`, `1,234`, `1.234`, `1,2.3`, `1.2.3`, `1e3`, `-1`, `,50`, `.50` | Validation error; nothing saved |
 
 **Accepted decision (2026-11-04):** store each BudgetLine amount as
 `NUMERIC(19,2)`, with the technical range `0.00` through
