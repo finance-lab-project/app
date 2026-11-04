@@ -558,6 +558,13 @@ Categories have their own identity and editable properties, so model them as
 anchors. Only fixed value sets such as line kind and lifecycle status are knots.
 The ten defaults are initial category data, not ten fixed columns.
 
+**Accepted decision (2026-11-04):** use UUID identities for `Budget`
+(`budget_id`), `BudgetLine` (`line_id`) and `Category` (`category_id`).
+Represent them as Java `UUID` values and PostgreSQL `uuid` columns; references
+to these anchors use the same UUID type. The UUID version and generation method
+remain an open design decision. Concrete table layouts and constraints below
+remain a proposed SQL sketch.
+
 | Construct | Proposed representation |
 | --- | --- |
 | Budget anchor | `budget.budget(budget_id)`; surrogate UUID identity |
@@ -565,7 +572,7 @@ The ten defaults are initial category data, not ten fixed columns.
 | Category anchor | `budget.category(category_id)`; stable UUID identity |
 | Category static attribute | Owner, shared by the category catalog and its monthly budgets |
 | Category historized attributes | Separate name, display-position and `ACTIVE` / `ARCHIVED` status tables |
-| Shared BudgetLine anchor | `budget.budget_line(line_id)`; one independently historized monthly amount for any line kind |
+| Shared BudgetLine anchor | `budget.budget_line(line_id)`; UUID identity for one independently historized monthly amount of any line kind |
 | Static tie | `budget.line_in_budget(line_id, budget_id)`; each line belongs to one budget |
 | Static knotted attribute | Line kind: `INCOME`, `SPENDING` or `INVESTMENT` |
 | Static category tie | `budget.line_category(line_id, category_id)`; exactly one category for a spending line, none for other kinds |
