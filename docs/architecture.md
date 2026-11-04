@@ -244,8 +244,9 @@ this architecture decision.
 ### Russian presentation and the first Budget value contract
 
 The market, language, RUB-only scope, two-decimal input limit, technical amount
-range and fresh start are confirmed. The exact parsing rules and display
-time-zone default below remain proposed implementation details of that direction.
+range, comma/dot decimal input and Russian display formatting are confirmed,
+as is the fresh start. Remaining parsing details and the display time-zone
+default below remain proposed implementation details of that direction.
 
 | Concern | First-release rule |
 | --- | --- |
@@ -273,22 +274,33 @@ display zone must not change a saved budget's month or historical instant.
 
 Money input is text parsed directly into `BigDecimal`, without a `double` or a
 browser numeric conversion. The input control shows the currency separately.
-Proposed input rules:
 
-- Accept ASCII digits with a required integer part and an optional comma followed
-  by one or two digits. Ungrouped integers may have leading zeros; they are
-  normalized in the new model rather than preserved as an original spelling.
+**Accepted decision (2026-11-04):** accept either comma or dot as the decimal
+separator in money input. For example, `1234,50` and `1234.50` represent the
+same exact amount. Display remains Russian: `1 234,50 ₽`, with a decimal comma,
+nonbreaking-space grouping and two decimal digits. Comma and dot are decimal
+separators only; reject mixed or repeated decimal separators and more than two
+fractional digits. Normalize accepted input to the same exact decimal value.
+
+The input rules below incorporate this decision; remaining parser details
+are still proposed:
+
+- Accept ASCII digits with a required integer part and an optional comma or dot
+  followed by one or two digits. Ungrouped integers may have leading zeros; they
+  are normalized in the new model rather than preserved as an original spelling.
 - Optionally group the integer part in threes. Grouped numbers start with one to
   three digits and no leading zero. Accept space (`U+0020`), nonbreaking space
   (`U+00A0`) and narrow nonbreaking space (`U+202F`) as separators; verify grouping
   before removing them. Trim those same characters at the ends only.
-- Empty input after that trimming means `UNSET`; `0`, `0,0` and `0,00` mean `SET`
-  with numeric zero. Unset values contribute zero to totals but remain unset.
-- Reject minus/plus signs, decimal dots, exponents, currency symbols in the value,
-  mixed decimal separators, invalid grouping, tabs/newlines and trailing text.
-  A partial edit such as `1,` remains editable but cannot be saved.
-- Reject more than two fractional digits, including `1,000`. Validate the complete
-  text, then convert exactly and normalize to scale two; never truncate or round.
+- Empty input after that trimming means `UNSET`; `0`, `0,0`, `0,00`, `0.0` and
+  `0.00` mean `SET` with numeric zero. Unset values contribute zero to totals
+  but remain unset.
+- Reject minus/plus signs, exponents, currency symbols in the value, mixed or
+  repeated decimal separators, invalid grouping, tabs/newlines and trailing text.
+  A partial edit such as `1,` or `1.` remains editable but cannot be saved.
+- Reject more than two fractional digits, including `1,000` and `1.000`.
+  Validate the complete text, then convert exactly and normalize to scale two;
+  never truncate or round.
   All non-UI entry points enforce the same domain precision and range rules.
 
 | Input | Result |
@@ -296,8 +308,9 @@ Proposed input rules:
 | Empty field | Unset amount |
 | `0` | Numeric `0.00`, displayed as `0,00 ₽` |
 | `1234` or `1 234` | Numeric `1234.00` |
-| `1234,5` or `1 234,50` | Numeric `1234.50` |
-| `12 34`, `1,234`, `1.23`, `1e3`, `-1`, `,50` | Validation error; nothing saved |
+| `1234,5`, `1234.5`, `1 234,50` or `1 234.50` | Numeric `1234.50`, displayed as `1 234,50 ₽` |
+| `1,23` or `1.23` | Numeric `1.23`, displayed as `1,23 ₽` |
+| `12 34`, `1,234`, `1.234`, `1,2.3`, `1.2.3`, `1e3`, `-1`, `,50`, `.50` | Validation error; nothing saved |
 
 **Accepted decision (2026-11-04):** store each BudgetLine amount as
 `NUMERIC(19,2)`, with the technical range `0.00` through
@@ -893,7 +906,7 @@ not the complete online release.
 The market, RUB/two-decimal policy, technical amount range, fresh start,
 single-account access, cloud provider and shared application/database VM are
 selected; the sizing, cost and backup baseline above are defined for planning.
-Before coding, review the proposed detailed parser/time-zone and authentication
+Before coding, review the remaining proposed parser/time-zone and authentication
 integration rules, pin the
 compatible build/runtime dependencies, and freeze the selected implementation
 brief. Before deployment, verify capacity, the current resource quote, existing
@@ -907,7 +920,8 @@ provisioning, deployment and spending are separate steps.
 Evidence required when the slice is implemented:
 
 1. Domain tests for planning totals, validation, unset versus zero and month scope.
-   Include Russian input/grouping, precision and range boundaries, negative
+   Include comma/dot decimal input with Russian display, grouping, precision and
+   range boundaries, negative
    derived remaining, strict date parsing and display-zone independence.
    Cover ten defaults seeded once, stable IDs, label rules, ordering, and
    preservation of saved amounts/totals when renaming or archiving categories.
