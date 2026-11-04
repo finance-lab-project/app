@@ -245,9 +245,9 @@ this architecture decision.
 
 The market, language, RUB-only scope, two-decimal input limit, technical amount
 range, comma/dot decimal input, optional space grouping, surrounding-space
-trimming, Russian display formatting and fresh start are confirmed. History uses
-UTC storage and explicitly labelled `Europe/Moscow` display. Remaining parsing
-details below are proposed implementation choices.
+trimming, leading-zero normalization, Russian display formatting and fresh start
+are confirmed. History uses UTC storage and explicitly labelled `Europe/Moscow`
+display. Remaining parsing details below are proposed implementation choices.
 
 | Concern | First-release rule |
 | --- | --- |
@@ -303,14 +303,20 @@ Empty input, including input containing only those space characters, means
 in the input, including at either end; do not trim them away. Interior spaces
 remain subject to the accepted grouping rule.
 
+**Accepted decision (2026-11-04):** accept leading zeros in both ungrouped
+and grouped money input, and normalize them to the same exact decimal value.
+For example, `001234,50` and `001 234,50` both represent `1234.50` and display
+as `1 234,50 ₽`; the same applies with a decimal dot. Validate the original
+grouping before removing separators or leading zeros: `0001 234,50` remains
+invalid because its first group has four digits. All-zero input represents
+`SET` with numeric zero, never `UNSET`.
+
 The input rules below incorporate these accepted decisions; remaining parser
 details are still proposed:
 
 - Accept ASCII digits with a required integer part and an optional comma or dot
-  followed by one or two digits. Ungrouped integers may have leading zeros; they
-  are normalized in the new model rather than preserved as an original spelling.
-- Apply the accepted grouping and trimming rules above. The proposed leading-zero
-  policy forbids a leading zero in grouped numbers.
+  followed by one or two digits.
+- Apply the accepted grouping, trimming and leading-zero normalization rules above.
 - Empty input after that trimming means `UNSET`; `0`, `0,0`, `0,00`, `0.0` and
   `0.00` mean `SET` with numeric zero. Unset values contribute zero to totals
   but remain unset.
@@ -331,8 +337,10 @@ details are still proposed:
 | `1234` or `1 234` | Numeric `1234.00` |
 | `1234,5`, `1234.5`, `1 234,50` or `1 234.50` | Numeric `1234.50`, displayed as `1 234,50 ₽` |
 | `1 234,56`, `1 234.56`, `1 234,56` or `1234.56` | Numeric `1234.56`, displayed as `1 234,56 ₽` |
+| `001234,50`, `001234.50`, `001 234,50` or `001 234.50` | Numeric `1234.50`, displayed as `1 234,50 ₽` |
+| `000` or `000 000,00` | Numeric `0.00`, displayed as `0,00 ₽`; not unset |
 | `1,23` or `1.23` | Numeric `1.23`, displayed as `1,23 ₽` |
-| `12 34`, `12 34,56`, `1,234`, `1.234`, `1,2.3`, `1.2.3`, `1e3`, `-1`, `,50`, `.50` | Validation error; nothing saved |
+| `12 34`, `12 34,56`, `0001 234,50`, `1,234`, `1.234`, `1,2.3`, `1.2.3`, `1e3`, `-1`, `,50`, `.50` | Validation error; nothing saved |
 
 **Accepted decision (2026-11-04):** store each BudgetLine amount as
 `NUMERIC(19,2)`, with the technical range `0.00` through
