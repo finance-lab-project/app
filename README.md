@@ -5,6 +5,7 @@ Java/Vaadin modular monolith without Spring, backed by PostgreSQL Anchor Modelin
 ## Start here
 
 - [Architecture and agreed contracts](docs/architecture.md)
+- [Runtime version pins and reproducible compatibility spike](docs/runtime-stack.md)
 - [Current release plan and issue index](docs/roadmap.md)
 - [Issues](https://github.com/finance-lab-project/app/issues)
 
@@ -28,6 +29,6 @@ Hosting plan: one Yandex Cloud VM for proxy, Jetty/Vaadin and PostgreSQL; 2 shar
 
 ## Delivery status
 
-Repository setup and design documentation only: no runnable Java application, ORM or deployment is claimed yet. Exact compatible runtime versions, SQL DDL/constraints and the CI/artifact-registry arrangement still need their tracked design work. GitHub hosts code and planning; GitLab alignment is an explicit build-planning decision.
+Repository setup, design documentation and an isolated runtime compatibility spike: no production application, ORM or deployment is claimed yet. The [runtime report](docs/runtime-stack.md) records exact version pins, WAR packaging constraints and smoke-test evidence. Application bootstrap, SQL design review and the CI/artifact-registry arrangement remain separate tracked work. GitHub hosts code and planning; GitLab alignment is an explicit build-planning decision.
 
 Issues carry scoped acceptance criteria and dependencies. Each repository has a private project board. Board status is a planning signal, not permission to implement, merge, deploy or spend. There are no separate learning issues in the new backlog. Use synthetic data and keep secrets out of repositories, issues and logs.
