@@ -614,10 +614,18 @@ verified during implementation.
 
 Mapping metadata is authoritative for runtime mapping; reviewed SQL migrations
 are authoritative for deployed schema. An integration check verifies they agree.
-Do not generate or alter production schema at application startup. Use an
-established migration runner, selected during bootstrap, rather than writing a
-second custom infrastructure tool. Root deployment orders the selected modules'
-migrations and checks compatibility before starting the application.
+Do not generate or alter production schema at application startup.
+
+**Accepted decision (2026-11-04):** use Flyway for schema migrations. Business
+modules own their versioned SQL migration files; Flyway applies them in version
+order and records applied versions and checksums. Root deployment orders the
+selected modules' migrations and checks compatibility before starting the
+application. The custom ORM does not create or migrate schema.
+See [Flyway versioned migrations](https://documentation.red-gate.com/fd/versioned-migrations-273973333.html).
+
+The exact Flyway version and deployment integration remain bootstrap work,
+subject to the project's stable-version and compatibility policy. Selecting the
+runner does not mean migrations have been implemented or executed.
 
 The initial ORM supports static attributes, knotted attributes, static ties,
 historized scalar/knotted attributes, parameterized identity lookup, and explicit
