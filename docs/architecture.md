@@ -244,9 +244,9 @@ this architecture decision.
 ### Russian presentation and the first Budget value contract
 
 The market, language, RUB-only scope, two-decimal input limit, technical amount
-range, comma/dot decimal input and Russian display formatting are confirmed,
-as is the fresh start. Remaining parsing details and the display time-zone
-default below remain proposed implementation details of that direction.
+range, comma/dot decimal input, Russian display formatting and fresh start are
+confirmed. History uses UTC storage and explicitly labelled `Europe/Moscow`
+display. Remaining parsing details below are proposed implementation choices.
 
 | Concern | First-release rule |
 | --- | --- |
@@ -255,7 +255,7 @@ default below remain proposed implementation details of that direction.
 | Date display/input | `04.11.2026`, with a four-digit year and strict calendar validation |
 | Budget month | `ноябрь 2026` in the UI; a `YearMonth` value internally, not a timestamp |
 | Calendar | Russian month/day names and controls, Monday as the first day of the week |
-| Time display | 24-hour time; any history timestamp identifies its display time zone |
+| Time display | 24-hour time in `Europe/Moscow`; every displayed history timestamp explicitly identifies that zone |
 
 Use the [Unicode Russian locale data](https://github.com/unicode-org/cldr/blob/main/common/main/ru.xml)
 as the formatting reference. Configure Vaadin component translations explicitly;
@@ -265,12 +265,16 @@ supports explicit date formatting. Strict Java date parsing uses `dd.MM.uuuu`;
 invalid dates such as `31.02.2026` must not roll into another month.
 
 Locale belongs to UI/report adapters. Domain objects, ORM mappings, keys and
-stored dates remain independent of presentation. Java `LocalDate` values do not
-gain a time zone; Anchor history uses instants stored as PostgreSQL `timestamptz`
-with UTC application/database session configuration. The proposed initial demo
-display zone is explicitly configured `Europe/Moscow`, shown to the user; it
-does not follow from `ru-RU` or represent every Russian user's zone. Changing
-display zone must not change a saved budget's month or historical instant.
+stored dates remain independent of presentation. Java `LocalDate` values and
+the Budget's `YearMonth` do not gain a time zone.
+
+**Accepted decision (2026-11-04):** store Anchor history timestamps as UTC
+instants using PostgreSQL `timestamptz`, with UTC application/database session
+configuration. Convert them to `Europe/Moscow` for history display and explicitly
+show the zone alongside every displayed history timestamp. This zone is configured
+for the first release; it does not follow the browser's time zone or the `ru-RU`
+locale. Display conversion must preserve the stored instant and must not shift
+a saved budget's month.
 
 Money input is text parsed directly into `BigDecimal`, without a `double` or a
 browser numeric conversion. The input control shows the currency separately.
@@ -903,12 +907,12 @@ flow, HTTPS on Yandex Cloud, protected database connectivity, and verified
 backup/recovery. A local Budget demonstration is an implementation milestone,
 not the complete online release.
 
-The market, RUB/two-decimal policy, technical amount range, fresh start,
-single-account access, cloud provider and shared application/database VM are
-selected; the sizing, cost and backup baseline above are defined for planning.
-Before coding, review the remaining proposed parser/time-zone and authentication
-integration rules, pin the
-compatible build/runtime dependencies, and freeze the selected implementation
+The market, RUB/two-decimal policy, technical amount range, history time-zone
+policy, fresh start, single-account access, cloud provider and shared
+application/database VM are selected; the sizing, cost and backup baseline above
+are defined for planning. Before coding, review the remaining proposed parser
+and authentication integration rules, pin compatible build/runtime dependencies,
+and freeze the selected implementation
 brief. Before deployment, verify capacity, the current resource quote, existing
 domain/email configuration and a successful restore, and obtain spending/release
 authorization.
