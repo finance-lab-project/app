@@ -247,14 +247,14 @@ The market, language, RUB-only scope, two-decimal input limit, technical amount
 range, comma/dot decimal input, optional space grouping, surrounding-space
 trimming, leading-zero normalization, fractional shorthand, Russian display
 formatting and fresh start are confirmed. History uses UTC storage and explicitly
-labelled `Europe/Moscow` display. The money-input contract below is accepted;
-date-parsing details remain proposed implementation choices.
+labelled `Europe/Moscow` display. The money-input contract and strict date-input
+rule below are accepted; their implementation and verification remain open.
 
 | Concern | First-release rule |
 | --- | --- |
 | Language | Russian labels, navigation, validation messages, empty states and user-facing reports; explicit `ru-RU` locale |
 | Money display | `1 234,56 ₽`: comma decimal separator, nonbreaking-space grouping, currency symbol after the amount, always two decimal digits |
-| Date display/input | `04.11.2026`, with a four-digit year and strict calendar validation |
+| Date display/input | `04.11.2026`: exactly two digits each for day and month, four for year, dot separators and strict calendar validation |
 | Budget month | `ноябрь 2026` in the UI; a `YearMonth` value internally, not a timestamp |
 | Calendar | Russian month/day names and controls, Monday as the first day of the week |
 | Time display | 24-hour time in `Europe/Moscow`; every displayed history timestamp explicitly identifies that zone |
@@ -263,8 +263,15 @@ Use the [Unicode Russian locale data](https://github.com/unicode-org/cldr/blob/m
 as the formatting reference. Configure Vaadin component translations explicitly;
 setting a locale alone does not supply all application labels. Its
 [Date Picker format API](https://vaadin.com/docs/latest/components/date-picker/date-formats)
-supports explicit date formatting. Proposed strict Java date parsing uses
-`dd.MM.uuuu`; invalid dates such as `31.02.2026` must not roll into another month.
+supports explicit date formatting.
+
+**Accepted decision (2026-11-04):** full date input uses exactly two digits for
+day, two for month and four for year, separated by dots, as in `04.11.2026`.
+Reject alternative or shortened forms such as `04/11/26` and `4.11.2026`.
+Require a valid calendar date: reject `31.02.2026` rather than silently correcting
+or rolling it into another month. Java parsing uses `dd.MM.uuuu` with strict
+calendar validation and exact-width input validation. Budget selection remains
+month/year (`YearMonth`), without requiring a full date.
 
 Locale belongs to UI/report adapters. Domain objects, ORM mappings, keys and
 stored dates remain independent of presentation. Java `LocalDate` values and
@@ -963,10 +970,9 @@ not the complete online release.
 The market, RUB/two-decimal policy, technical amount range, history time-zone
 policy, fresh start, single-account access, cloud provider and shared
 application/database VM are selected; the sizing, cost and backup baseline above
-are defined for planning. Before coding, review the remaining proposed date-parsing
-and authentication integration rules, pin compatible build/runtime dependencies,
-and freeze the selected implementation
-brief. Before deployment, verify capacity, the current resource quote, existing
+are defined for planning. Before coding, review the proposed authentication
+integration rules, pin compatible build/runtime dependencies, and freeze the
+selected implementation brief. Before deployment, verify capacity, the current resource quote, existing
 domain/email configuration and a successful restore, and obtain spending/release
 authorization.
 Legacy code removal is allowed as part of the planned rewrite bootstrap. The
