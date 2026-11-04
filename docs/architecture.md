@@ -651,6 +651,22 @@ same change time. Clearing it appends `UNSET`, retaining the earlier amount as
 history. Setting it again records the amount and `SET` together, including when
 the numeric value equals an older value from before the clear.
 
+**Accepted decision (2026-11-04):** PostgreSQL enforces amount/state pairing at
+transaction commit for each `(line_id, changed_at)` coordinate:
+
+- Every `SET` state has exactly one amount at that same coordinate, and every
+  amount has exactly one matching `SET` state.
+- An `UNSET` state has no amount at that coordinate. Earlier amount rows remain
+  in history.
+
+Separate statements may assemble the pair within one transaction, but an
+incomplete or contradictory pairing must not commit. A rejected commit rolls
+back the transaction, including facts, guard/version changes and revisions.
+Application validation and historical-read integrity checks remain in place.
+The exact deferred SQL mechanism still requires design and verification against
+real PostgreSQL; this decision does not select a particular trigger or constraint
+definition.
+
 For a read at time T, select the latest state at or before T. If it is `UNSET`,
 return an unset amount; if it is `SET`, require the amount recorded at that state's
 exact change time. A missing companion amount is an integrity error, not permission
@@ -919,8 +935,9 @@ restoring an old revision, backdating and editing/deleting history are outside v
 
 The ORM supplies current/as-of projections, not a Budget-specific history API.
 For an amount, no state before T means the line did not exist; `UNSET` means a
-known empty value, and `SET(0.00)` means numeric zero. Budget enforces paired
-state/value integrity and recalculates totals from the selected revision's values.
+known empty value, and `SET(0.00)` means numeric zero. Budget's PostgreSQL schema
+enforces paired state/value integrity at commit; Budget validates historical
+projections and recalculates totals from the selected revision's values.
 
 Current and historical projections use one consistent database snapshot: one SQL
 statement, or a read-only `REPEATABLE READ` transaction for multi-query assembly.
@@ -1060,8 +1077,11 @@ Evidence required when the slice is implemented:
    snapshots, and reads before creation and between revisions.
    Include category changes, Budget revisions pinned to catalog revisions,
    addition of lines, and archive behavior across existing and new months.
-   Cover a populated line on first save, unset versus zero, clear then re-enter
-   the same amount, and rejection of a `SET` state missing its companion amount.
+   Cover a populated line on first save, unset versus zero, and clear then
+   re-enter the same amount. Verify commit-time pairing enforcement: valid
+   `SET`/amount pairs and `UNSET` alone commit; missing companions, orphan amounts,
+   mismatched coordinates and `UNSET` with an amount at the same coordinate fail.
+   Rejected commits leave no partial facts or advanced guard/revision state.
 4. Unknown-commit handling without automatic retries, and connection/statement
    cleanup on success/failure. Add operation-ID retry tests only if that later
    contract is selected; v1 makes no retry-safe or exactly-once claim.
