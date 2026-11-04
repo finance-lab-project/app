@@ -243,9 +243,9 @@ this architecture decision.
 
 ### Russian presentation and the first Budget value contract
 
-The market, language, RUB-only scope, two-decimal input limit and fresh start
-above are confirmed. The exact parsing rules, technical upper bound and display
-time-zone default below are proposed implementation details of that direction.
+The market, language, RUB-only scope, two-decimal input limit, technical amount
+range and fresh start are confirmed. The exact parsing rules and display
+time-zone default below remain proposed implementation details of that direction.
 
 | Concern | First-release rule |
 | --- | --- |
@@ -299,11 +299,14 @@ Proposed input rules:
 | `1234,5` or `1 234,50` | Numeric `1234.50` |
 | `12 34`, `1,234`, `1.23`, `1e3`, `-1`, `,50` | Validation error; nothing saved |
 
-Proposed technical storage is `NUMERIC(19,2)`: each entered amount is between
-`0.00` and `99999999999999999.99`, inclusive. Validate this bound before writing,
-and constrain stored values to that range. PostgreSQL can round on assignment
-to a scale-constrained numeric column, so database coercion must never substitute
-for application/ORM precision validation.
+**Accepted decision (2026-11-04):** store each BudgetLine amount as
+`NUMERIC(19,2)`, with the technical range `0.00` through
+`99999999999999999.99` RUB, inclusive, and no smaller business maximum.
+The same range applies to income, spending and investment allocation.
+Validate it before writing and constrain stored values to that range.
+Reject excess decimal places before insertion; never round an entered amount.
+PostgreSQL can round on assignment to a scale-constrained numeric column, so
+database coercion must never substitute for application/ORM precision validation.
 [PostgreSQL numeric behavior](https://www.postgresql.org/docs/current/datatype-numeric.html)
 documents this distinction.
 
@@ -510,9 +513,10 @@ model and its DDL.
 
 New monetary values follow the Russian Budget contract above: `BigDecimal`,
 explicit `RUB`, at most two decimal places at input, and no silent rounding.
-The proposed storage bound is `NUMERIC(19,2)`. Numeric zero and an unset amount
-are distinct. Totals are calculated by Budget and are not stored as additional
-mutable facts. The ORM supplies exact codecs; Budget owns these value constraints.
+The accepted storage is `NUMERIC(19,2)` with the technical amount range above
+and no smaller business maximum. Numeric zero and an unset amount are distinct.
+Totals are calculated by Budget and are not stored as additional mutable facts.
+The ORM supplies exact codecs; Budget owns these value constraints.
 
 ### Clearing an amount and reading history
 
@@ -886,10 +890,11 @@ flow, HTTPS on Yandex Cloud, protected database connectivity, and verified
 backup/recovery. A local Budget demonstration is an implementation milestone,
 not the complete online release.
 
-The market, RUB/two-decimal policy, fresh start, single-account access, cloud
-provider and shared application/database VM are selected; the sizing, cost and
-backup baseline above are defined for planning. Before coding, review the proposed
-detailed parser/range/time-zone and authentication integration rules, pin the
+The market, RUB/two-decimal policy, technical amount range, fresh start,
+single-account access, cloud provider and shared application/database VM are
+selected; the sizing, cost and backup baseline above are defined for planning.
+Before coding, review the proposed detailed parser/time-zone and authentication
+integration rules, pin the
 compatible build/runtime dependencies, and freeze the selected implementation
 brief. Before deployment, verify capacity, the current resource quote, existing
 domain/email configuration and a successful restore, and obtain spending/release
