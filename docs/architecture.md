@@ -718,9 +718,16 @@ Responsibilities and schema sketch:
 These tables are deliberately conventional transaction/identity support. They
 do not replace the Anchor facts or become a generic entity-attribute-value store.
 Creation writes the anchors, static facts, keys and initial revision atomically.
-Versions start at one; zero is the application's marker for an unsaved budget,
-not a stored revision. Guard updates and revision inserts use the same transaction
-as their facts, so rollback does not advance a committed aggregate version.
+
+**Accepted decision (2026-11-04):** use PostgreSQL `BIGINT` and Java `long` for
+Budget and category-catalog revision numbers. Guard current-version columns and
+revision references such as `catalog_version` use the same types. Stored versions
+start at one; zero remains the application's marker for an unsaved Budget, not
+a stored revision. A state-changing command advances its aggregate's version
+once; no-op saves do not increment it.
+
+Guard updates and revision inserts use the same transaction as their facts, so
+rollback does not advance a committed aggregate version.
 
 ## 5. Custom ORM contract
 
