@@ -91,6 +91,12 @@ an alternative deployment target, not a second required server. See the
 [Vaadin compatibility matrix](https://vaadin.com/docs/latest/compatibility) and
 [Jetty compatibility table](https://jetty.org/docs/jetty/12.1/index.html).
 
+The [issue #2 runtime report](runtime-stack.md) records the dated exact pins,
+reproducible production-WAR/JDBC spike and build-tool constraints. It retains
+WAR packaging on Jetty 12.1 EE11 without Spring. Its memory observations do not
+validate the planned VM's application capacity; application bootstrap and
+deployment validation remain separate work.
+
 ### Private online access and Yandex Cloud deployment
 
 The hosting provider, shared application/database VM, online browser access and
