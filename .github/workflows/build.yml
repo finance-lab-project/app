@@ -1,0 +1,25 @@
+name: Application bootstrap
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: bootstrap-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - name: Install checksum-verified runtime pins
+        run: scripts/ci-tools.sh
+      - name: Clean builds, independent parent consumer and Jetty lifecycle
+        env:
+          PLAYWRIGHT_INSTALL_ARGS: install --with-deps chromium
+        run: scripts/verify.sh

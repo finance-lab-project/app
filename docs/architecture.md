@@ -511,9 +511,10 @@ depend on an uncommitted sibling checkout or mutable snapshot artifact.
 GitHub is the selected repository, issue and Project home. Each repository has
 its own private delivery board; public repository visibility does not make the
 deployed application public. GitLab remains a requested stack-alignment topic:
-choose the CI/artifact-registry arrangement explicitly during build planning,
-without assuming or performing a hosting migration. Track design and delivery
-tasks directly; separate learning issues are not part of the new backlog.
+the [bootstrap build decision](build.md) selects GitHub Actions for checks and
+GitLab Maven Package Registry for separately authorized immutable publication,
+without a repository migration. The registry is not provisioned by bootstrap.
+Track design and delivery tasks directly; separate learning issues are not part of the new backlog.
 
 ## 3. Internal structure and dependency rules
 

@@ -1,0 +1,9 @@
+**/target/
+application/node_modules/
+application/.cache/
+application/src/main/bundles/
+application/src/main/frontend/generated/
+application/vite.generated.ts
+application/vite.config.ts
+application/tsconfig.json
+application/types.d.ts
