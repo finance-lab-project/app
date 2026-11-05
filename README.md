@@ -6,6 +6,7 @@ Java/Vaadin modular monolith without Spring, backed by PostgreSQL Anchor Modelin
 
 - [Architecture and agreed contracts](docs/architecture.md)
 - [Runtime version pins and reproducible compatibility spike](docs/runtime-stack.md)
+- [Application build, configuration, CI and immutable artifacts](docs/build.md)
 - [Current release plan and issue index](docs/roadmap.md)
 - [Issues](https://github.com/finance-lab-project/app/issues)
 
@@ -13,7 +14,7 @@ Java/Vaadin modular monolith without Spring, backed by PostgreSQL Anchor Modelin
 
 | Repository | Responsibility | R1 |
 | --- | --- | --- |
-| [app](https://github.com/finance-lab-project/app) | Architecture, release coordination, Maven parent/application assembly, login and runtime configuration | Active design |
+| [app](https://github.com/finance-lab-project/app) | Architecture, release coordination, Maven parent/application assembly, login and runtime configuration | Bootstrap implemented |
 | [orm](https://github.com/finance-lab-project/orm) | Anchor metadata, JDBC transactions, SQL generation and history projections | Active design |
 | [budget](https://github.com/finance-lab-project/budget) | Monthly planning, categories, validation, Vaadin UI, mappings and migrations | First business module |
 | [portfolio](https://github.com/finance-lab-project/portfolio) | Independent holdings/transactions/calculations | Planning only; deferred |
@@ -29,6 +30,6 @@ Hosting plan: one Yandex Cloud VM for proxy, Jetty/Vaadin and PostgreSQL; 2 shar
 
 ## Delivery status
 
-Repository setup, design documentation and an isolated runtime compatibility spike: no production application, ORM or deployment is claimed yet. The [runtime report](docs/runtime-stack.md) records exact version pins, WAR packaging constraints and smoke-test evidence. Application bootstrap, SQL design review and the CI/artifact-registry arrangement remain separate tracked work. GitHub hosts code and planning; GitLab alignment is an explicit build-planning decision.
+The Maven parent and initial Java/Vaadin WAR assembly are implemented; ORM/Budget integration, login and deployment remain separate work. The [build guide](docs/build.md) covers local verification, bootstrap-only startup, GitHub Actions checks and the selected GitLab Maven registry. The registry is not provisioned and no artifacts are published. The [runtime report](docs/runtime-stack.md) records the compatibility spike; it does not establish application capacity.
 
 Issues carry scoped acceptance criteria and dependencies. Each repository has a private project board. Board status is a planning signal, not permission to implement, merge, deploy or spend. There are no separate learning issues in the new backlog. Use synthetic data and keep secrets out of repositories, issues and logs.

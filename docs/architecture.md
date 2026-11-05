@@ -1,7 +1,7 @@
 # Finance Lab: Java modular monolith and Anchor persistence
 
-Date: 2026-11-04. Status: agreed direction with proposed implementation details;
-repository/backlog setup is recorded in the release plan; application implementation has not started.
+Date: 2026-11-05. Status: agreed direction with proposed implementation details;
+the Maven/application bootstrap is implemented; business modules and login remain delivery work.
 
 The selected direction is Java/Vaadin without Spring, PostgreSQL with Anchor
 Modeling, a custom ORM, and a root repository assembling separately maintained
@@ -511,9 +511,10 @@ depend on an uncommitted sibling checkout or mutable snapshot artifact.
 GitHub is the selected repository, issue and Project home. Each repository has
 its own private delivery board; public repository visibility does not make the
 deployed application public. GitLab remains a requested stack-alignment topic:
-choose the CI/artifact-registry arrangement explicitly during build planning,
-without assuming or performing a hosting migration. Track design and delivery
-tasks directly; separate learning issues are not part of the new backlog.
+the [bootstrap build decision](build.md) selects GitHub Actions for checks and
+GitLab Maven Package Registry for separately authorized immutable publication,
+without a repository migration. The registry is not provisioned by bootstrap.
+Track design and delivery tasks directly; separate learning issues are not part of the new backlog.
 
 ## 3. Internal structure and dependency rules
 
@@ -778,9 +779,10 @@ selected modules' migrations and checks compatibility before starting the
 application. The custom ORM does not create or migrate schema.
 See [Flyway versioned migrations](https://documentation.red-gate.com/fd/versioned-migrations-273973333.html).
 
-The exact Flyway version and deployment integration remain bootstrap work,
-subject to the project's stable-version and compatibility policy. Selecting the
-runner does not mean migrations have been implemented or executed.
+The [bootstrap](build.md) reserves Flyway 13.12.0 in application dependency
+management. PostgreSQL compatibility and deployment ordering must be checked
+with the first module migrations before adding the runtime runner. No migrations
+have been implemented or executed by bootstrap.
 
 The initial ORM supports static attributes, knotted attributes, static ties,
 historized scalar/knotted attributes, parameterized identity lookup, and explicit

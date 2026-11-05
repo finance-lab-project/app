@@ -1,6 +1,6 @@
 # Current Finance Lab release plan
 
-Updated 2026-11-04. This is the canonical product delivery plan for the Java/Vaadin rewrite. It supersedes the Spring/React and distributed Go/BFF product sequences. Repository setup is complete; application implementation has not started.
+Updated 2026-11-05. This is the canonical product delivery plan for the Java/Vaadin rewrite. It supersedes the Spring/React and distributed Go/BFF product sequences. Repository setup and the initial Maven/application bootstrap are implemented; business modules and login remain delivery work.
 
 ## Next review work
 
@@ -22,7 +22,7 @@ These are review candidates, not automatic agent dispatch. Implementation follow
 - Weekly Sunday 03:00 Europe/Moscow encrypted off-VM backups, 28-day retention, pre-database-change backups and verified restore.
 - Clean start: no old data import or compatibility requirement. Legacy code can be removed during bootstrap. No repository deletion, live-site change or cloud deployment was performed by planning setup.
 
-The [architecture](architecture.md) distinguishes agreed behavior from proposed details. SQL keys/constraints, numeric input limits/parser edge cases, display-zone configuration, authentication integration, runtime pins and CI/artifact registry must pass their scoped design/validation work. GitHub hosts repositories/issues/projects; GitLab alignment remains explicit build planning.
+The [architecture](architecture.md) distinguishes agreed behavior from proposed details. SQL keys/constraints, numeric input limits/parser edge cases, display-zone configuration, authentication integration, runtime pins and CI/artifact registry must pass their scoped design/validation work. GitHub hosts repositories/issues/projects. The [bootstrap build decision](build.md) selects GitHub Actions checks and a separately provisioned GitLab Maven registry.
 
 ## Issue index
 
@@ -32,7 +32,7 @@ The [architecture](architecture.md) distinguishes agreed behavior from proposed 
 | `budget` | [Design R1 PostgreSQL schema, constraints and initial migration](https://github.com/finance-lab-project/budget/issues/1) | Design review |
 | `app` | [Validate and pin the Java/Vaadin/Jetty/PostgreSQL runtime stack](https://github.com/finance-lab-project/app/issues/2) | Design review |
 | `orm` | [Design the minimal Anchor mapping, transaction and projection API](https://github.com/finance-lab-project/orm/issues/1) | Design review |
-| `app` | [Bootstrap the Maven parent and Java application assembly](https://github.com/finance-lab-project/app/issues/3) | Implementation backlog |
+| `app` | [Bootstrap the Maven parent and Java application assembly](https://github.com/finance-lab-project/app/issues/3) | Implemented; verification and review recorded in PR |
 | `orm` | [Implement scoped JDBC transactions, codecs and failure outcomes](https://github.com/finance-lab-project/orm/issues/2) | Implementation backlog |
 | `orm` | [Implement Anchor SQL generation and current/history projections](https://github.com/finance-lab-project/orm/issues/3) | Implementation backlog |
 | `budget` | [Implement RUB Budget values and the configurable category catalog](https://github.com/finance-lab-project/budget/issues/2) | Implementation backlog |
