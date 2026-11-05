@@ -11,6 +11,7 @@ revision=$(git rev-parse HEAD)
 [[ "$(git rev-parse 'v0.1.0^{commit}')" == "$revision" ]]
 mkdir -p target
 provenance="$PWD/target/build-parent-0.1.0-provenance.properties"
+parent_pom="$PWD/build-parent/pom.xml"
 digest=$(shasum -a 256 build-parent/pom.xml | awk '{print $1}')
 cat > "$provenance" <<EOF
 coordinates=org.financelab:build-parent:pom:0.1.0
@@ -23,5 +24,5 @@ EOF
 mvn -B -ntp -s "$MAVEN_SETTINGS" -f build-parent/pom.xml \
     org.apache.maven.plugins:maven-deploy-plugin:3.1.4:deploy-file \
     -DrepositoryId=gitlab-maven "-Durl=$GITLAB_MAVEN_URL" \
-    -Dfile=build-parent/pom.xml -DpomFile=build-parent/pom.xml \
+    "-Dfile=$parent_pom" "-DpomFile=$parent_pom" \
     -DgeneratePom=false "-Dfiles=$provenance" -Dclassifiers=provenance -Dtypes=properties

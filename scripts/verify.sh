@@ -12,7 +12,7 @@ export APP_HTTP_PORT="$port" APP_BASE_URL="http://127.0.0.1:$port/"
 temporary=$(mktemp -d)
 jetty_pid=""
 stop_jetty() {
-    kill "$jetty_pid"
+    kill "$jetty_pid" 2>/dev/null || true
     for attempt in {1..15}; do
         if ! kill -0 "$jetty_pid" 2>/dev/null; then
             wait "$jetty_pid" || true
@@ -37,6 +37,7 @@ cp application/target/finance-lab.war "$temporary/first.war"
 # Two clean production builds must produce exactly the same archive.
 mvn -B -ntp clean package "-Dsource.revision=$BUILD_SOURCE_REVISION"
 cmp "$temporary/first.war" application/target/finance-lab.war
+git diff --exit-code -- application/package.json application/package-lock.json
 printf 'Reproducibility OK: two clean WAR builds are byte-identical.\n'
 scripts/check-parent.sh
 mvn -B -ntp -f application/pom.xml exec:java -Dexec.mainClass=com.microsoft.playwright.CLI \
@@ -70,4 +71,5 @@ if curl --fail --silent "$APP_BASE_URL" -o /dev/null; then
     printf 'HTTP listener still responds after shutdown.\n' >&2; exit 1
 fi
 shasum -a 256 application/target/finance-lab.war build-parent/pom.xml > target/SHA256SUMS
+cat target/SHA256SUMS
 printf 'Application checks passed: configuration rejection, startup, production browser flow and bounded shutdown.\n'
