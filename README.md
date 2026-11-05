@@ -14,7 +14,7 @@ Java/Vaadin modular monolith without Spring, backed by PostgreSQL Anchor Modelin
 
 | Repository | Responsibility | R1 |
 | --- | --- | --- |
-| [app](https://github.com/finance-lab-project/app) | Architecture, release coordination, Maven parent/application assembly, login and runtime configuration | Active design |
+| [app](https://github.com/finance-lab-project/app) | Architecture, release coordination, Maven parent/application assembly, login and runtime configuration | Bootstrap implemented |
 | [orm](https://github.com/finance-lab-project/orm) | Anchor metadata, JDBC transactions, SQL generation and history projections | Active design |
 | [budget](https://github.com/finance-lab-project/budget) | Monthly planning, categories, validation, Vaadin UI, mappings and migrations | First business module |
 | [portfolio](https://github.com/finance-lab-project/portfolio) | Independent holdings/transactions/calculations | Planning only; deferred |
