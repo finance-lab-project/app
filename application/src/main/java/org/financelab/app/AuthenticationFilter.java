@@ -20,7 +20,8 @@ public final class AuthenticationFilter implements Filter {
         var response = (HttpServletResponse) output;
         response.setHeader("Cache-Control", "no-store");
         response.setHeader("X-Content-Type-Options", "nosniff");
-        response.setHeader("Referrer-Policy", "no-referrer");
+        // no-referrer makes native form POSTs send Origin: null.
+        response.setHeader("Referrer-Policy", "same-origin");
         response.setHeader("X-Frame-Options", "DENY");
         if (!request.isSecure()) { response.sendError(403); return; }
         var config = (ApplicationConfig) request.getServletContext().getAttribute(ApplicationLifecycle.CONFIG_ATTRIBUTE);

@@ -52,8 +52,10 @@ class AuthenticationIT {
                             .set("username", "synthetic-user").set("password", PASSWORD))).status();
                     assertEquals(mutation.equals("/login") ? 403 : 401, status);
                 }
-                assertEquals(403, client.post("/login", credentials(token, PASSWORD)
-                        .setHeader("Origin", "https://foreign.invalid")).status());
+                for (String origin : new String[]{"https://foreign.invalid", "null"}) {
+                    assertEquals(403, client.post("/login", credentials(token, PASSWORD)
+                            .setHeader("Origin", origin)).status());
+                }
                 assertEquals(401, login(client, "incorrect-synthetic-password").status());
                 assertEquals(303, login(client, PASSWORD).status());
                 String authenticatedCookie = cookie(client);
@@ -114,9 +116,8 @@ class AuthenticationIT {
 
     private String cookie(APIRequestContext client) {
         // The cookie is synthetic and stays in ignored test output.
-        String state = client.storageState();
-        var match = Pattern.compile("\"name\"\\s*:\\s*\"JSESSIONID\"\\s*,\\s*\"value\"\\s*:\\s*\"([^\"]+)\"").matcher(state);
-        assertTrue(match.find(), "Session cookie present");
-        return "JSESSIONID=" + match.group(1);
+        return client.cookies(System.getenv("APP_BASE_URL")).stream()
+                .filter(cookie -> cookie.name.equals("JSESSIONID"))
+                .map(cookie -> "JSESSIONID=" + cookie.value).findFirst().orElseThrow();
     }
 }
