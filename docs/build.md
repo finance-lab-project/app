@@ -1,9 +1,9 @@
-# Application bootstrap
+# Application assembly
 
-Implements [app #3](https://github.com/finance-lab-project/app/issues/3), using
-the [verified runtime pins](runtime-stack.md). This is a production-built WAR
-containing a bootstrap page, not a deployable Budget release. Login is
-[app #4](https://github.com/finance-lab-project/app/issues/4).
+Implements [app #3](https://github.com/finance-lab-project/app/issues/3) and the
+[app #4 authentication boundary](authentication.md), using the
+[verified runtime pins](runtime-stack.md). The protected production-built WAR
+contains the initial page; business modules and deployment remain separate.
 
 ## Assembly and build
 
@@ -11,10 +11,12 @@ containing a bootstrap page, not a deployable Budget release. Login is
   Contains Java/Maven enforcement and build-plugin conventions; no application,
   Vaadin or business-module dependencies and no reactor modules.
 - Root `pom.xml`: local reactor only, not published.
+- `authentication/`: the server-classpath account adapter and Password4j 1.8.4
+  Argon2id verifier, packaged separately from the WAR and Jetty itself.
 - `application/`: `org.financelab:application:war:0.1.0`, assembled as
   `application/target/finance-lab.war`. Vaadin 25.3.5, Servlet 6.1 provided by
   Jetty 12.1.14 EE11 and runtime pgJDBC 42.7.14. No Spring, ORM/Budget artifacts,
-  Portfolio/FIRE, reporting, workflow, messaging or cryptography integrations.
+  Portfolio/FIRE, reporting, workflow or messaging integrations.
 
 ORM/Budget have no published implementation artifacts yet; do not invent
 coordinates or require sibling source trees. When delivered, pin their exact
@@ -43,11 +45,12 @@ The script checks exact JDK/Node/npm/Maven/Jetty pins, builds the WAR twice from
 clean Maven output and compares every byte, tests configuration, publishes the
 parent to a disposable file registry and compiles an unrelated Java module
 against it using a fresh Maven cache and `<relativePath/>`. It installs matching
-Chromium, checks that an unconfigured WAR is unavailable, opens the configured
-production page, performs a server-side event and reload, sends SIGTERM, and
-requires listener shutdown within 15 seconds. Startup polls are bounded to 90
+Chromium and uses a disposable self-signed localhost TLS connector. It checks
+fail-closed startup, login/logout, server-side events/reload, CSRF, endpoint
+protection, throttling, idle/absolute expiry and credential rotation across a JVM
+restart. SIGTERM must stop the listeners within 15 seconds. Startup polls are bounded to 90
 seconds each; the CI job has an overall 25-minute deadline. Downloads need
-network access. No database is created or contacted by this UI bootstrap check.
+network access. No database is created or contacted by this application check.
 The real PostgreSQL transaction probe remains in `spikes/runtime-stack`.
 
 Direct development builds use:
@@ -69,7 +72,8 @@ does not assert that runner OS packages or the application fit the planned VM.
 ## Configuration and lifecycle
 
 ```sh
-APP_MODE=bootstrap scripts/run.sh
+APP_ACCOUNT_FILE=/run/finance-lab/account.properties \
+APP_PUBLIC_ORIGIN=https://finance.example.invalid scripts/run.sh
 ```
 
 This starts a separate Jetty process on **127.0.0.1:18083** from the packaged WAR.
@@ -77,10 +81,12 @@ Override the port with `APP_HTTP_PORT` (1–65535). The script does not require
 Node/npm at runtime. `APP_DISPLAY_ZONE` defaults to `Europe/Moscow` and must be
 a valid Java zone ID; it does not inherit the machine's display zone.
 
-Missing `APP_MODE`, `production`, or any other mode rejects webapp startup.
-Bootstrap mode is explicitly unauthenticated and contains no business data.
-Keep it on loopback; it is not an online release. Normal application startup
-remains closed until #4 implements and validates the real account configuration.
+Missing/invalid account configuration or HTTPS origin rejects startup. The former
+`APP_MODE` bootstrap bypass is removed and rejected. The protected account file,
+session limits, trusted TLS proxy settings and operator rotation/recovery procedure
+are documented in the [authentication guide](authentication.md). Ship the
+authentication JAR, its runtime `lib/` directory and `config/jetty-auth.xml` with
+the WAR. Runtime requires no Maven, Node or npm.
 The Servlet listener owns application configuration, removes it on stop and
 provides a lifecycle seam for actual resources when modules arrive. There are
 no database pools, workers or optional clients to initialize in this increment.
@@ -151,8 +157,9 @@ Each library overrides `source.repository`, supplies its own full
 `source.revision` during a clean tagged build, and publishes provenance alongside
 its immutable artifact. Application builds embed source/version/parent provenance
 in `META-INF/finance-lab/build.properties`; library JARs inherit source manifest
-entries. `target/SHA256SUMS` records the checked application's WAR and parent POM
-digests. The parent, ORM and Budget must be resolvable from the registry before
+entries. `target/SHA256SUMS` records the checked application's WAR, authentication
+adapter/runtime dependencies, Jetty configuration and parent POM digests.
+The parent, ORM and Budget must be resolvable from the registry before
 independent release builds can use them; a local `mvn install` is development only.
 
 ## Verification evidence

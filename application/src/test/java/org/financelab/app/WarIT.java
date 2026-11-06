@@ -1,6 +1,7 @@
 package org.financelab.app;
 
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.Browser;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -8,6 +9,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.zip.ZipFile;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +22,7 @@ class WarIT {
             assertTrue(entries.stream().anyMatch(name -> name.contains("VAADIN/build/") && name.endsWith(".js")));
             assertTrue(entries.contains("WEB-INF/lib/postgresql-42.7.14.jar"));
             assertFalse(entries.stream().anyMatch(name -> name.matches(
-                    "WEB-INF/lib/(spring-.*|jetty-.*|jakarta.servlet-api-.*|junit-.*|playwright-.*|portfolio-.*|fire-.*|camunda-.*|artemis-.*|flyway-.*)\\.jar")));
+                    "WEB-INF/lib/(spring-.*|jetty-.*|authentication-.*|password4j-.*|jakarta.servlet-api-.*|junit-.*|playwright-.*|portfolio-.*|fire-.*|camunda-.*|artemis-.*|flyway-.*)\\.jar")));
             var config = war.getEntry("WEB-INF/classes/META-INF/VAADIN/config/flow-build-info.json");
             assertNotNull(config);
             try (var input = war.getInputStream(config)) {
@@ -36,8 +38,14 @@ class WarIT {
             assertEquals("0.1.0", provenance.getProperty("version"));
         }
         var errors = new ArrayList<String>();
-        try (var playwright = Playwright.create(); var browser = playwright.chromium().launch()) {
-            var page = browser.newPage();
+        try (var playwright = Playwright.create(); var browser = playwright.chromium().launch();
+             var context = browser.newContext(new Browser.NewContextOptions().setIgnoreHTTPSErrors(true))) {
+            var page = context.newPage();
+            assertEquals(200, page.navigate(System.getenv("APP_BASE_URL") + "login").status());
+            page.locator("input[name=username]").fill("synthetic-user");
+            page.locator("input[name=password]").fill("synthetic-test-password-only");
+            page.getByText("Войти", new com.microsoft.playwright.Page.GetByTextOptions().setExact(true)).click();
+            assertThat(page.locator("h1")).hasText("Finance Lab");
             page.onPageError(errors::add);
             page.onResponse(response -> {
                 if (response.status() >= 400) errors.add("HTTP " + response.status());
@@ -45,12 +53,30 @@ class WarIT {
             assertEquals(200, page.navigate(System.getenv("APP_BASE_URL")).status());
             assertThat(page.locator("h1")).hasText("Finance Lab");
             assertThat(page.locator("#status")).hasText("Готово");
+            var uidl = new AtomicReference<com.microsoft.playwright.Request>();
+            page.onRequest(request -> {
+                if (request.method().equals("POST") && request.url().contains("v-r=uidl")) uidl.set(request);
+            });
             page.getByText("Проверить соединение").click();
             assertThat(page.locator("#status")).hasText("Соединение работает");
+            assertNotNull(uidl.get());
+            String original = uidl.get().postData();
+            String tampered = original.replaceFirst("\"csrfToken\"\\s*:\\s*\"[^\"]+\"", "\"csrfToken\":\"invalid\"");
+            assertNotEquals(original, tampered);
+            var rejected = context.request().post(uidl.get().url(), com.microsoft.playwright.options.RequestOptions.create()
+                    .setHeader("Content-Type", "application/json").setData(tampered));
+            assertTrue(rejected.text().contains("\"appError\""), "Vaadin rejects a forged UIDL CSRF token");
             page.reload();
             assertThat(page.locator("h1")).hasText("Finance Lab");
             assertTrue(errors.isEmpty(), errors.toString());
+            String oldCookie = context.cookies().stream().filter(cookie -> cookie.name.equals("JSESSIONID"))
+                    .map(cookie -> "JSESSIONID=" + cookie.value).findFirst().orElseThrow();
+            page.getByText("Выйти", new com.microsoft.playwright.Page.GetByTextOptions().setExact(true)).click();
+            assertThat(page.locator("h1")).hasText("Вход в Finance Lab");
+            assertEquals(401, context.request().get(System.getenv("APP_BASE_URL")).status());
+            assertEquals(401, context.request().get(System.getenv("APP_BASE_URL"),
+                    com.microsoft.playwright.options.RequestOptions.create().setHeader("Cookie", oldCookie)).status());
         }
-        System.out.println("Application WAR OK: production assets, JDBC, source provenance, browser/server event and reload");
+        System.out.println("Application WAR OK: production assets, provenance, HTTPS browser login, server event, reload and logout");
     }
 }

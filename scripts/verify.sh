@@ -8,7 +8,9 @@ BUILD_SOURCE_REVISION=$(git rev-parse HEAD)
 export PLAYWRIGHT_BROWSERS_PATH="$PWD/application/.cache/playwright"
 export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 PLAYWRIGHT_SKIP_BROWSER_GC=1
 port=${APP_HTTP_PORT:-18083}
-export APP_HTTP_PORT="$port" APP_BASE_URL="http://127.0.0.1:$port/"
+tls_port=${APP_TEST_TLS_PORT:-18084}
+export APP_HTTP_PORT="$port" APP_HTTP_BASE_URL="http://127.0.0.1:$port/"
+export APP_BASE_URL="https://localhost:$tls_port/" APP_PUBLIC_ORIGIN="https://localhost:$tls_port"
 temporary=$(mktemp -d)
 jetty_pid=""
 stop_jetty() {
@@ -34,42 +36,83 @@ cleanup() {
 trap cleanup EXIT
 mvn -B -ntp clean package "-Dsource.revision=$BUILD_SOURCE_REVISION"
 cp application/target/finance-lab.war "$temporary/first.war"
+cp authentication/target/authentication-0.1.0.jar "$temporary/first-authentication.jar"
 # Two clean production builds must produce exactly the same archive.
 mvn -B -ntp clean package "-Dsource.revision=$BUILD_SOURCE_REVISION"
 cmp "$temporary/first.war" application/target/finance-lab.war
+cmp "$temporary/first-authentication.jar" authentication/target/authentication-0.1.0.jar
 git diff --exit-code -- application/package.json application/package-lock.json
-printf 'Reproducibility OK: two clean WAR builds are byte-identical.\n'
+printf 'Reproducibility OK: two clean WAR and authentication JAR builds are byte-identical.\n'
 scripts/check-parent.sh
 mvn -B -ntp -f application/pom.xml exec:java -Dexec.mainClass=com.microsoft.playwright.CLI \
     -Dexec.classpathScope=test "-Dexec.args=${PLAYWRIGHT_INSTALL_ARGS:-install chromium}"
-# A missing account/mode configuration must never yield a usable application.
-env -u APP_MODE scripts/run.sh > target/jetty-unconfigured.log 2>&1 &
+# Use a disposable local TLS connector; production TLS/proxy deployment is separate.
+"$JAVA_HOME/bin/keytool" -genkeypair -alias synthetic-test -keyalg RSA -keysize 2048 \
+    -validity 1 -dname CN=localhost -ext SAN=dns:localhost,ip:127.0.0.1 \
+    -storetype PKCS12 -keystore "$temporary/test.p12" -storepass synthetic-test-only -noprompt > target/test-tls.log 2>&1
+mkdir -p target/jetty-base
+(cd target/jetty-base; "$JAVA_HOME/bin/java" -jar "$JETTY_HOME/start.jar" --add-modules=https > ../test-tls-setup.log 2>&1)
+cat > target/jetty-base/start.d/test-tls.ini <<EOF
+jetty.ssl.host=127.0.0.1
+jetty.ssl.port=$tls_port
+jetty.sslContext.keyStorePath=$temporary/test.p12
+jetty.sslContext.keyStorePassword=synthetic-test-only
+jetty.sslContext.keyManagerPassword=synthetic-test-only
+EOF
+# A missing account configuration must never yield a usable application.
+env -u APP_MODE -u APP_ACCOUNT_FILE scripts/run.sh > target/jetty-unconfigured.log 2>&1 &
 jetty_pid=$!
 rejected=false
 for attempt in {1..90}; do
-    if grep -q 'APP_MODE=bootstrap is required' target/jetty-unconfigured.log; then rejected=true; break; fi
-    kill -0 "$jetty_pid"
+    if grep -q 'A valid owner-only APP_ACCOUNT_FILE is required' target/jetty-unconfigured.log; then rejected=true; break; fi
+    kill -0 "$jetty_pid" || break
     sleep 1
 done
 [[ "$rejected" == true ]]
-status=$(curl --silent -o /dev/null -w '%{http_code}' "$APP_BASE_URL" || true)
+status=$(curl --insecure --silent -o /dev/null -w '%{http_code}' "$APP_BASE_URL/login" || true)
 [[ "$status" != 200 ]]
 stop_jetty
-APP_MODE=bootstrap scripts/run.sh > target/jetty.log 2>&1 &
-jetty_pid=$!
-ready=false
-for attempt in {1..90}; do
-    kill -0 "$jetty_pid"
-    if curl --fail --silent "$APP_BASE_URL" -o target/bootstrap.html; then ready=true; break; fi
-    sleep 1
-done
-[[ "$ready" == true ]]
-mvn -B -ntp -f application/pom.xml failsafe:integration-test failsafe:verify
+export APP_ACCOUNT_FILE="$temporary/account.properties"
+# Jetty's selected SLF4J API is reused; no duplicate logging implementation.
+slf4j_api=$(find "$JETTY_HOME/lib" -name 'slf4j-api-*.jar' -print -quit)
+account_classpath="authentication/target/test-classes:authentication/target/classes:authentication/target/lib/*:$slf4j_api"
+"$JAVA_HOME/bin/java" -cp "$account_classpath" org.financelab.auth.SyntheticAccountFile "$APP_ACCOUNT_FILE"
+start_configured() {
+    scripts/run.sh > target/jetty.log 2>&1 &
+    jetty_pid=$!
+    local ready=false
+    for attempt in {1..90}; do
+        kill -0 "$jetty_pid"
+        if curl --insecure --fail --silent "$APP_BASE_URL/login" -o /dev/null; then ready=true; break; fi
+        sleep 1
+    done
+    [[ "$ready" == true ]]
+}
+integration_test() {
+    mvn -B -ntp -f application/pom.xml "-Dit.test=$1" failsafe:integration-test failsafe:verify
+}
+start_configured
+integration_test WarIT
+integration_test AuthenticationIT
 stop_jetty
-grep -q 'Finance Lab bootstrap stopped' target/jetty.log
-if curl --fail --silent "$APP_BASE_URL" -o /dev/null; then
+"$JAVA_HOME/bin/java" -cp "$account_classpath" org.financelab.auth.SyntheticAccountFile "$temporary/rotated.properties" rotated
+export APP_ACCOUNT_FILE="$temporary/rotated.properties"
+start_configured
+AUTH_TEST_PHASE=rotated integration_test AuthenticationIT
+stop_jetty
+export APP_ACCOUNT_FILE="$temporary/account.properties" APP_SESSION_IDLE_SECONDS=2
+start_configured
+AUTH_TEST_PHASE=idle integration_test AuthenticationIT
+stop_jetty
+export APP_SESSION_IDLE_SECONDS=30 APP_SESSION_ABSOLUTE_SECONDS=2
+start_configured
+AUTH_TEST_PHASE=absolute integration_test AuthenticationIT
+stop_jetty
+grep -q 'Finance Lab stopped' target/jetty.log
+if curl --insecure --fail --silent "$APP_BASE_URL/login" -o /dev/null; then
     printf 'HTTP listener still responds after shutdown.\n' >&2; exit 1
 fi
-shasum -a 256 application/target/finance-lab.war build-parent/pom.xml > target/SHA256SUMS
+shasum -a 256 application/target/finance-lab.war authentication/target/authentication-0.1.0.jar \
+    authentication/target/lib/*.jar config/jetty-auth.xml build-parent/pom.xml > target/SHA256SUMS
 cat target/SHA256SUMS
-printf 'Application checks passed: configuration rejection, startup, production browser flow and bounded shutdown.\n'
+printf 'Application checks passed: fail-closed config, HTTPS browser login/logout, CSRF, throttling, expiry, restart rotation and bounded shutdown.\n'
