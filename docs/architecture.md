@@ -1,7 +1,7 @@
 # Finance Lab: Java modular monolith and Anchor persistence
 
 Date: 2026-11-05. Status: agreed direction with proposed implementation details;
-the Maven/application bootstrap is implemented; business modules and login remain delivery work.
+the Maven/application bootstrap and configured-account session boundary are implemented; business modules remain delivery work.
 
 The selected direction is Java/Vaadin without Spring, PostgreSQL with Anchor
 Modeling, a custom ORM, and a root repository assembling separately maintained
@@ -111,8 +111,8 @@ verifier. This does not introduce Spring, an identity-provider service, or a
 separate authentication repository. Vaadin documents
 [security integration for plain Java](https://vaadin.com/docs/latest/flow/security/advanced-topics/securing-plain-java-app),
 and Jetty exposes [authenticator and login-service integration](https://jetty.org/docs/jetty/12.1/programming-guide/security/index.html).
-The exact adapter/library combination still needs verification with the pinned
-runtime; framework integration is not an implemented login flow.
+The selected adapter uses Jetty 12.1.14 programmatic Servlet authentication and
+Password4j 1.8.4 Argon2id, as recorded in the [authentication brief](authentication.md).
 
 Provision one stable internal owner ID, username and salted adaptive password
 hash through protected deployment configuration. The proposed hash algorithm is

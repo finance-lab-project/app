@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "https://jetty.org/configure_10_0.dtd">
+<Configure class="org.eclipse.jetty.ee11.webapp.WebAppContext">
+    <Get name="securityHandler">
+        <Set name="authenticator"><New class="org.financelab.auth.ProgrammaticFormAuthenticator"/></Set>
+        <Set name="sessionRenewedOnAuthentication">true</Set>
+        <Set name="persistAuthenticationCredentials">false</Set>
+    </Get>
+</Configure>

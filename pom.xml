@@ -13,6 +13,7 @@
     <properties><maven.deploy.skip>true</maven.deploy.skip></properties>
     <modules>
         <module>build-parent</module>
+        <module>authentication</module>
         <module>application</module>
     </modules>
 </project>
