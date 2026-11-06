@@ -9,15 +9,15 @@ cd "$(dirname "$0")/.."
 [[ -f authentication/target/authentication-0.1.0.jar ]]
 port=${APP_HTTP_PORT:-18083}
 [[ "$port" =~ ^[0-9]+$ ]] && (( port > 0 && port <= 65535 ))
-base="$PWD/target/jetty-base"
 app_root="$PWD"
-mkdir -p "$base"
+base=${APP_JETTY_BASE:-"$app_root/target/jetty-base"}
+mkdir -p "$app_root/target" "$base"
 cd "$base"
 "$JAVA_HOME/bin/java" -jar "$JETTY_HOME/start.jar" \
-    --add-modules=http,forwarded,ext,ee11-deploy,ee11-annotations,ee11-websocket-jakarta > ../jetty-setup.log 2>&1
-cp ../../authentication/target/authentication-0.1.0.jar lib/ext/
-cp ../../authentication/target/lib/*.jar lib/ext/
-cp ../../application/target/finance-lab.war webapps/ROOT.war
+    --add-modules=http,forwarded,ext,ee11-deploy,ee11-annotations,ee11-websocket-jakarta > "$app_root/target/jetty-setup.log" 2>&1
+cp "$app_root/authentication/target/authentication-0.1.0.jar" lib/ext/
+cp "$app_root/authentication/target/lib/"*.jar lib/ext/
+cp "$app_root/application/target/finance-lab.war" webapps/ROOT.war
 # Only a trusted local TLS proxy may reach this connector and supply forwarded headers.
 exec "$JAVA_HOME/bin/java" -Xms64m -Xmx256m -jar "$JETTY_HOME/start.jar" \
     "$app_root/config/jetty-auth.xml" \

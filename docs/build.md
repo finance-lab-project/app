@@ -77,7 +77,9 @@ APP_PUBLIC_ORIGIN=https://finance.example.invalid scripts/run.sh
 ```
 
 This starts a separate Jetty process on **127.0.0.1:18083** from the packaged WAR.
-Override the port with `APP_HTTP_PORT` (1–65535). The script does not require
+Override the port with `APP_HTTP_PORT` (1–65535). Use `APP_JETTY_BASE` to override
+the default `target/jetty-base`. Verification uses its own disposable base to
+keep test TLS settings out of normal startup. The script does not require
 Node/npm at runtime. `APP_DISPLAY_ZONE` defaults to `Europe/Moscow` and must be
 a valid Java zone ID; it does not inherit the machine's display zone.
 

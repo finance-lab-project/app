@@ -12,6 +12,7 @@ tls_port=${APP_TEST_TLS_PORT:-18084}
 export APP_HTTP_PORT="$port" APP_HTTP_BASE_URL="http://127.0.0.1:$port/"
 export APP_BASE_URL="https://localhost:$tls_port/" APP_PUBLIC_ORIGIN="https://localhost:$tls_port"
 temporary=$(mktemp -d)
+export APP_JETTY_BASE="$temporary/jetty-base"
 jetty_pid=""
 stop_jetty() {
     kill "$jetty_pid" 2>/dev/null || true
@@ -50,9 +51,9 @@ mvn -B -ntp -f application/pom.xml exec:java -Dexec.mainClass=com.microsoft.play
 "$JAVA_HOME/bin/keytool" -genkeypair -alias synthetic-test -keyalg RSA -keysize 2048 \
     -validity 1 -dname CN=localhost -ext SAN=dns:localhost,ip:127.0.0.1 \
     -storetype PKCS12 -keystore "$temporary/test.p12" -storepass synthetic-test-only -noprompt > target/test-tls.log 2>&1
-mkdir -p target/jetty-base
-(cd target/jetty-base; "$JAVA_HOME/bin/java" -jar "$JETTY_HOME/start.jar" --add-modules=https > ../test-tls-setup.log 2>&1)
-cat > target/jetty-base/start.d/test-tls.ini <<EOF
+mkdir -p "$APP_JETTY_BASE"
+(cd "$APP_JETTY_BASE"; "$JAVA_HOME/bin/java" -jar "$JETTY_HOME/start.jar" --add-modules=https) > target/test-tls-setup.log 2>&1
+cat > "$APP_JETTY_BASE/start.d/test-tls.ini" <<EOF
 jetty.ssl.host=127.0.0.1
 jetty.ssl.port=$tls_port
 jetty.sslContext.keyStorePath=$temporary/test.p12
@@ -112,6 +113,20 @@ grep -q 'Finance Lab stopped' target/jetty.log
 if curl --insecure --fail --silent "${APP_BASE_URL}login" -o /dev/null; then
     printf 'HTTP listener still responds after shutdown.\n' >&2; exit 1
 fi
+# Normal startup must not depend on the verifier's disposable TLS configuration.
+rm "$temporary/test.p12"
+env -u APP_JETTY_BASE scripts/run.sh > target/jetty-normal.log 2>&1 &
+jetty_pid=$!
+ready=false
+for attempt in {1..90}; do
+    kill -0 "$jetty_pid"
+    if curl --fail --silent --header 'X-Forwarded-Proto: https' "${APP_HTTP_BASE_URL}login" -o /dev/null; then ready=true; break; fi
+    sleep 1
+done
+[[ "$ready" == true ]]
+stop_jetty
+grep -q 'Finance Lab stopped' target/jetty-normal.log
+printf 'Normal startup OK after removing the verifier TLS keystore.\n'
 shasum -a 256 application/target/finance-lab.war authentication/target/authentication-0.1.0.jar \
     authentication/target/lib/*.jar config/jetty-auth.xml build-parent/pom.xml > target/SHA256SUMS
 cat target/SHA256SUMS

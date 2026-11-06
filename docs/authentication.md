@@ -105,8 +105,10 @@ self-signed localhost certificate. It checks production Vaadin login/events/
 reload/logout, Servlet endpoint gates, cookie attributes, CSRF, throttle bypass
 attempts, session ID rotation, stale cookies after restart/credential rotation,
 and shortened idle/absolute expiry. The verifier clock is controlled only in
-unit tests; runtime throttling has no test override. The test TLS connector is
-configured only in ignored build output.
+unit tests; runtime throttling has no test override. The test TLS connector uses
+a private temporary Jetty base removed on exit. The verifier also removes its
+test keystore and checks that normal startup still succeeds with valid account
+configuration.
 
 Business modules are not assembled yet: the owner test verifies the trusted
 identity seam against a foreign browser owner value; actual owner-scoped
