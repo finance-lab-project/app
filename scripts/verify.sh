@@ -69,7 +69,7 @@ for attempt in {1..90}; do
     sleep 1
 done
 [[ "$rejected" == true ]]
-status=$(curl --insecure --silent -o /dev/null -w '%{http_code}' "$APP_BASE_URL/login" || true)
+status=$(curl --insecure --silent -o /dev/null -w '%{http_code}' "${APP_BASE_URL}login" || true)
 [[ "$status" != 200 ]]
 stop_jetty
 export APP_ACCOUNT_FILE="$temporary/account.properties"
@@ -83,7 +83,7 @@ start_configured() {
     local ready=false
     for attempt in {1..90}; do
         kill -0 "$jetty_pid"
-        if curl --insecure --fail --silent "$APP_BASE_URL/login" -o /dev/null; then ready=true; break; fi
+        if curl --insecure --fail --silent "${APP_BASE_URL}login" -o /dev/null; then ready=true; break; fi
         sleep 1
     done
     [[ "$ready" == true ]]
@@ -109,7 +109,7 @@ start_configured
 AUTH_TEST_PHASE=absolute integration_test AuthenticationIT
 stop_jetty
 grep -q 'Finance Lab stopped' target/jetty.log
-if curl --insecure --fail --silent "$APP_BASE_URL/login" -o /dev/null; then
+if curl --insecure --fail --silent "${APP_BASE_URL}login" -o /dev/null; then
     printf 'HTTP listener still responds after shutdown.\n' >&2; exit 1
 fi
 shasum -a 256 application/target/finance-lab.war authentication/target/authentication-0.1.0.jar \
