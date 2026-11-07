@@ -38,6 +38,19 @@ public final class PlannerPages extends HttpServlet {
     }
 
     @Override protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if ("/ui".equals(request.getServletPath())) {
+            String file = request.getPathInfo();
+            if (file == null || !java.util.Set.of("/local.js", "/login.js", "/transfer.js", "/store.js", "/planner.css").contains(file)) {
+                response.sendError(404);
+                return;
+            }
+            response.setContentType(file.endsWith(".css") ? "text/css;charset=UTF-8" : "text/javascript;charset=UTF-8");
+            try (var stream = getServletContext().getResourceAsStream("/ui" + file)) {
+                if (stream == null) response.sendError(404);
+                else stream.transferTo(response.getOutputStream());
+            }
+            return;
+        }
         if ("/privacy".equals(request.getServletPath())) {
             page(response, "Данные и cookie", "", """
                     <main class="reading"><h1>Данные и cookie</h1>
