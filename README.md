@@ -4,6 +4,7 @@ Java/Vaadin modular monolith without Spring, backed by PostgreSQL Anchor Modelin
 
 ## Start here
 
+- [MVP technical review and evidence](docs/review/README.md)
 - [Guest, sign-in, cloud transfer and privacy](docs/guest-and-cloud.md)
 - [Architecture and agreed contracts](docs/architecture.md)
 - [Runtime version pins and reproducible compatibility spike](docs/runtime-stack.md)
