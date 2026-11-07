@@ -59,8 +59,15 @@ class PlannerJourneyIT {
             assertThat(page.locator("#status")).hasText("Категории сохранены.");
             button(page,"План месяца").click();
             page.locator("#plan").getByRole(AriaRole.TEXTBOX, new Locator.GetByRoleOptions().setName("Учебная поездка").setExact(true)).fill("25,50");
+            page.locator("#spend-0").fill("10");
             page.locator("#save").click();
-            assertThat(page.locator("#balance")).hasText("274,50 ₽");
+            assertThat(page.locator("#status")).hasText("Сохранено в этом браузере.");
+            assertThat(page.locator("#balance")).hasText("264,50 ₽");
+            button(page,"Категории").click();
+            String archivedLabel = page.locator("#categories input").first().inputValue();
+            button(page,"В архив: " + archivedLabel).click();
+            button(page,"Сохранить категории").click();
+            assertThat(page.locator("#status")).hasText("Категории сохранены.");
             button(page,"История").click();
             assertThat(page.locator("#revision-detail")).containsText("Учебная поездка");
             page.locator("#revision").selectOption("1");
@@ -74,7 +81,9 @@ class PlannerJourneyIT {
             assertThat(page.locator("#months")).containsText("Суммы прошлых версий перенесены");
             page.getByText("Открыть мой бюджет").click();
             period(page,"2091","03");
-            assertThat(page.locator("#balance")).hasText("274,50 ₽");
+            assertThat(page.locator("#balance")).hasText("264,50 ₽");
+            assertThat(page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions()
+                    .setName(archivedLabel + " · в архиве").setExact(true))).hasValue("10,00");
             button(page,"Категории").click();
             page.locator("#categories input").last().fill("Поездки");
             button(page,"Сохранить категории").click();

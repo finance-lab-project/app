@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the pinned module sources until the Maven registry is provisioned.
 set -euo pipefail
-revision=1660e6e6f6b6736d3760b8016d89e644f749bcf9
+revision=43d86d28965a241cd45f7938c1adfb2ec50f8132
 source_dir=$(mktemp -d)
 trap 'rm -rf "$source_dir"' EXIT
 git -C "$source_dir" init --quiet

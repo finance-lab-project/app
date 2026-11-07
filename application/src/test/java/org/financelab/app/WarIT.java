@@ -25,7 +25,7 @@ class WarIT {
             assertFalse(entries.stream().anyMatch(name -> name.matches(
                     "WEB-INF/lib/(spring-.*|jetty-.*|authentication-.*|password4j-.*|jakarta.servlet-api-.*|junit-.*|playwright-.*|portfolio-.*|fire-.*|camunda-.*|artemis-.*)\\.jar")));
             for (String[] library : new String[][]{
-                    {"budget-0.2.0.jar", "1660e6e6f6b6736d3760b8016d89e644f749bcf9"},
+                    {"budget-0.2.0.jar", "43d86d28965a241cd45f7938c1adfb2ec50f8132"},
                     {"orm-0.1.0.jar", "8daaf91d07d2e30b563322b22a0c6da7545578e5"}}) {
                 var entry = war.getEntry("WEB-INF/lib/" + library[0]);
                 assertNotNull(entry);
