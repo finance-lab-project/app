@@ -1,0 +1,16 @@
+#!/bin/bash
+set -euo pipefail
+: "${REPORT_TO:?}" "${MSMTP_CONFIG:?}" "${SERVICE_RESULT:?}" "${RUNTIME_DIRECTORY:?}"
+
+status=FAILED
+body='Check the backup unit journal. Use the last verified recovery point.'
+if [[ $SERVICE_RESULT == success && -s $RUNTIME_DIRECTORY/verified ]]; then
+    status=OK
+    body=$(cat "$RUNTIME_DIRECTORY/verified")
+fi
+if ! printf 'To: %s\nSubject: Finance Lab %s backup %s\n\n%s\n' "$REPORT_TO" "$1" "$status" "$body" |
+    msmtp --file="$MSMTP_CONFIG" -- "$REPORT_TO"; then
+    echo 'Backup report could not be sent.' >&2
+    exit 1
+fi
+[[ $status == OK ]]

@@ -1,0 +1,11 @@
+{
+  "Rules": [
+    {
+      "ID": "expire-database-backups",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "database/" },
+      "Expiration": { "Days": 28 },
+      "AbortIncompleteMultipartUpload": { "DaysAfterInitiation": 1 }
+    }
+  ]
+}

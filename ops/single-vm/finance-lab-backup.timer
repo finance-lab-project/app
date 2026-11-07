@@ -1,0 +1,11 @@
+[Unit]
+Description=Weekly Finance Lab database backup
+
+[Timer]
+OnCalendar=Sun *-*-* 03:00:00 Europe/Moscow
+AccuracySec=1s
+Persistent=true
+Unit=finance-lab-backup@weekly.service
+
+[Install]
+WantedBy=timers.target

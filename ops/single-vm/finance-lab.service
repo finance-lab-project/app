@@ -1,0 +1,23 @@
+[Unit]
+Description=Finance Lab Jetty application
+Requires=postgresql@18-main.service
+After=postgresql@18-main.service
+
+[Service]
+User=finance_app
+EnvironmentFile=/etc/finance-lab/application.env
+WorkingDirectory=/srv/finance-lab/current/jetty-base
+ExecStart=/srv/finance-lab/current/jdk/bin/java -Xms64m -Xmx256m \
+    -jar /srv/finance-lab/current/jetty-home/start.jar /srv/finance-lab/current/config/jetty-auth.xml \
+    jetty.http.host=127.0.0.1 jetty.http.port=18083 jetty.httpConfig.forwardedOnly=true \
+    jetty.server.stopAtShutdown=true jetty.server.stopTimeout=5000
+TimeoutStopSec=15
+Restart=on-failure
+UMask=0077
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

@@ -8,6 +8,7 @@ Java/Vaadin modular monolith without Spring, backed by PostgreSQL Anchor Modelin
 - [Runtime version pins and reproducible compatibility spike](docs/runtime-stack.md)
 - [Application build, configuration, CI and immutable artifacts](docs/build.md)
 - [Configured account, session boundary and operator recovery](docs/authentication.md)
+- [Single-VM deployment, backup, restore and rollback runbook](docs/single-vm.md)
 - [Current release plan and issue index](docs/roadmap.md)
 - [Issues](https://github.com/finance-lab-project/app/issues)
 

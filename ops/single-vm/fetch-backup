@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+umask 077
+
+if [[ $# != 3 || ! $2 =~ ^[0-9a-f]{64}$ ]]; then
+    echo 'Usage: fetch-backup OBJECT_KEY EXPECTED_SHA256 NEW_PRIVATE_DIRECTORY' >&2
+    exit 2
+fi
+key=$1 digest=$2 work=$3
+: "${S3_ENDPOINT:?}" "${BACKUP_BUCKET:?}" "${AGE_IDENTITY_FILE:?}"
+
+# The caller supplies a new directory on the operator's encrypted recovery disk.
+mkdir -m 0700 -- "$work"
+trap 'rm -f -- "$work/ciphertext" "$work/partial.dump"' EXIT
+aws --endpoint-url "$S3_ENDPOINT" s3 cp "s3://$BACKUP_BUCKET/$key" "$work/ciphertext" --only-show-errors
+if ! printf '%s  %s\n' "$digest" "$work/ciphertext" | sha256sum --check --status; then
+    echo 'Downloaded ciphertext does not match the verified SHA-256.' >&2
+    exit 1
+fi
+age --decrypt -i "$AGE_IDENTITY_FILE" -o "$work/partial.dump" "$work/ciphertext"
+pg_restore --list "$work/partial.dump" > /dev/null
+mv -- "$work/partial.dump" "$work/database.dump"
