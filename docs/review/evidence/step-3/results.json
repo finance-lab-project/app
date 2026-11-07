@@ -1,0 +1,403 @@
+{
+  "schema_version": 1,
+  "observation_date": "2026-11-07",
+  "timezone": "Europe/Moscow",
+  "source_baseline": {
+    "app": "f78682778eebed86730ec457f63c96648f19370d",
+    "budget": "43d86d28965a241cd45f7938c1adfb2ec50f8132",
+    "orm": "8daaf91d07d2e30b563322b22a0c6da7545578e5"
+  },
+  "environment": {
+    "os_architecture": "macOS arm64",
+    "java": "27.0.1.0.3",
+    "maven": "3.10.0",
+    "node": "24.22.2",
+    "npm": "11.19.1",
+    "jetty": "12.1.14 EE11",
+    "postgresql_image": "postgres:18.6",
+    "playwright_java": "1.64.0",
+    "browser": "Chrome Headless Shell 156.0.8078.4 / Playwright revision 1248",
+    "tls": "isolated self-signed test certificate"
+  },
+  "budget_unit": [
+    {
+      "name": "org.financelab.budget.adapter.presentation.RussianBudgetFormatTest",
+      "tests": 93,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "acceptsExactMoneyContract(String, String)[1]",
+        "acceptsExactMoneyContract(String, String)[2]",
+        "acceptsExactMoneyContract(String, String)[3]",
+        "acceptsExactMoneyContract(String, String)[4]",
+        "acceptsExactMoneyContract(String, String)[5]",
+        "acceptsExactMoneyContract(String, String)[6]",
+        "acceptsExactMoneyContract(String, String)[7]",
+        "acceptsExactMoneyContract(String, String)[8]",
+        "acceptsExactMoneyContract(String, String)[9]",
+        "acceptsExactMoneyContract(String, String)[10]",
+        "acceptsExactMoneyContract(String, String)[11]",
+        "acceptsExactMoneyContract(String, String)[12]",
+        "acceptsExactMoneyContract(String, String)[13]",
+        "acceptsExactMoneyContract(String, String)[14]",
+        "acceptsExactMoneyContract(String, String)[15]",
+        "acceptsExactMoneyContract(String, String)[16]",
+        "acceptsExactMoneyContract(String, String)[17]",
+        "acceptsExactMoneyContract(String, String)[18]",
+        "acceptsExactMoneyContract(String, String)[19]",
+        "acceptsExactMoneyContract(String, String)[20]",
+        "acceptsExactMoneyContract(String, String)[21]",
+        "acceptsExactMoneyContract(String, String)[22]",
+        "acceptsExactMoneyContract(String, String)[23]",
+        "acceptsExactMoneyContract(String, String)[24]",
+        "acceptsExactMoneyContract(String, String)[25]",
+        "acceptsExactMoneyContract(String, String)[26]",
+        "russianPresentationIsIndependentOfMachineDefaults",
+        "onlyEmptyOrAcceptedSpacesAreUnset(String)[1]",
+        "onlyEmptyOrAcceptedSpacesAreUnset(String)[2]",
+        "onlyEmptyOrAcceptedSpacesAreUnset(String)[3]",
+        "onlyEmptyOrAcceptedSpacesAreUnset(String)[4]",
+        "onlyEmptyOrAcceptedSpacesAreUnset(String)[5]",
+        "trimsOnlyTheAcceptedSpaces",
+        "rejectsNonContractOrImpossibleDates(String)[1]",
+        "rejectsNonContractOrImpossibleDates(String)[2]",
+        "rejectsNonContractOrImpossibleDates(String)[3]",
+        "rejectsNonContractOrImpossibleDates(String)[4]",
+        "rejectsNonContractOrImpossibleDates(String)[5]",
+        "rejectsNonContractOrImpossibleDates(String)[6]",
+        "rejectsNonContractOrImpossibleDates(String)[7]",
+        "rejectsNonContractOrImpossibleDates(String)[8]",
+        "rejectsNonContractOrImpossibleDates(String)[9]",
+        "rejectsNonContractOrImpossibleDates(String)[10]",
+        "rejectsNonContractOrImpossibleDates(String)[11]",
+        "rejectsNonContractOrImpossibleDates(String)[12]",
+        "rejectsNonContractOrImpossibleDates(String)[13]",
+        "rejectsNonContractOrImpossibleDates(String)[14]",
+        "rejectsNonContractOrImpossibleDates(String)[15]",
+        "rejectsNonContractOrImpossibleDates(String)[16]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[1]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[2]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[3]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[4]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[5]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[6]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[7]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[8]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[9]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[10]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[11]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[12]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[13]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[14]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[15]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[16]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[17]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[18]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[19]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[20]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[21]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[22]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[23]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[24]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[25]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[26]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[27]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[28]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[29]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[30]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[31]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[32]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[33]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[34]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[35]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[36]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[37]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[38]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[39]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[40]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[41]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[42]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[43]",
+        "rejectsInvalidAndIncompleteMoneyWithoutRounding(String)[44]"
+      ]
+    },
+    {
+      "name": "org.financelab.budget.application.BudgetServiceTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "everyOperationUsesTheServerOwnerAndRechecksIdentity"
+      ]
+    },
+    {
+      "name": "org.financelab.budget.domain.BudgetAmountTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "distinguishesUnsetFromZeroAndNormalizesExactValues",
+        "allTypedEntryPointsRejectExcessScaleAndRange(String)[1]",
+        "allTypedEntryPointsRejectExcessScaleAndRange(String)[2]",
+        "allTypedEntryPointsRejectExcessScaleAndRange(String)[3]",
+        "allTypedEntryPointsRejectExcessScaleAndRange(String)[4]",
+        "allTypedEntryPointsRejectExcessScaleAndRange(String)[5]",
+        "allTypedEntryPointsRejectExcessScaleAndRange(String)[6]",
+        "allTypedEntryPointsRejectExcessScaleAndRange(String)[7]"
+      ]
+    },
+    {
+      "name": "org.financelab.budget.domain.BudgetTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "exactTotalsSeparateInvestmentsAndAllowNegativeRemainingAndOversizedTotals",
+        "amountsCanBeSetToZeroClearedAndSetAgainWithoutChangingLineIdentity",
+        "archivedExistingLinesIncludingZeroAndUnsetStayVisibleEditableAndInTotals",
+        "catalogChangesApplyAcrossMonthsWithoutMutatingSnapshotsOrAmounts",
+        "rejectsMissingCategoryForeignOwnerAndInvalidLineMembership",
+        "createsOneIncomeAndInvestmentWithVariableSpendingAndExplicitRub"
+      ]
+    },
+    {
+      "name": "org.financelab.budget.domain.CategoryCatalogTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "initializationPreservesExistingEditedArchivedAndEmptyCatalogs",
+        "seedsTheAgreedLabelsAndOrderWithUniqueV4Ids",
+        "rejectsCorruptCatalogAndForeignOwner",
+        "labelsMayDuplicateAndArchiveNeverReleasesIdentity",
+        "reorderRequiresEveryIdentityExactlyOnceAndRetainsArchiveStatus",
+        "blankLabelsCannotBeAddedOrRenamed(String)[1]",
+        "blankLabelsCannotBeAddedOrRenamed(String)[2]",
+        "blankLabelsCannotBeAddedOrRenamed(String)[3]",
+        "blankLabelsCannotBeAddedOrRenamed(String)[4]",
+        "blankLabelsCannotBeAddedOrRenamed(String)[5]",
+        "blankLabelsCannotBeAddedOrRenamed(String)[6]"
+      ]
+    }
+  ],
+  "budget_postgresql": [
+    {
+      "name": "org.financelab.budget.adapter.postgres.PostgresBudgetStoreIT",
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "competingInitializersCreateOnlyOneCompleteCatalog",
+        "changedSaveIsOneRevisionAndClearThenSameAmountRemainsInHistory",
+        "partialBudgetWriteRollsBackFactsGuardAndRevision",
+        "multiQueryCurrentReadUsesOneSnapshotWithoutBlockingWriters",
+        "firstSaveWritesOnlyFinalInitialStatesAndNoopDoesNotWrite",
+        "catalogAndBudgetRacesHoldCatalogLockUntilCompletion(boolean)[1]",
+        "catalogAndBudgetRacesHoldCatalogLockUntilCompletion(boolean)[2]",
+        "confirmedCommitWithCleanupFailureStaysSavedEvenIfDiagnosticsSinkThrows",
+        "categoryEditsPinOldLabelsAndOrderAndAddLinesOnlyOnExplicitSave(boolean)[1]",
+        "categoryEditsPinOldLabelsAndOrderAndAddLinesOnlyOnExplicitSave(boolean)[2]",
+        "lostCommitAcknowledgementIsUnknownAndNeverRetried(boolean)[1]",
+        "lostCommitAcknowledgementIsUnknownAndNeverRetried(boolean)[2]",
+        "initializationIsAtomicOnceOnlyAndPreservesEditedArchivedDefaults",
+        "competingFirstSavesAndStaleTabsHaveOneWinner(boolean)[1]",
+        "competingFirstSavesAndStaleTabsHaveOneWinner(boolean)[2]",
+        "catalogCommandsAlsoReportUnknownWithoutRetries(boolean)[1]",
+        "catalogCommandsAlsoReportUnknownWithoutRetries(boolean)[2]",
+        "realDeferredPairingFailureRollsBackWholeSave(String)[1]",
+        "realDeferredPairingFailureRollsBackWholeSave(String)[2]",
+        "realDeferredPairingFailureRollsBackWholeSave(String)[3]",
+        "realDeferredPairingFailureRollsBackWholeSave(String)[4]",
+        "guestTransferReplaysANewMonthAndRequiresReviewBeforeChangingAnExistingOne",
+        "databaseClockCoordinatesAreSharedAndMonotonicWithEqualAndBackwardReadings",
+        "catalogCannotDeleteRestoreOrReuseAnotherOwnersCategoryIdentity",
+        "transferKeepsArchivedSpendingInItsOwnCategoryAndMonth",
+        "invalidShapesAndForeignOwnersNeverChangeFacts",
+        "catalogOnlyEditsDoNotMakeBudgetNoopARevisionAndStaleCatalogStillConflicts",
+        "failedInitializationLeavesNoClaimOrPartialCategories",
+        "partialCatalogCommandRollsBackFactsGuardAndRevision"
+      ]
+    }
+  ],
+  "app_unit_latest_build": [
+    {
+      "name": "org.financelab.app.ApplicationConfigTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "requiresHttpsOriginAndRejectsBootstrapBypass",
+        "validatesDisplayZoneWithoutDependingOnHostLocale"
+      ]
+    },
+    {
+      "name": "org.financelab.app.OwnerIdentityTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "derivesOwnerOnlyFromContainerPrincipal"
+      ]
+    },
+    {
+      "name": "org.financelab.auth.ConfiguredAccountTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "rejectsMissingMalformedWeakOrExposedConfigurationWithoutLeakingValues",
+        "throttlesAcrossUsernamesAndRecoversAfterCooldown",
+        "disablesContainerFormBypass",
+        "verifiesOnlyConfiguredAccountAndSuppliesStableOwner"
+      ]
+    }
+  ],
+  "app_packaged_war": {
+    "name": "org.financelab.app.WarIT",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "cases": [
+      "standaloneProductionWarHasProvenanceAndHandlesServerEvents"
+    ]
+  },
+  "app_standard_journeys": {
+    "name": "org.financelab.app.PlannerJourneyIT",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "cases": [
+      "guestToCloudAndSecondBrowser",
+      "sameCategoryAndHistoryToolsInGuestAndAccount"
+    ]
+  },
+  "review_cases": {
+    "name": "org.financelab.app.WorkflowReviewIT",
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "cases": [
+      "confirmedAccountSaveFollowedByReadFailureBlocksTheEditor",
+      "sharedGuestValidationNavigationAndHistory",
+      "interruptedReplayAndUserConfirmedRetry(Fault)[1]",
+      "interruptedReplayAndUserConfirmedRetry(Fault)[2]",
+      "interruptedReplayAndUserConfirmedRetry(Fault)[3]",
+      "staleAccountAndCatalogSavesKeepDraftsWithoutAppendingHistory",
+      "localAcknowledgementFailureKeepsTheCopyAndRetryDoesNotDuplicateHistory",
+      "rapidlyReopenedDialogConsumesThePreviousCloseEvent"
+    ]
+  },
+  "characterization_note": "Passing issue-characterization cases reproduce the documented behavior; they do not establish that the issue is fixed.",
+  "navigation_reentry_close_events": [
+    {
+      "value": "stay",
+      "open": true
+    },
+    {
+      "value": "discard",
+      "open": false
+    }
+  ],
+  "replay_outcomes": {
+    "failed_before": {
+      "fault": "FAILED_BEFORE",
+      "statusAfterInterruption": "409",
+      "committedPrefix": "1",
+      "writeAttemptsBeforeExplicitConfirmation": "2",
+      "accountIncomeHistoryAfterRetry": "[100, 300]",
+      "latestIncome": "300",
+      "copiedHistoryOnRetry": "false"
+    },
+    "unknown_after": {
+      "fault": "UNKNOWN_AFTER",
+      "statusAfterInterruption": "409",
+      "committedPrefix": "2",
+      "writeAttemptsBeforeExplicitConfirmation": "2",
+      "accountIncomeHistoryAfterRetry": "[100, 200, 300]",
+      "latestIncome": "300",
+      "copiedHistoryOnRetry": "false"
+    },
+    "unknown_before": {
+      "fault": "UNKNOWN_BEFORE",
+      "statusAfterInterruption": "409",
+      "committedPrefix": "1",
+      "writeAttemptsBeforeExplicitConfirmation": "2",
+      "accountIncomeHistoryAfterRetry": "[100, 300]",
+      "latestIncome": "300",
+      "copiedHistoryOnRetry": "false"
+    }
+  },
+  "artifact_sha256": {
+    "application/target/finance-lab.war": "a2a81f71a567587934cf7c830b3adf2b4c10d4fa1e9004f9fc60fbfdba27307a",
+    "authentication/target/authentication-0.1.0.jar": "661f6f65ccbde13e31cc432870ce16bb8e0e466cede7b8235bce8dd505645a24",
+    "authentication/target/lib/password4j-1.8.4.jar": "d1406a158533b65bda7c20cebf7bf2a9a0626f8931fd1dc3d39243af5849edf5",
+    "config/jetty-auth.xml": "fd8b7ab5d9393f7e1e945e6df0f384c4ac96a8da878d3dbc0ffaf28773cfb494",
+    "build-parent/pom.xml": "aa61d398a42e3df231b696532a545872296bba8d039b453cf5ad98f5b284a34f"
+  },
+  "review_reproduction_sha256": {
+    "WorkflowReviewIT.java": "6113cc8731c9b5084e40ecda98e626df17decbb4a1c67a1aacd41f13870cdfbf",
+    "run.sh": "ad9fe0227153d71d9f1cb89db90574dd8f7a9fdeb8542149c1a075dfb8473490"
+  },
+  "working_trees": {
+    "app": "clean",
+    "budget": "clean",
+    "orm": "clean"
+  },
+  "production_correspondence": "unverified; no deployment manifest available",
+  "authentication_phases": [
+    {
+      "phase": "default",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "phase": "rotated",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "phase": "idle",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "phase": "absolute",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "matches_step_1_ci_manifest": true,
+  "reproduction_roles": {
+    "confirmedAccountSaveFollowedByReadFailureBlocksTheEditor": "issue-characterization",
+    "sharedGuestValidationNavigationAndHistory": "assurance",
+    "interruptedReplayAndUserConfirmedRetry(Fault)[1]": "recovery-characterization",
+    "interruptedReplayAndUserConfirmedRetry(Fault)[2]": "recovery-characterization",
+    "interruptedReplayAndUserConfirmedRetry(Fault)[3]": "recovery-characterization",
+    "staleAccountAndCatalogSavesKeepDraftsWithoutAppendingHistory": "assurance",
+    "localAcknowledgementFailureKeepsTheCopyAndRetryDoesNotDuplicateHistory": "assurance",
+    "rapidlyReopenedDialogConsumesThePreviousCloseEvent": "issue-characterization"
+  },
+  "screenshot_sha256": "2748ad2a1b689e31b1bd4a2c1b83098ed2cf7fb6bbbc71801ca974fd44f3126a",
+  "source_trees_unchanged": true,
+  "final_workflow_runner_exit_code": 0
+}
