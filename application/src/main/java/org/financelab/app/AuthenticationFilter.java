@@ -9,10 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Set;
 
 /** Default-deny boundary for views, UIDL, history, downloads and future endpoints. */
 public final class AuthenticationFilter implements Filter {
     static final String AUTHENTICATED_AT = AuthenticationFilter.class.getName() + ".authenticatedAt";
+
+    private static final Set<String> PUBLIC_READS = Set.of("/local", "/privacy", "/ui/planner.css",
+            "/ui/local.js", "/ui/store.js", "/ui/login.js");
 
     @Override
     public void doFilter(ServletRequest input, ServletResponse output, FilterChain chain) throws IOException, ServletException {
@@ -36,12 +40,17 @@ public final class AuthenticationFilter implements Filter {
             }
         }
         // Compare the raw URI: path parameters, aliases and encoded variants are not anonymous.
-        if (request.getRequestURI().equals(request.getContextPath() + "/login")) {
+        String path = request.getRequestURI().substring(request.getContextPath().length());
+        boolean read = "GET".equals(request.getMethod()) || "HEAD".equals(request.getMethod());
+        if (path.equals("/login") || read && PUBLIC_READS.contains(path)) {
             chain.doFilter(request, response);
             return;
         }
         if (session == null || session.getAttribute(AUTHENTICATED_AT) == null || request.getUserPrincipal() == null) {
-            if ("GET".equals(request.getMethod()) && request.getQueryString() == null
+            if (read && path.equals("/") && request.getQueryString() == null) {
+                response.setStatus(303);
+                response.setHeader("Location", request.getContextPath() + "/local");
+            } else if ("GET".equals(request.getMethod()) && request.getQueryString() == null
                     && "document".equals(request.getHeader("Sec-Fetch-Dest"))) {
                 response.setStatus(303);
                 response.setHeader("Location", request.getContextPath() + "/login");

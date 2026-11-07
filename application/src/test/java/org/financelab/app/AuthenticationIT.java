@@ -23,11 +23,11 @@ class AuthenticationIT {
             var client = client(playwright);
             try {
                 if (phase.equals("rotated")) {
-                    var stolen = client.get("/", RequestOptions.create().setHeader("Cookie", Files.readString(Path.of("target/old-session-cookie"))));
+                    var stolen = client.get("/transfer", RequestOptions.create().setHeader("Cookie", Files.readString(Path.of("target/old-session-cookie"))));
                     assertEquals(401, stolen.status());
                     assertEquals(401, login(client, PASSWORD).status());
                     assertEquals(303, login(client, ROTATED).status());
-                    assertEquals(200, client.get("/").status());
+                    assertEquals(200, client.get("/transfer").status());
                     return;
                 }
                 if (phase.equals("idle") || phase.equals("absolute")) {
@@ -36,10 +36,14 @@ class AuthenticationIT {
                     if (phase.equals("absolute")) {
                         while (System.nanoTime() < until) { client.get("/"); Thread.sleep(200); }
                     } else Thread.sleep(3000);
-                    assertEquals(401, client.get("/").status());
+                    assertEquals(401, client.get("/transfer").status());
                     return;
                 }
-                for (String path : new String[]{"/", "/history", "/api/budget", "/download", "/VAADIN/build/test.js", "/?v-r=uidl", "/login;alias"}) {
+                assertEquals(303, client.get("/", RequestOptions.create().setMaxRedirects(0)).status());
+                assertEquals(200, client.get("/local").status());
+                assertEquals(200, client.get("/privacy").status());
+                assertEquals(401, client.post("/transfer").status());
+                for (String path : new String[]{"/transfer", "/history", "/api/budget", "/download", "/VAADIN/build/test.js", "/?v-r=uidl", "/login;alias"}) {
                     assertEquals(401, client.get(path).status(), path);
                 }
                 assertEquals(403, client.get(System.getenv("APP_HTTP_BASE_URL") + "login").status());
@@ -60,7 +64,11 @@ class AuthenticationIT {
                 assertEquals(303, login(client, PASSWORD).status());
                 String authenticatedCookie = cookie(client);
                 assertNotEquals(anonymousCookie, authenticatedCookie);
-                assertEquals(401, client.get("/", RequestOptions.create().setHeader("Cookie", anonymousCookie)).status());
+                assertEquals(403, client.post("/transfer", RequestOptions.create()
+                        .setHeader("Origin", System.getenv("APP_PUBLIC_ORIGIN")).setHeader("X-CSRF-Token", token)).status());
+                assertEquals(403, client.post("/transfer", RequestOptions.create()
+                        .setHeader("Origin", "https://foreign.invalid")).status());
+                assertEquals(401, client.get("/transfer", RequestOptions.create().setHeader("Cookie", anonymousCookie)).status());
                 // Neither request parameters nor headers alter the server-side owner boundary.
                 assertEquals(200, client.get("/?owner_id=20000000-0000-4000-8000-000000000002",
                         RequestOptions.create().setHeader("X-Owner-ID", "20000000-0000-4000-8000-000000000002")).status());

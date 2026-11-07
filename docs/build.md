@@ -3,7 +3,7 @@
 Implements [app #3](https://github.com/finance-lab-project/app/issues/3) and the
 [app #4 authentication boundary](authentication.md), using the
 [verified runtime pins](runtime-stack.md). The protected production-built WAR
-contains the initial page; business modules and deployment remain separate.
+contains the guest planner, configured login and the authenticated Budget workspace.
 
 ## Assembly and build
 
@@ -15,21 +15,12 @@ contains the initial page; business modules and deployment remain separate.
   Argon2id verifier, packaged separately from the WAR and Jetty itself.
 - `application/`: `org.financelab:application:war:0.1.0`, assembled as
   `application/target/finance-lab.war`. Vaadin 25.3.5, Servlet 6.1 provided by
-  Jetty 12.1.14 EE11 and runtime pgJDBC 42.7.14. No Spring, ORM/Budget artifacts,
-  Portfolio/FIRE, reporting, workflow or messaging integrations.
-
-ORM/Budget have no published implementation artifacts yet; do not invent
-coordinates or require sibling source trees. When delivered, pin their exact
-release versions in the application's dependency management and record each
-GAV, source repository, full commit and artifact SHA-256 in its release manifest.
-Do not add module dependencies to the parent or depend on the application WAR.
-
-Flyway core and PostgreSQL extension **13.12.0** are reserved in application
-dependency management, selected from [publisher release metadata](https://repo.maven.apache.org/maven2/org/flywaydb/flyway-core/maven-metadata.xml)
-on 2026-11-05. They are not runtime dependencies yet: there are no module schemas
-or migrations in this increment. PostgreSQL 18.6 compatibility and migration
-ordering must be checked with the first actual module migration before adding
-the runner. This is a version choice, not a claim that migrations ran.
+  Jetty 12.1.14 EE11, runtime pgJDBC 42.7.14 and the Budget/ORM libraries.
+- Run `scripts/prepare-budget.sh` before the first build. It builds Budget 0.1.0 at
+  `94fe727e54eee105699078fe286d6f370d9426e4` and its pinned ORM 0.1.0 at
+  `8daaf91d07d2e30b563322b22a0c6da7545578e5`. The WAR test checks both embedded source revisions.
+- Flyway 13.12.0 is packaged for the separate administrative migration command in the [deployment runbook](single-vm.md).
+  The runtime uses a PostgreSQL account with Budget DML privileges.
 
 Install the exact toolchain from the runtime report, then run from a clean Git
 checkout (synthetic installation paths):
@@ -38,6 +29,7 @@ checkout (synthetic installation paths):
 export JAVA_HOME=/opt/runtime-tools/jdk-27.0.1.0.3
 export JETTY_HOME=/opt/runtime-tools/jetty-home-12.1.14
 export PATH="/opt/runtime-tools/apache-maven-3.10.0/bin:/opt/runtime-tools/node-v24.22.2/bin:$JAVA_HOME/bin:$PATH"
+scripts/prepare-budget.sh
 scripts/verify.sh
 ```
 
@@ -49,9 +41,7 @@ Chromium and uses a disposable self-signed localhost TLS connector. It checks
 fail-closed startup, login/logout, server-side events/reload, CSRF, endpoint
 protection, throttling, idle/absolute expiry and credential rotation across a JVM
 restart. SIGTERM must stop the listeners within 15 seconds. Startup polls are bounded to 90
-seconds each; the CI job has an overall 25-minute deadline. Downloads need
-network access. No database is created or contacted by this application check.
-The real PostgreSQL transaction probe remains in `spikes/runtime-stack`.
+seconds each; the CI job has an overall 25-minute deadline. Downloads need network access. The browser journey verifies local Save, sign-in, transfer, a second browser and conflict resolution against disposable PostgreSQL 18.6 (Docker required).
 
 Direct development builds use:
 

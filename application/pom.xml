@@ -13,7 +13,6 @@
         <vaadin.ci.build>true</vaadin.ci.build>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
-    <!-- Add only published, immutable ORM/Budget versions here when they exist. -->
     <dependencyManagement><dependencies>
         <dependency><groupId>com.vaadin</groupId><artifactId>vaadin-bom</artifactId><version>${vaadin.version}</version><type>pom</type><scope>import</scope></dependency>
         <dependency><groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.7.14</version></dependency>
@@ -22,6 +21,9 @@
     </dependencies></dependencyManagement>
     <dependencies>
         <dependency><groupId>com.vaadin</groupId><artifactId>vaadin-core</artifactId></dependency>
+        <dependency><groupId>org.financelab</groupId><artifactId>budget</artifactId><version>0.1.0</version></dependency>
+        <dependency><groupId>org.flywaydb</groupId><artifactId>flyway-core</artifactId></dependency>
+        <dependency><groupId>org.flywaydb</groupId><artifactId>flyway-database-postgresql</artifactId></dependency>
         <dependency><groupId>jakarta.servlet</groupId><artifactId>jakarta.servlet-api</artifactId><version>6.1.0</version><scope>provided</scope></dependency>
         <dependency><groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><scope>runtime</scope></dependency>
         <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><version>6.1.3</version><scope>test</scope></dependency>

@@ -19,6 +19,8 @@ jobs:
           persist-credentials: false
       - name: Install checksum-verified runtime pins
         run: scripts/ci-tools.sh
+      - name: Build pinned Budget and ORM modules
+        run: scripts/prepare-budget.sh
       - name: Clean builds, independent parent consumer and Jetty lifecycle
         env:
           PLAYWRIGHT_INSTALL_ARGS: install --with-deps chromium

@@ -14,6 +14,7 @@ export APP_BASE_URL="https://localhost:$tls_port/" APP_PUBLIC_ORIGIN="https://lo
 temporary=$(mktemp -d)
 export APP_JETTY_BASE="$temporary/jetty-base"
 jetty_pid=""
+database=""
 stop_jetty() {
     kill "$jetty_pid" 2>/dev/null || true
     for attempt in {1..15}; do
@@ -32,6 +33,7 @@ cleanup() {
         kill -KILL "$jetty_pid" 2>/dev/null || true
         wait "$jetty_pid" 2>/dev/null || true
     fi
+    if [[ -n "$database" ]]; then docker rm -f "$database" >/dev/null; fi
     rm -rf "$temporary"
 }
 trap cleanup EXIT
@@ -60,6 +62,26 @@ jetty.sslContext.keyStorePath=$temporary/test.p12
 jetty.sslContext.keyStorePassword=synthetic-test-only
 jetty.sslContext.keyManagerPassword=synthetic-test-only
 EOF
+# Isolated PostgreSQL. Run the packaged migration with separate credentials, then test the runtime grants.
+database=$(docker run -d --rm --tmpfs /var/lib/postgresql -p 127.0.0.1::5432 \
+    -e POSTGRES_PASSWORD=synthetic-admin -e POSTGRES_DB=finance_lab postgres:18.6 -c timezone=UTC)
+for attempt in {1..60}; do
+    if docker exec "$database" pg_isready -h 127.0.0.1 -U postgres -d finance_lab >/dev/null 2>&1; then break; fi
+    sleep 1
+done
+dbport=$(docker port "$database" 5432/tcp | awk -F: '{print $NF}')
+psql_admin() { docker exec -i "$database" psql -X -v ON_ERROR_STOP=1 -U postgres -d finance_lab "$@"; }
+psql_admin < ops/single-vm/roles.sql
+psql_admin <<'SQL'
+ALTER DATABASE finance_lab OWNER TO finance_owner;
+ALTER ROLE finance_app PASSWORD 'synthetic-runtime';
+ALTER ROLE finance_migrate PASSWORD 'synthetic-migration';
+SQL
+export APP_DB_URL="jdbc:postgresql://127.0.0.1:$dbport/finance_lab" APP_DB_USER=finance_app APP_DB_PASSWORD=synthetic-runtime
+FLYWAY_URL="$APP_DB_URL" FLYWAY_USER=finance_migrate FLYWAY_PASSWORD=synthetic-migration \
+    "$JAVA_HOME/bin/java" -cp 'application/target/finance-lab/WEB-INF/classes:application/target/finance-lab/WEB-INF/lib/*' \
+    org.financelab.app.BudgetMigration
+psql_admin < ops/single-vm/budget-grants.sql
 # A missing account configuration must never yield a usable application.
 env -u APP_MODE -u APP_ACCOUNT_FILE scripts/run.sh > target/jetty-unconfigured.log 2>&1 &
 jetty_pid=$!
@@ -94,6 +116,7 @@ integration_test() {
 }
 start_configured
 integration_test WarIT
+integration_test PlannerJourneyIT
 integration_test AuthenticationIT
 stop_jetty
 "$JAVA_HOME/bin/java" -cp "$account_classpath" org.financelab.auth.SyntheticAccountFile "$temporary/rotated.properties" rotated

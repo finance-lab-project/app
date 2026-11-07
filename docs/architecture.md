@@ -129,7 +129,7 @@ rotate the session ID on login, enforce explicit expiry, and invalidate it on
 logout. Keep Vaadin's request protections enabled, protect login/logout mutations
 against CSRF, and throttle failed login attempts. Authentication gates business
 views, history, downloads and any data endpoints; hiding navigation is insufficient.
-Only the login flow and the static resources it requires are anonymous. Public
+The guest planner, privacy notice, login form and their allowlisted assets are anonymous. Guest amounts stay in browser storage until an authenticated transfer. See the [guest and cloud contract](guest-and-cloud.md). Public
 status responses, if needed, contain no configuration or financial information.
 
 Map the authenticated principal to the configured owner ID on the server.

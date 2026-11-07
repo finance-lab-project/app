@@ -10,7 +10,7 @@ account and verifies Argon2id using Password4j 1.8.4. Disable Jetty's separate
 application's CSRF checks. Cache the container identity without the password.
 The WAR stays an ordinary Vaadin production WAR; no Spring or identity service.
 
-Protect every request by default, with only the exact login endpoint anonymous.
+Protect every request by default. Allow anonymous reads of the local-only guest planner, privacy notice and their exact assets, plus the login form and its CSRF-protected POST. The root directs guests to the local planner. Account budgets, transfer and Vaadin RPC require the configured owner.
 The plain Russian HTML login form needs no anonymous Vaadin resources. Existing
 Vaadin request/CSRF protection stays enabled. The Servlet principal is the stable
 owner UUID and supplies identity to server-side business services.

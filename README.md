@@ -4,6 +4,7 @@ Java/Vaadin modular monolith without Spring, backed by PostgreSQL Anchor Modelin
 
 ## Start here
 
+- [Guest, sign-in, cloud transfer and privacy](docs/guest-and-cloud.md)
 - [Architecture and agreed contracts](docs/architecture.md)
 - [Runtime version pins and reproducible compatibility spike](docs/runtime-stack.md)
 - [Application build, configuration, CI and immutable artifacts](docs/build.md)
@@ -32,6 +33,6 @@ Hosting plan: one Yandex Cloud VM for proxy, Jetty/Vaadin and PostgreSQL; 2 shar
 
 ## Delivery status
 
-The Maven parent, Java/Vaadin WAR assembly and configured single-account session boundary are implemented; ORM/Budget integration and deployment remain separate work. The [build guide](docs/build.md) covers local verification, configured startup, GitHub Actions checks and the selected GitLab Maven registry. The registry is not provisioned and no artifacts are published. The [runtime report](docs/runtime-stack.md) records the compatibility spike; it does not establish application capacity.
+The assembled WAR serves the local guest planner, login and authenticated PostgreSQL Budget workspace. The [build guide](docs/build.md) covers local verification, configured startup, GitHub Actions checks and the selected GitLab Maven registry. The registry is not provisioned and no artifacts are published. The [runtime report](docs/runtime-stack.md) records the compatibility spike; it does not establish application capacity.
 
 Issues carry scoped acceptance criteria and dependencies. Each repository has a private project board. Board status is a planning signal, not permission to implement, merge, deploy or spend. There are no separate learning issues in the new backlog. Use synthetic data and keep secrets out of repositories, issues and logs.
