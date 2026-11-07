@@ -53,7 +53,7 @@ protected off-VM copy of the file and its stable owner UUID.
 
 ```sh
 umask 077
-java -cp "authentication/target/authentication-0.1.0.jar:authentication/target/lib/*:$JETTY_HOME/lib/*" \
+java -cp "authentication/target/authentication-0.1.0.jar:authentication/target/lib/*:$JETTY_HOME/lib/*:$JETTY_HOME/lib/logging/*" \
   org.financelab.auth.AccountFileTool /run/finance-lab/account.next.properties
 ```
 

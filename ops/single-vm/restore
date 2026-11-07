@@ -1,0 +1,13 @@
+#!/bin/bash
+set -euo pipefail
+
+if [[ $# != 1 || ! $1 =~ ^[a-z][a-z0-9_]{0,62}$ ]]; then
+    echo 'Usage: restore NEW_DATABASE_NAME < verified.dump' >&2
+    exit 2
+fi
+: "${PGHOST:?Select the recovery cluster}" "${PGUSER:?}" "${DB_OWNER:?}"
+
+# Never replace an existing database. Restore original object ownership and ACLs.
+createdb --no-password --template=template0 --owner="$DB_OWNER" "$1"
+pg_restore --no-password --single-transaction --exit-on-error --dbname="$1"
+printf 'Restored %s. Verify grants, application state and history before cutover.\n' "$1"

@@ -1,0 +1,29 @@
+#!/bin/bash
+set -euo pipefail
+umask 077
+
+case ${1:-} in
+    weekly|pre-change) reason=$1 ;;
+    *) echo 'Usage: backup weekly|pre-change' >&2; exit 2 ;;
+esac
+: "${PGHOST:?}" "${PGUSER:?}" "${PGDATABASE:?}" "${AGE_RECIPIENT_FILE:?}"
+: "${S3_ENDPOINT:?}" "${BACKUP_BUCKET:?}" "${RUNTIME_DIRECTORY:?}"
+
+work=$(mktemp -d /var/tmp/finance-lab-backup.XXXXXXXX)
+trap 'rm -rf -- "$work"' EXIT
+archive=$work/database.dump.age
+started=$(date -u +%Y%m%dT%H%M%SZ)
+pg_dump --no-password --format=custom --dbname="$PGDATABASE" | age -R "$AGE_RECIPIENT_FILE" > "$archive"
+checksum=$(sha256sum "$archive")
+digest=${checksum%% *}
+key="database/$reason/$started-$digest.dump.age"
+object="s3://$BACKUP_BUCKET/$key"
+
+aws --endpoint-url "$S3_ENDPOINT" s3 cp "$archive" "$object" --only-show-errors
+readback=$(aws --endpoint-url "$S3_ENDPOINT" s3 cp "$object" - --only-show-errors | sha256sum)
+if [[ ${readback%% *} != "$digest" ]]; then
+    echo 'Uploaded ciphertext failed SHA-256 verification.' >&2
+    exit 1
+fi
+printf 'Object key: %s\nSHA-256: %s\n' "$key" "$digest" > "$RUNTIME_DIRECTORY/verified"
+cat "$RUNTIME_DIRECTORY/verified"
