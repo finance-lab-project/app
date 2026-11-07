@@ -101,7 +101,7 @@ deployment validation remain separate work.
 
 The hosting provider, shared application/database VM, online browser access and
 single preconfigured account are confirmed. The endpoint is internet-reachable
-over HTTPS; application data is available only after authentication. A local demo
+over HTTPS. Account data is available after authentication. Guests may save months in their own browser and transfer them after login. A local demo
 without authentication does not satisfy the first-release requirement.
 
 The root application owns a Russian-language login page and servlet-compatible

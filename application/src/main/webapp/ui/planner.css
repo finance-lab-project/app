@@ -38,7 +38,9 @@ h2 { font-size: 1.35rem; line-height: 1.27; letter-spacing: -.025em; margin-bott
 .month, .auth label, .transfer-month label { display: block; font-weight: 600; }
 .month input,.auth input:not([type=hidden]), select { display: block; width: 100%; min-height: 3rem; padding: .55rem .8rem;
   background: white; color: var(--ink); border-radius: .55rem; border: 1px solid #798e83; }
-.month input { margin-top: .3rem; }
+.date-controls { display: flex; gap: .7rem; }
+.month input, .month select { margin-top: .3rem; }
+#year { width: 6.1rem; }
 .planner-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem,.49fr); gap: clamp(1rem,2.5vw,2rem); align-items: start; }
 .summary { grid-column: 2; grid-row: 1; background: var(--pale); color: #103c2e; border-radius: 1.3rem; padding: clamp(1.2rem,3vw,2.2rem); }
 .summary h2 { margin-bottom: .3rem; font-size: 1.05rem; }
@@ -79,6 +81,15 @@ footer { max-width: 75rem; margin: 0 auto; padding: 1rem clamp(1rem,4vw,3rem) 2r
 .cloud .workspace { max-width: 68rem !important; --vaadin-gap-m: .9rem; }
 .workspace > vaadin-horizontal-layout { flex-wrap: wrap; max-width: 100%; }
 .workspace vaadin-button { min-height: 2.75rem; border-radius: 2rem; }
+.workspace vaadin-button:not([theme~=primary]) { color: var(--primary); box-shadow: none; }
+.workspace > vaadin-horizontal-layout:first-of-type { background: #e4ede6; border-radius: 1.6rem; padding: .2rem; gap: .1rem; }
+.workspace > vaadin-horizontal-layout:first-of-type vaadin-button { border: 0; background: transparent; }
+.workspace:has(#income) > vaadin-horizontal-layout:first-of-type vaadin-button:first-child,
+.workspace:has(#add-category) > vaadin-horizontal-layout:first-of-type vaadin-button:nth-child(2),
+.workspace:not(:has(#income, #add-category)):has(> vaadin-vertical-layout h2) > vaadin-horizontal-layout:first-of-type vaadin-button:nth-child(3) {
+  color: #103c2e; background: #c4e7d6; font-weight: 700;
+}
+.workspace vaadin-text-field::part(input-field) { min-height: 2.85rem; border-radius: .55rem; border: 1px solid #81958a; box-shadow: none; }
 .workspace #save { background: var(--primary); color: white; }
 .workspace #save-status { margin: .15rem 0; }
 .workspace #save-status:is([data-state=conflict],[data-state=unknown],[data-state=read-failed]) { color: #90341d; }

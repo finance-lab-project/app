@@ -46,7 +46,8 @@ class PlannerJourneyIT {
             assertThat(first.locator("h1")).hasText("Бюджет на месяц");
             assertThat(button(first, "Сохранить")).isEnabled();
             assertTrue(guest.cookies().isEmpty(), "Guest pages do not set a session cookie");
-            String month = first.locator("#month").inputValue();
+            assertThat(first.locator("#month option:checked")).hasText(java.util.regex.Pattern.compile("[А-Яа-яЁё]+"));
+            String month = first.locator("#year").inputValue() + "-" + first.locator("#month").inputValue();
             guest.setOffline(true);
             first.locator("#spend-1").fill("45,67");
             first.locator("#investment").fill("250");
@@ -65,7 +66,9 @@ class PlannerJourneyIT {
             saveLocally(second, "14000");
             onscreen(second);
             capture(second, "guest-mobile.png");
-            first.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Войти")).click();
+            // Save-and-sign-in protects edits made since the last explicit save.
+            first.locator("#income").fill("12345,67");
+            first.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Сохранить и войти")).click();
             assertThat(first.locator("h1")).hasText("Вход в Finance Lab");
             capture(first, "login.png");
             login(first);

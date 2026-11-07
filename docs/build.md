@@ -66,6 +66,8 @@ APP_ACCOUNT_FILE=/run/finance-lab/account.properties \
 APP_PUBLIC_ORIGIN=https://finance.example.invalid scripts/run.sh
 ```
 
+First apply the packaged migration and export the restricted runtime connection settings `APP_DB_URL`, `APP_DB_USER` and `APP_DB_PASSWORD` from the protected environment described in the [single-VM runbook](single-vm.md).
+
 This starts a separate Jetty process on **127.0.0.1:18083** from the packaged WAR.
 Override the port with `APP_HTTP_PORT` (1–65535). Use `APP_JETTY_BASE` to override
 the default `target/jetty-base`. Verification uses its own disposable base to
@@ -79,9 +81,7 @@ session limits, trusted TLS proxy settings and operator rotation/recovery proced
 are documented in the [authentication guide](authentication.md). Ship the
 authentication JAR, its runtime `lib/` directory and `config/jetty-auth.xml` with
 the WAR. Runtime requires no Maven, Node or npm.
-The Servlet listener owns application configuration, removes it on stop and
-provides a lifecycle seam for actual resources when modules arrive. There are
-no database pools, workers or optional clients to initialize in this increment.
+The servlet listener opens a bounded Hikari pool, verifies the Budget mappings, and closes the pool at shutdown.
 Stop with Ctrl-C or SIGTERM; Jetty runs with a five-second graceful stop timeout.
 
 ## CI and registry decision — 2026-11-05

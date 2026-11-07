@@ -76,12 +76,13 @@ public final class PlannerPages extends HttpServlet {
         StringBuilder fields = new StringBuilder();
         for (int i = 0; i < STARTERS.size(); i++) fields.append(amount("spend-" + i, STARTERS.get(i)));
         boolean signedIn = request.getUserPrincipal() != null;
-        String action = signedIn ? "<a class=\"button secondary\" href=\"transfer\">Перенести в аккаунт</a>"
-                : "<a class=\"button secondary\" href=\"login\">Войти</a>";
+        String action = signedIn ? "<a id=\"account-action\" class=\"button secondary\" href=\"transfer\">Перенести в аккаунт</a>"
+                : "<a id=\"account-action\" class=\"button secondary\" href=\"login\">Войти</a>";
         page(response, "План месяца", action, """
                 <main class="planner"><div class="page-title"><div><h1>Бюджет на месяц</h1>
-                <p>Сохранение в этом браузере</p></div><label class="month">Месяц
-                <input id="month" type="month" required min="0001-01" max="9999-12"></label></div>
+                <p>Сохранение в этом браузере</p></div><div class="date-controls">
+                <label class="month">Месяц<select id="month"></select></label>
+                <label class="month">Год<input id="year" type="number" min="1" max="9999" required></label></div></div>
                 <noscript>Для сохранения в браузере включите JavaScript.</noscript>
                 <div class="planner-grid"><aside class="summary" aria-labelledby="balance-label">
                 <h2 id="balance-label">Остаток</h2><output id="balance">—</output>

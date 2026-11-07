@@ -1,8 +1,14 @@
 import {key, validMonth, decode, kopecks, money, replaceMonth} from "./store.js";
 
 const $ = selector => document.querySelector(selector);
-const monthInput = $("#month");
-const form = $("#plan");
+const monthInput = $("#month"), yearInput = $("#year");
+const monthNames = new Intl.DateTimeFormat("ru-RU", {month:"long", timeZone:"UTC"});
+for (let i = 0; i < 12; i++) {
+  const label = monthNames.format(new Date(Date.UTC(2000, i, 15)));
+  monthInput.add(new Option(label[0].toUpperCase() + label.slice(1), String(i + 1).padStart(2, "0")));
+}
+const form = $("#plan"), account = $("#account-action");
+const accountLabel = account.textContent;
 const fields = [...form.querySelectorAll("input")];
 const spending = fields.filter(f => f.id.startsWith("spend-"));
 const now = new Intl.DateTimeFormat("sv-SE", {timeZone:"Europe/Moscow", year:"numeric", month:"2-digit"}).format(new Date());
@@ -39,7 +45,10 @@ function totals(report) {
   return !invalid;
 }
 function loadMonth(next) {
-  month = next; monthInput.value = next;
+  account.textContent = accountLabel;
+  month = next;
+  monthInput.value = next.slice(5);
+  yearInput.value = String(Number(next.slice(0,4)));
   fields.forEach(f => { f.value = ""; f.removeAttribute("aria-invalid"); });
   readable = false;
   try {
@@ -58,20 +67,43 @@ function loadMonth(next) {
   $("#remove").hidden = original === null || !readable;
   totals(false);
 }
-form.addEventListener("input", () => { totals(false); if (readable) status(dirty() ? "Есть несохранённые изменения." : "Изменений нет."); });
-form.addEventListener("submit", async event => {
-  event.preventDefault();
-  if (!readable || !totals(true)) { if (readable) status("Проверьте отмеченные суммы."); return; }
+form.addEventListener("input", () => {
+  totals(false);
+  if (readable) {
+    status(dirty() ? "Есть несохранённые изменения." : "Изменений нет.");
+    account.textContent = dirty() ? (accountLabel === "Войти" ? "Сохранить и войти" : "Сохранить и перенести") : accountLabel;
+  }
+});
+async function save() {
+  if (!readable || !totals(true)) { if (readable) status("Проверьте отмеченные суммы."); return false; }
   const selected = month, next = JSON.stringify(draft()), before = original;
   try {
-    if (!await replaceMonth(selected, before, next)) { status("Месяц изменён в другой вкладке. Ваш ввод остался на экране. Откройте сохранённую версию перед повторным сохранением."); return; }
-    if (month === selected) { original = next; baseline = next; $("#remove").hidden = false; status("Сохранено в этом браузере."); }
-  } catch { status("Не удалось сохранить месяц в браузере. Проверьте разрешения и свободное место."); }
+    if (!await replaceMonth(selected, before, next)) {
+      status("Месяц изменён в другой вкладке. Ваш ввод остался на экране. Откройте сохранённую версию перед повторным сохранением.");
+      return false;
+    }
+    if (month !== selected) return false;
+    original = next; baseline = next; $("#remove").hidden = false;
+    if (dirty()) { status("Есть новые несохранённые изменения."); return false; }
+    account.textContent = accountLabel;
+    status("Сохранено в этом браузере.");
+    return true;
+  } catch { status("Не удалось сохранить месяц в браузере. Проверьте разрешения и свободное место."); return false; }
+}
+form.addEventListener("submit", event => { event.preventDefault(); void save(); });
+account.addEventListener("click", async event => {
+  if (!dirty()) return;
+  event.preventDefault();
+  if (await save()) location.assign(account.href);
 });
-monthInput.addEventListener("change", () => {
-  if (!validMonth(monthInput.value) || (dirty() && !confirm("Сменить месяц и отменить несохранённые изменения?"))) monthInput.value = month;
-  else loadMonth(monthInput.value);
-});
+function selectMonth() {
+  const next = yearInput.value.padStart(4, "0") + "-" + monthInput.value;
+  if (!yearInput.validity.valid || !validMonth(next) || (dirty() && !confirm("Сменить месяц и отменить несохранённые изменения?"))) {
+    monthInput.value = month.slice(5); yearInput.value = String(Number(month.slice(0,4)));
+  } else loadMonth(next);
+}
+monthInput.addEventListener("change", selectMonth);
+yearInput.addEventListener("change", selectMonth);
 $("#remove").addEventListener("click", async () => {
   if (!confirm("Удалить этот месяц из браузера?")) return;
   try {
