@@ -1,121 +1,218 @@
-import {key, validMonth, decode, kopecks, money, replaceMonth} from "./store.js";
+import {browserStorage, catalogKey, key, money, kopecks, starterCategories, validMonth} from "./store.js";
 
-const $ = selector => document.querySelector(selector);
-const monthInput = $("#month"), yearInput = $("#year");
-const monthNames = new Intl.DateTimeFormat("ru-RU", {month:"long", timeZone:"UTC"});
-for (let i = 0; i < 12; i++) {
-  const label = monthNames.format(new Date(Date.UTC(2000, i, 15)));
-  monthInput.add(new Option(label[0].toUpperCase() + label.slice(1), String(i + 1).padStart(2, "0")));
+function el(tag, text, props) {
+  const n = document.createElement(tag);
+  if (text !== undefined) n.textContent = text;
+  return Object.assign(n, props);
 }
-const form = $("#plan"), account = $("#account-action");
-const accountLabel = account.textContent;
-const fields = [...form.querySelectorAll("input")];
-const spending = fields.filter(f => f.id.startsWith("spend-"));
-const now = new Intl.DateTimeFormat("sv-SE", {timeZone:"Europe/Moscow", year:"numeric", month:"2-digit"}).format(new Date());
-let month, original, baseline, readable = false;
-
-function draft() {
-  return {income: $("#income").value, investment: $("#investment").value, spending: spending.map(f => f.value)};
-}
-function status(text) { $("#status").textContent = text; }
-function dirty() { return readable && JSON.stringify(draft()) !== baseline; }
-function totals(report) {
-  let invalid;
-  const values = new Map();
-  for (const field of fields) {
-    const error = document.getElementById(field.id + "-error");
+export function startPlanner(root, accountStorage) {
+  const $ = s => root.querySelector(s);
+  const planner = $("#planner");
+  if (!planner || planner.dataset.ready) return;
+  planner.dataset.ready = "true";
+  const cloud = planner.dataset.mode === "cloud", account = $("#account-action");
+  const storage = accountStorage || browserStorage(starterCategories([...$("#starter-labels").children].map(n => n.textContent)));
+  const savedText = cloud ? "Сохранено в аккаунте." : "Сохранено в этом браузере.";
+  const periods = new Intl.DateTimeFormat("ru-RU", {month:"long", timeZone:"UTC"});
+  for (let i = 0; i < 12; i++) {
+    const n = periods.format(new Date(Date.UTC(2000, i, 15)));
+    $("#month").add(new Option(n[0].toUpperCase() + n.slice(1), String(i+1).padStart(2,"0")));
+  }
+  let month = new Intl.DateTimeFormat("sv-SE", {timeZone:"Europe/Moscow", year:"numeric", month:"2-digit"}).format(new Date());
+  let panel = "month", view, catalog, rows = [], baseline, busy = false, blocked = false;
+  const fields = () => [...$("#plan").querySelectorAll("input")];
+  const spending = () => [...$("#spending").querySelectorAll("input")];
+  const values = () => panel === "catalog" ? rows : fields().map(f => f.value);
+  const dirty = () => panel !== "history" && baseline !== undefined && JSON.stringify(values()) !== baseline;
+  const status = t => { $("#status").textContent = t; };
+  function accountLabel() { if (!cloud) account.textContent = dirty() ? "Сохранить и войти" : "Войти"; }
+  function edited() {
+    accountLabel();
+    if (!blocked) status(dirty() ? "Есть несохранённые изменения." : "Изменений нет.");
+  }
+  function lock(state) {
+    busy = state;
+    for (const s of [".planner-nav", ".date-controls", "#month-panel", "#catalog-panel", "#history-panel"]) $(s).inert = state;
+  }
+  async function request(action, data) {
+    const result = await storage(action, data);
+    if (result?.error) throw Object.assign(new Error(), {kind:result.error});
+    return result;
+  }
+  function failure(e, write) {
+    const kind = e.kind || (cloud && write ? "unknown" : "failed");
+    blocked = !write || kind === "unknown" || kind === "conflict";
+    $("#reload-plan").hidden = !blocked;
+    $("#save").disabled = $("#save-catalog").disabled = blocked;
+    if (kind === "invalid") status("Проверьте введённые данные. Изменения не сохранены.");
+    else if (kind === "conflict") status("Сохранённые данные изменились. Ваш ввод остался на экране. Загрузите актуальную версию.");
+    else if (kind === "unknown" && write) status("Результат сохранения не подтверждён. Ваш ввод остался на экране. Проверьте сохранённые данные перед новой попыткой.");
+    else status(write ? "Не удалось сохранить. Ваш ввод остался на экране." : "Не удалось прочитать данные. Попробуйте загрузить их снова.");
+  }
+  function drawLine(line, i) {
+    const id = "spend-" + i;
+    const label = el("label", line.label + (line.archived ? " · в архиве" : ""), {className:"amount", htmlFor:id});
+    const box = el("span", undefined, {className:"amount-box"});
+    const input = el("input", undefined, {id, name:id, type:"text", inputMode:"decimal", autocomplete:"off", maxLength:80, value:line.amount});
+    input.setAttribute("aria-describedby", id + "-error");
+    const unit = el("span", "₽"); unit.setAttribute("aria-hidden","true");
+    box.append(input, unit); label.append(box, el("small", "", {id:id+"-error"}));
+    return label;
+  }
+  function totals(report = false) {
+    let invalid;
+    const all = fields();
+    const amounts = all.map(f => {
+      const error = $("#" + f.id + "-error");
+      try { const value = kopecks(f.value); error.textContent = ""; f.removeAttribute("aria-invalid"); return value ?? 0n; }
+      catch(e) { invalid ??= f; if (report || f === document.activeElement || f.hasAttribute("aria-invalid")) {
+        error.textContent = e.message; f.setAttribute("aria-invalid","true");
+      } return 0n; }
+    });
+    const [income, investment, ...lines] = amounts, spent = lines.reduce((a,b)=>a+b,0n), balance = income-investment-spent;
+    for (const [id, n] of [["balance",balance],["income-total",income],["investment-total",investment],["spending-total",spent]])
+      $("#"+id).textContent = invalid ? "—" : money(n);
+    $("#balance").classList.toggle("negative", !invalid && balance < 0n);
+    if (report && invalid) invalid.focus();
+    return !invalid;
+  }
+  function renderCategories(focus) {
+    const target = $("#categories");
+    target.replaceChildren(...rows.map((c, i) => {
+      const row = el("div", undefined, {className:"category-row"});
+      const input = el("input", undefined, {value:c.label, readOnly:c.archived, placeholder:"Название категории"});
+      input.setAttribute("aria-label", "Название категории " + (i+1));
+      input.oninput = () => { c.label = input.value; input.removeAttribute("aria-invalid"); edited(); };
+      row.append(input);
+      const action = (name, label, disabled, callback) => {
+        const b = el("button",name,{type:"button",className:"secondary",disabled});
+        b.setAttribute("aria-label", label); b.onclick = callback; row.append(b);
+      };
+      const move = j => { [rows[i],rows[j]] = [rows[j],rows[i]]; renderCategories(j); edited(); };
+      action("↑", "Переместить выше: " + c.label, i === 0, () => move(i-1));
+      action("↓", "Переместить ниже: " + c.label, i === rows.length-1, () => move(i+1));
+      if (c.archived && catalog.categories.find(x=>x.id===c.id)?.archived) row.append(el("span","В архиве"));
+      else action(c.archived ? "Вернуть" : "В архив", (c.archived ? "Вернуть: " : "В архив: ") + c.label, false, () => {
+        // An unsaved, unnamed row can be removed without ever entering the catalog.
+        if (!c.label.trim() && !catalog.categories.some(x=>x.id===c.id)) rows.splice(i,1);
+        else c.archived = !c.archived;
+        renderCategories(); edited();
+      });
+      return row;
+    }));
+    if (focus !== undefined) target.children[focus]?.querySelector("input").focus();
+  }
+  function showRevision(v) {
+    const dl = el("dl"), add = (label, value) => dl.append(el("dt",label),el("dd",value));
+    const show = a => { const n = kopecks(a); return n === null ? "Не задано" : money(n); };
+    add("Доход",show(v.income)); add("Инвестиции",show(v.investment));
+    const spent = v.lines.reduce((n,l)=>n+(kopecks(l.amount) ?? 0n),0n);
+    add("Расходы",money(spent));
+    for (const l of v.lines) add(l.label+(l.archived ? " · в архиве" : ""),show(l.amount));
+    add("Остаток",money((kopecks(v.income) ?? 0n)-(kopecks(v.investment) ?? 0n)-spent));
+    $("#revision-detail").replaceChildren(dl);
+  }
+  async function load() {
+    lock(true);
+    blocked = true; baseline = undefined;
+    $("#month").value = month.slice(5); $("#year").value = String(Number(month.slice(0,4)));
+    for (const tab of root.querySelectorAll("[data-panel]")) {
+      const selected = tab.dataset.panel === panel;
+      if (selected) tab.setAttribute("aria-current","page"); else tab.removeAttribute("aria-current");
+      $("#"+tab.dataset.panel+"-panel").hidden = !selected;
+    }
+    status("Загрузка…"); $("#reload-plan").hidden = true;
     try {
-      values.set(field, kopecks(field.value) ?? 0n);
-      error.textContent = ""; field.removeAttribute("aria-invalid");
-    } catch (e) {
-      invalid ??= field;
-      if (report || field === document.activeElement || field.hasAttribute("aria-invalid")) {
-        field.setAttribute("aria-invalid", "true"); error.textContent = e.message;
+      if (panel === "month") {
+        view = await request("month",{month});
+        $("#income").value = view.income; $("#investment").value = view.investment;
+        $("#spending").replaceChildren(...view.lines.map(drawLine)); totals();
+        status(view.version ? savedText : "Пустой месяц. Сохраните план после ввода сумм.");
+      } else if (panel === "catalog") {
+        catalog = await request("catalog",{}); rows = catalog.categories.map(c=>({...c}));
+        renderCategories(); status("");
+      } else {
+        const revisions = await request("history",{month});
+        const select = $("#revision"); select.replaceChildren(); $("#revision-detail").replaceChildren();
+        for (const r of revisions) {
+          const when = r.at ? " · "+new Intl.DateTimeFormat("ru-RU",{dateStyle:"short",timeStyle:"medium",timeZone:"Europe/Moscow"}).format(new Date(r.at))+" (МСК)" : "";
+          select.add(new Option("Версия "+r.version+when,r.version));
+        }
+        select.disabled = !revisions.length;
+        if (revisions.length) showRevision(await request("revision",{month,version:Number(select.value)}));
+        status(revisions.length ? "Сохранённые версии доступны только для чтения." : "Сохранённых версий пока нет.");
       }
-    }
+      baseline = JSON.stringify(values()); blocked = false; accountLabel(); $("#save").disabled = $("#save-catalog").disabled = false;
+    } catch(e) { failure(e,false); }
+    finally { lock(false); }
   }
-  const spent = spending.reduce((sum, f) => sum + (values.get(f) ?? 0n), 0n);
-  const income = values.get($("#income")) ?? 0n, investment = values.get($("#investment")) ?? 0n;
-  for (const [id, amount] of [["balance", income - spent - investment], ["income-total", income],
-      ["spending-total", spent], ["investment-total", investment]]) {
-    document.getElementById(id).textContent = invalid ? "—" : money(amount);
+  async function save() {
+    if (busy || blocked) return false;
+    let action, data;
+    if (panel === "month") {
+      if (!totals(true)) { status("Проверьте отмеченные суммы."); return false; }
+      const inputs = spending();
+      action = "save"; data = {month,version:view.version,catalogVersion:view.catalogVersion,stamp:view.stamp,
+        income:$("#income").value,investment:$("#investment").value,lines:view.lines.map((l,i)=>({id:l.id,amount:inputs[i].value}))};
+    } else if (panel === "catalog") {
+      const invalid = rows.findIndex(c=>!c.label.trim());
+      if (invalid >= 0) {
+        const f = $("#categories").children[invalid].querySelector("input"); f.setAttribute("aria-invalid","true"); f.focus();
+        status("Введите название категории."); return false;
+      }
+      action = "saveCatalog"; data = {version:catalog.version,categories:rows.map(c=>({...c,label:c.label.trim()}))};
+    } else return false;
+    lock(true);
+    try {
+      await request(action,data);
+      await load();
+      if (!blocked) status(panel === "catalog" ? "Категории сохранены." : savedText);
+      return !blocked;
+    } catch(e) { failure(e,true); return false; }
+    finally { lock(false); }
   }
-  $("#balance").classList.toggle("negative", !invalid && income - spent - investment < 0n);
-  if (invalid && report) invalid.focus();
-  return !invalid;
-}
-function loadMonth(next) {
-  account.textContent = accountLabel;
-  month = next;
-  monthInput.value = next.slice(5);
-  yearInput.value = String(Number(next.slice(0,4)));
-  fields.forEach(f => { f.value = ""; f.removeAttribute("aria-invalid"); });
-  readable = false;
-  try {
-    original = localStorage.getItem(key(month));
-    if (original !== null) {
-      const saved = decode(original, spending.length);
-      $("#income").value = saved.income; $("#investment").value = saved.investment;
-      spending.forEach((f, i) => f.value = saved.spending[i]);
-    }
-    baseline = JSON.stringify(draft()); readable = true;
-    status(original === null ? "Пустой месяц. Сохраните план после ввода сумм." : "Сохранено в этом браузере.");
-  } catch {
-    status("Не удалось прочитать данные браузера. Разрешите локальное хранение или откройте другой месяц.");
+  async function canLeave() {
+    if (busy) return false;
+    if (!dirty()) return true;
+    const d = $("#leave-dialog"); d.returnValue = "stay"; d.showModal();
+    const choice = await new Promise(resolve=>d.addEventListener("close",()=>resolve(d.returnValue),{once:true}));
+    return choice === "discard" || choice === "save" && await save();
   }
-  $("#save").disabled = !readable;
-  $("#remove").hidden = original === null || !readable;
-  totals(false);
-}
-form.addEventListener("input", () => {
-  totals(false);
-  if (readable) {
-    status(dirty() ? "Есть несохранённые изменения." : "Изменений нет.");
-    account.textContent = dirty() ? (accountLabel === "Войти" ? "Сохранить и войти" : "Сохранить и перенести") : accountLabel;
+  $("#plan").oninput = () => { totals(); edited(); };
+  $("#plan").onsubmit = e => { e.preventDefault(); void save(); };
+  $("#save-catalog").onclick = save;
+  $("#clear").onclick = () => {
+    if (busy || blocked || !fields().some(f=>f.value) || !confirm("Очистить все суммы? Чтобы записать изменение, нажмите «Сохранить».")) return;
+    fields().forEach(f=>f.value=""); totals(); edited();
+  };
+  $("#add-category").onclick = () => { rows.push({id:crypto.randomUUID(),label:"",archived:false}); renderCategories(rows.length-1); edited(); };
+  $("#reload-plan").onclick = async () => { if (!busy && (!dirty() || confirm("Загрузить сохранённые данные и отменить текущий ввод?"))) await load(); };
+  for (const tab of root.querySelectorAll("[data-panel]")) tab.onclick = async () => {
+    if (panel !== tab.dataset.panel && await canLeave()) { panel = tab.dataset.panel; await load(); }
+  };
+  async function selectMonth() {
+    const year = $("#year"), next = year.value.padStart(4,"0")+"-"+$("#month").value;
+    const valid = year.validity.valid && validMonth(next);
+    year.value = String(Number(month.slice(0,4))); $("#month").value = month.slice(5);
+    if (valid && next !== month && await canLeave()) { month = next; await load(); }
   }
-});
-async function save() {
-  if (!readable || !totals(true)) { if (readable) status("Проверьте отмеченные суммы."); return false; }
-  const selected = month, next = JSON.stringify(draft()), before = original;
-  try {
-    if (!await replaceMonth(selected, before, next)) {
-      status("Месяц изменён в другой вкладке. Ваш ввод остался на экране. Откройте сохранённую версию перед повторным сохранением.");
-      return false;
-    }
-    if (month !== selected) return false;
-    original = next; baseline = next; $("#remove").hidden = false;
-    if (dirty()) { status("Есть новые несохранённые изменения."); return false; }
-    account.textContent = accountLabel;
-    status("Сохранено в этом браузере.");
-    return true;
-  } catch { status("Не удалось сохранить месяц в браузере. Проверьте разрешения и свободное место."); return false; }
-}
-form.addEventListener("submit", event => { event.preventDefault(); void save(); });
-account.addEventListener("click", async event => {
-  if (!dirty()) return;
-  event.preventDefault();
-  if (await save()) location.assign(account.href);
-});
-function selectMonth() {
-  const next = yearInput.value.padStart(4, "0") + "-" + monthInput.value;
-  if (!yearInput.validity.valid || !validMonth(next) || (dirty() && !confirm("Сменить месяц и отменить несохранённые изменения?"))) {
-    monthInput.value = month.slice(5); yearInput.value = String(Number(month.slice(0,4)));
-  } else loadMonth(next);
-}
-monthInput.addEventListener("change", selectMonth);
-yearInput.addEventListener("change", selectMonth);
-$("#remove").addEventListener("click", async () => {
-  if (!confirm("Удалить этот месяц из браузера?")) return;
-  try {
-    if (await replaceMonth(month, original, null)) { loadMonth(month); status("Месяц удалён из браузера."); }
-    else status("Месяц изменился в другой вкладке. Обновите страницу.");
-  } catch { status("Не удалось удалить месяц."); }
-});
-window.addEventListener("beforeunload", e => { if (dirty()) { e.preventDefault(); e.returnValue = ""; } });
-window.addEventListener("storage", e => {
-  if (e.key === null || e.key === key(month)) {
-    if (!dirty()) loadMonth(month);
+  $("#year").onchange = $("#month").onchange = selectMonth;
+  $("#revision").onchange = async () => {
+    lock(true);
+    try { showRevision(await request("revision",{month,version:Number($("#revision").value)})); }
+    catch(e) { $("#revision-detail").replaceChildren(); failure(e,false); }
+    finally { lock(false); }
+  };
+  account.onclick = async e => {
+    if (busy || dirty()) { e.preventDefault(); if (!busy && await save()) location.assign(account.href); }
+  };
+  window.addEventListener("beforeunload", e => { if (dirty() || busy) { e.preventDefault(); e.returnValue = ""; } });
+  if (!cloud) window.addEventListener("storage", e => {
+    if (![null,catalogKey,key(month)].includes(e.key)) return;
+    if (busy) return;
+    if (!dirty()) void load();
     else status("Данные в другой вкладке изменились. Ваш ввод остался на экране.");
-  }
-});
-loadMonth(now);
+  });
+  void load();
+}
+if (document.querySelector('#planner[data-mode="local"]')) startPlanner(document);

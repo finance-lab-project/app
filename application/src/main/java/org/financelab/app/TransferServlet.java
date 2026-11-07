@@ -7,6 +7,8 @@ import org.financelab.budget.application.BudgetStore;
 import org.financelab.budget.application.SaveResult;
 import org.financelab.budget.domain.Budget;
 import org.financelab.budget.domain.BudgetAmount;
+import org.financelab.budget.domain.Category;
+import org.financelab.budget.domain.CategoryCatalog;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
@@ -22,11 +24,14 @@ public final class TransferServlet extends HttpServlet {
         PlannerPages.page(response, "Перенос в аккаунт", "<a href=\"./\">Мой бюджет</a>", """
                 <main class="reading"><h1>Из браузера в аккаунт</h1>
                 <p>Перенесите сохранённые месяцы, чтобы открыть их на другом устройстве.
-                Если месяц уже есть в аккаунте, вы сможете сравнить суммы.</p>
-                <div id="transfer" data-count="%d"><input type="hidden" id="csrf" value="%s">
+                Если месяц уже есть в аккаунте, вы сможете сравнить суммы. Переносится текущая версия плана.
+                Если версий несколько, история останется доступна в этом браузере после выхода.</p>
+                <ul hidden id="starter-labels">%s</ul><div id="transfer"><input type="hidden" id="csrf" value="%s">
+                <section id="catalog-transfer" hidden><h2>Категории из браузера</h2><div id="catalog-review"></div>
+                <button class="secondary" type="button" id="copy-categories">Перенести категории</button></section>
                 <div id="months"></div><div class="actions"><button class="primary" id="send" hidden>Перенести месяцы</button>
                 <a href="./">Открыть мой бюджет</a></div><p role="status" id="status"></p></div></main>"""
-                .formatted(PlannerPages.STARTERS.size(), AccountServlet.csrf(request.getSession())), "transfer");
+                .formatted(PlannerPages.STARTERS.stream().map(s -> "<li>" + PlannerPages.escape(s) + "</li>").collect(java.util.stream.Collectors.joining()), AccountServlet.csrf(request.getSession())), "transfer");
     }
 
     @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -44,7 +49,8 @@ public final class TransferServlet extends HttpServlet {
             return;
         }
         try {
-            importMonth(request, response);
+            if ("catalog".equals(request.getParameter("operation"))) importCatalog(request, response);
+            else importMonth(request, response);
         } catch (IllegalArgumentException | java.time.DateTimeException e) {
             reply(response, 400, Map.of("message", "Проверьте суммы и выбранные категории. Месяц остался в браузере."));
         } catch (RuntimeException e) {
@@ -55,6 +61,51 @@ public final class TransferServlet extends HttpServlet {
 
     private record Option(String id, String label) { }
     private record Difference(String label, String local, String cloud) { }
+
+    /** Importing categories is optional and explicitly reviewed; an established account keeps its own settings. */
+    private static void importCatalog(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        String source = req.getParameter("categories");
+        if (source == null) throw new IllegalArgumentException();
+        var rows = JSON.readValue(source, PlannerCommands.CategoryRow[].class);
+        var service = ApplicationLifecycle.service(req, () -> OwnerIdentity.require(req));
+        var current = service.catalog();
+        var catalog = current.catalog();
+        var existing = catalog.categories();
+        boolean fresh = current.revision().version() == 1;
+        var target = new ArrayList<Category>();
+        if (!fresh) target.addAll(existing);
+        var mappings = new LinkedHashMap<String, String>();
+        var used = new HashSet<UUID>();
+        for (var row : rows) {
+            if (row == null || row.id() == null || row.label() == null || row.label().isBlank() || mappings.containsKey(row.id()))
+                throw new IllegalArgumentException();
+            boolean starter = row.id().matches("starter-[0-9]+");
+            int index = starter ? Integer.parseInt(row.id().substring(8)) : -1;
+            if (index >= PlannerPages.STARTERS.size()) throw new IllegalArgumentException();
+            UUID guestId = starter ? null : UUID.fromString(row.id());
+            var direct = existing.stream().filter(x -> x.id().equals(guestId)).findFirst();
+            var names = existing.stream().filter(x -> x.label().equals(row.label())).toList();
+            Category match = fresh && starter ? existing.get(index) : direct.orElse(names.size() == 1 ? names.getFirst() : null);
+            if (match != null && !used.add(match.id())) match = null;
+            UUID id = match != null ? match.id() : starter ? UUID.randomUUID() : guestId;
+            if (fresh || match == null)
+                target.add(new Category(id, catalog.ownerId(), row.label(), target.size()+1,
+                        row.archived() ? Category.Status.ARCHIVED : Category.Status.ACTIVE));
+            mappings.put(row.id(), id.toString());
+        }
+        // A malformed submission cannot omit a server-owned category.
+        if (fresh && !used.containsAll(existing.stream().map(Category::id).toList())) throw new IllegalArgumentException();
+        long version = current.revision().version();
+        if (!Long.toString(version).equals(req.getParameter("version"))) {
+            reply(res, 200, Map.of("version", version, "fresh", fresh, "preview", target.stream()
+                    .map(c -> c.label() + (c.status() == Category.Status.ARCHIVED ? " (в архиве)" : "")).toList()));
+            return;
+        }
+        var result = service.saveCatalog(version, new CategoryCatalog(catalog.ownerId(), target));
+        if (result instanceof SaveResult.Saved<?> || result instanceof SaveResult.Unchanged<?>)
+            reply(res, 200, Map.of("saved", true, "mapping", mappings));
+        else reply(res, 409, Map.of("message", "Перенос категорий не подтверждён. Откройте перенос заново и проверьте категории."));
+    }
 
     private static void importMonth(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String month = required(req, "month");
@@ -79,16 +130,17 @@ public final class TransferServlet extends HttpServlet {
             difference(changes, "Инвестиции", current.investment().amount(), investment);
             draft = draft.withInvestment(investment);
         }
-        for (int i = 0; i < PlannerPages.STARTERS.size(); i++) {
+        String[] labels = req.getParameterValues("label");
+        int size = labels == null ? PlannerPages.STARTERS.size() : labels.length;
+        for (int i = 0; i < size; i++) {
             var value = amount(req, "spend-" + i);
             if (value.value().isEmpty()) continue;
-            String label = PlannerPages.STARTERS.get(i);
+            String label = labels == null ? PlannerPages.STARTERS.get(i) : labels[i];
             String target = req.getParameter("map-" + i);
             var matches = lines.stream().filter(s -> target == null ? label.equals(s.category().label())
                     : s.category().id().toString().equals(target)).toList();
-            if (matches.size() != 1) { unresolved.put("map-" + i, label); continue; }
+            if (matches.size() != 1 || !assigned.add(matches.getFirst().category().id())) { unresolved.put("map-" + i, label); continue; }
             var line = matches.getFirst();
-            if (!assigned.add(line.category().id())) throw new IllegalArgumentException();
             difference(changes, line.category().label(), line.line().amount(), value);
             draft = draft.withSpending(line.category().id(), value);
         }

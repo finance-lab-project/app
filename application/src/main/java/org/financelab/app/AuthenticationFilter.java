@@ -15,8 +15,7 @@ import java.util.Set;
 public final class AuthenticationFilter implements Filter {
     static final String AUTHENTICATED_AT = AuthenticationFilter.class.getName() + ".authenticatedAt";
 
-    private static final Set<String> PUBLIC_READS = Set.of("/local", "/privacy", "/ui/planner.css",
-            "/ui/local.js", "/ui/store.js", "/ui/login.js");
+    private static final Set<String> PUBLIC_READS = Set.of("/local", "/privacy");
 
     @Override
     public void doFilter(ServletRequest input, ServletResponse output, FilterChain chain) throws IOException, ServletException {
@@ -42,7 +41,8 @@ public final class AuthenticationFilter implements Filter {
         // Compare the raw URI: path parameters, aliases and encoded variants are not anonymous.
         String path = request.getRequestURI().substring(request.getContextPath().length());
         boolean read = "GET".equals(request.getMethod()) || "HEAD".equals(request.getMethod());
-        if (path.equals("/login") || read && PUBLIC_READS.contains(path)) {
+        if (path.equals("/login") || read && (PUBLIC_READS.contains(path)
+                || path.startsWith("/ui/") && PlannerPages.PUBLIC_ASSETS.contains(path.substring(3)))) {
             chain.doFilter(request, response);
             return;
         }

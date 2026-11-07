@@ -31,7 +31,7 @@ button:disabled { cursor: default; opacity: .65; }
 h1,h2,p,dl { margin-top: 0; }
 h1 { font-size: clamp(2rem, 4.7vw, 3.25rem); line-height: 1.12; letter-spacing: -.045em; margin-bottom: .55rem; }
 h2 { font-size: 1.35rem; line-height: 1.27; letter-spacing: -.025em; margin-bottom: 1rem; }
-.planner,.cloud .workspace { width: 100%; max-width: 75rem; margin: 0 auto; padding: clamp(1.3rem,4vw,3rem); }
+.planner { width: 100%; max-width: 75rem; margin: 0 auto; padding: clamp(1.3rem,4vw,3rem); }
 .page-title { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin-bottom: 1.4rem; }
 .page-title p,.intro,.helper { color: var(--muted); }
 .page-title p { margin: 0; }
@@ -52,7 +52,7 @@ h2 { font-size: 1.35rem; line-height: 1.27; letter-spacing: -.025em; margin-bott
 .surface,.reading { background: var(--paper); border: 1px solid var(--line); border-radius: 1.3rem; padding: clamp(1.1rem,3vw,2rem); }
 #plan { grid-column: 1; grid-row: 1; }
 .field-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-items: end; gap: .85rem 1.15rem; }
-.field-grid + h2 { border-top: 1px solid var(--line); margin-top: 1.6rem; padding-top: 1.4rem; }
+
 .amount { color: var(--ink); font-size: .9rem; font-weight: 560; display: block; }
 .amount-box { display: flex; align-items: center; margin-top: .32rem; border: 1px solid #81958a; border-radius: .55rem; overflow: hidden; }
 .amount-box:focus-within { outline: 2px solid var(--primary); }
@@ -78,33 +78,37 @@ footer { max-width: 75rem; margin: 0 auto; padding: 1rem clamp(1rem,4vw,3rem) 2r
 .transfer-month { margin: .85rem 0; }
 .transfer-month h2 { text-transform: capitalize; margin: 0 0 .4rem; }
 .transfer-month select { margin: .4rem 0; }
-.cloud .workspace { max-width: 68rem !important; --vaadin-gap-m: .9rem; }
-.workspace > vaadin-horizontal-layout { flex-wrap: wrap; max-width: 100%; }
-.workspace vaadin-button { min-height: 2.75rem; border-radius: 2rem; }
-.workspace vaadin-button:not([theme~=primary]) { color: var(--primary); box-shadow: none; }
-.workspace > vaadin-horizontal-layout:first-of-type { background: #e4ede6; border-radius: 1.6rem; padding: .2rem; gap: .1rem; }
-.workspace > vaadin-horizontal-layout:first-of-type vaadin-button { border: 0; background: transparent; }
-.workspace:has(#income) > vaadin-horizontal-layout:first-of-type vaadin-button:first-child,
-.workspace:has(#add-category) > vaadin-horizontal-layout:first-of-type vaadin-button:nth-child(2),
-.workspace:not(:has(#income, #add-category)):has(> vaadin-vertical-layout h2) > vaadin-horizontal-layout:first-of-type vaadin-button:nth-child(3) {
-  color: #103c2e; background: #c4e7d6; font-weight: 700;
-}
-.workspace vaadin-text-field::part(input-field) { min-height: 2.85rem; border-radius: .55rem; border: 1px solid #81958a; box-shadow: none; }
-.workspace #save { background: var(--primary); color: white; }
-.workspace #save-status { margin: .15rem 0; }
-.workspace #save-status:is([data-state=conflict],[data-state=unknown],[data-state=read-failed]) { color: #90341d; }
-.workspace > vaadin-vertical-layout { background: var(--paper); border: 1px solid var(--line); border-radius: 1.25rem;
-  padding: clamp(1rem,3vw,2rem); }
-.workspace vaadin-vertical-layout:has(> #income) { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .85rem 1.2rem; }
-.workspace vaadin-vertical-layout:has(> #income) > :not(vaadin-text-field) { grid-column: 1/-1; }
-.workspace #totals { padding: 1rem; border-radius: .8rem; background: var(--pale); font-weight: 600; }
+.app-frame { min-height: 100vh; padding-bottom: var(--notice-space, 0px); background: var(--canvas); color: var(--ink); font: 1rem/1.5 Roboto, system-ui, sans-serif; }
+.app-frame h1,.app-frame h2 { color: var(--ink); font-family: inherit; font-weight: 700; }
+#plan section + section { border-top: 1px solid var(--line); margin-top: 1.5rem; padding-top: 1.3rem; }
+#plan section > .amount { max-width: 24rem; }
+.planner-nav { display: flex; flex-wrap: wrap; gap: .25rem; background: #e4ede6; border-radius: 1.5rem;
+  width: fit-content; max-width: 100%; padding: .2rem; margin-bottom: 1.25rem; }
+.planner-nav button { border: 0; color: var(--ink); background: transparent; padding: .5rem 1rem; min-height: 2.75rem; border-radius: 1.35rem; }
+.planner-nav button[aria-current=page] { background: var(--primary); color: white; font-weight: 650; }
+.category-row { display: flex; align-items: center; gap: .45rem; flex-wrap: wrap; margin: .65rem 0; }
+.category-row input { flex: 1 1 12rem; min-width: 0; padding: .6rem; border: 1px solid #81958a; border-radius: .55rem; }
+.category-row button { padding: .35rem .7rem; min-width: 2.75rem; }
+#history-panel select { width: auto; max-width: 100%; }
+#revision-detail dl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .4rem 1rem; }
+#revision-detail dd { margin: 0; text-align: right; }
+#revision-detail dd,#revision-detail dt,.category-row,.amount { overflow-wrap: anywhere; }
+#status { min-height: 1.5em; }
+dialog { max-width: min(30rem,95%); color: var(--ink); border: 1px solid var(--line); border-radius: 1rem; padding: 1.6rem; }
+dialog::backdrop { background: #112e2460; }
+.cookie-notice { position: fixed; z-index: 10; bottom: 0; inset-inline: 0; padding: .6rem max(1rem,env(safe-area-inset-right)) max(.6rem,env(safe-area-inset-bottom));
+  background: #f8fcf8; border-top: 1px solid #99afa2; box-shadow: 0 -3px 12px #14291b16; }
+.cookie-notice > div { display: flex; gap: 1rem; align-items: center; justify-content: space-between; max-width: 69rem; margin: auto; }
+.cookie-notice p { margin: 0; font-size: .9rem; }
 [hidden] { display: none !important; }
-@media(max-width: 700px) {
-  .planner-grid,.field-grid,.workspace vaadin-vertical-layout:has(> #income) { grid-template-columns: minmax(0,1fr); }
+@media(max-width:700px) {
+  .planner-grid,.field-grid { grid-template-columns: minmax(0,1fr); }
   .summary,#plan { grid-column: auto; grid-row: auto; }
   .page-title { align-items: start; flex-direction: column; }
   .auth,.reading { margin: 1rem; }
-  .workspace vaadin-horizontal-layout { flex-wrap: wrap; }
-  .appbar nav { gap: .7rem; }
+  .appbar nav { gap: .65rem; flex-wrap: wrap; }
+  .planner-nav button { padding-inline: .8rem; }
+  .cookie-notice > div { gap: .6rem; }
+  .cookie-notice button { padding-inline: .85rem; }
 }
 .policy { white-space: pre-wrap; overflow-wrap: anywhere; }

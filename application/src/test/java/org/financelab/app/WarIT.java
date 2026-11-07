@@ -54,19 +54,19 @@ class WarIT {
             page.locator("input[name=username]").fill("synthetic-user");
             page.locator("input[name=password]").fill("synthetic-test-password-only");
             page.getByText("Войти", new com.microsoft.playwright.Page.GetByTextOptions().setExact(true)).click();
-            assertThat(page.locator("h1")).hasText("Бюджет");
+            assertThat(page.locator("h1")).hasText("Бюджет на месяц");
             page.onPageError(errors::add);
             page.onResponse(response -> {
                 if (response.status() >= 400) errors.add("HTTP " + response.status());
             });
             assertEquals(200, page.navigate(System.getenv("APP_BASE_URL")).status());
-            assertThat(page.locator("h1")).hasText("Бюджет");
+            assertThat(page.locator("h1")).hasText("Бюджет на месяц");
             var uidl = new AtomicReference<com.microsoft.playwright.Request>();
             page.onRequest(request -> {
                 if (request.method().equals("POST") && request.url().contains("v-r=uidl")) uidl.set(request);
             });
-            page.getByText("Настройки", new com.microsoft.playwright.Page.GetByTextOptions().setExact(true)).click();
-            assertThat(page.getByText("Добавить категорию", new com.microsoft.playwright.Page.GetByTextOptions().setExact(true))).isVisible();
+            page.getByText("Категории", new com.microsoft.playwright.Page.GetByTextOptions().setExact(true)).click();
+            assertThat(page.locator("#categories input").first()).isVisible();
             assertNotNull(uidl.get());
             String original = uidl.get().postData();
             String tampered = original.replaceFirst("\"csrfToken\"\\s*:\\s*\"[^\"]+\"", "\"csrfToken\":\"invalid\"");
@@ -75,7 +75,7 @@ class WarIT {
                     .setHeader("Content-Type", "application/json").setData(tampered));
             assertTrue(rejected.text().contains("\"appError\""), "Vaadin rejects a forged UIDL CSRF token");
             page.reload();
-            assertThat(page.locator("h1")).hasText("Бюджет");
+            assertThat(page.locator("h1")).hasText("Бюджет на месяц");
             assertTrue(errors.isEmpty(), errors.toString());
             String oldCookie = context.cookies().stream().filter(cookie -> cookie.name.equals("JSESSIONID"))
                     .map(cookie -> "JSESSIONID=" + cookie.value).findFirst().orElseThrow();
