@@ -1,14 +1,6 @@
 # Current Finance Lab release plan
 
-Updated 2026-11-05. This is the canonical product delivery plan for the Java/Vaadin rewrite. It supersedes the Spring/React and distributed Go/BFF product sequences. Repository setup and the initial Maven/application bootstrap are implemented; business modules and login remain delivery work.
-
-## Next review work
-
-1. [Budget schema and initial migration](https://github.com/finance-lab-project/budget/issues/1).
-2. [Compatible runtime versions and packaging](https://github.com/finance-lab-project/app/issues/2).
-3. [Minimal ORM API](https://github.com/finance-lab-project/orm/issues/1), informed by the schema review.
-
-These are review candidates, not automatic agent dispatch. Implementation follows a selected issue and accepted brief. There is no release date commitment in this plan.
+Updated 2026-11-07. The Java/Vaadin Budget candidate is assembled. The remaining R1 work is approval, live verification on Yandex Cloud and human acceptance. The checked artifacts, test results and pending operator observations are in the [R1 verification record](r1-verification.md).
 
 ## Agreed first-release scope
 
@@ -22,25 +14,25 @@ These are review candidates, not automatic agent dispatch. Implementation follow
 - Weekly Sunday 03:00 Europe/Moscow encrypted off-VM backups, 28-day retention, pre-database-change backups and verified restore.
 - Clean start: no old data import or compatibility requirement. Legacy code can be removed during bootstrap. No repository deletion, live-site change or cloud deployment was performed by planning setup.
 
-The [architecture](architecture.md) distinguishes agreed behavior from proposed details. SQL keys/constraints, numeric input limits/parser edge cases, display-zone configuration, authentication integration, runtime pins and CI/artifact registry must pass their scoped design/validation work. GitHub hosts repositories/issues/projects. The [bootstrap build decision](build.md) selects GitHub Actions checks and a separately provisioned GitLab Maven registry.
+The [architecture](architecture.md) records the agreed contracts. The [build decision](build.md) selects GitHub Actions for CI and a separately provisioned GitLab Maven registry.
 
 ## Issue index
 
-| Repository | Work | Phase |
+| Repository | Work | Status and evidence |
 | --- | --- | --- |
 | `app` | [R1 — Deliver the private Russian Budget application](https://github.com/finance-lab-project/app/issues/1) | Release tracker |
-| `budget` | [Design R1 PostgreSQL schema, constraints and initial migration](https://github.com/finance-lab-project/budget/issues/1) | Design review |
-| `app` | [Validate and pin the Java/Vaadin/Jetty/PostgreSQL runtime stack](https://github.com/finance-lab-project/app/issues/2) | Design review |
-| `orm` | [Design the minimal Anchor mapping, transaction and projection API](https://github.com/finance-lab-project/orm/issues/1) | Design review |
-| `app` | [Bootstrap the Maven parent and Java application assembly](https://github.com/finance-lab-project/app/issues/3) | Implemented; verification and review recorded in PR |
-| `orm` | [Implement scoped JDBC transactions, codecs and failure outcomes](https://github.com/finance-lab-project/orm/issues/2) | Implementation backlog |
-| `orm` | [Implement Anchor SQL generation and current/history projections](https://github.com/finance-lab-project/orm/issues/3) | Implementation backlog |
-| `budget` | [Implement RUB Budget values and the configurable category catalog](https://github.com/finance-lab-project/budget/issues/2) | Implementation backlog |
-| `budget` | [Implement atomic Budget/catalog saves and recorded history](https://github.com/finance-lab-project/budget/issues/3) | Implementation backlog |
-| `budget` | [Build the Russian monthly planner, category settings and history views](https://github.com/finance-lab-project/budget/issues/4) | Implementation backlog |
-| `app` | [Implement the configured single-account login and session boundary](https://github.com/finance-lab-project/app/issues/4) | Implementation backlog |
-| `app` | [Prepare the single-VM deployment and weekly backup/restore runbook](https://github.com/finance-lab-project/app/issues/5) | Implementation backlog |
-| `app` | [Verify and release the private Budget R1 on Yandex Cloud](https://github.com/finance-lab-project/app/issues/6) | Implementation backlog |
+| `budget` | [Design R1 PostgreSQL schema, constraints and initial migration](https://github.com/finance-lab-project/budget/issues/1) | [Merged PR #5](https://github.com/finance-lab-project/budget/pull/5) |
+| `app` | [Validate and pin the Java/Vaadin/Jetty/PostgreSQL runtime stack](https://github.com/finance-lab-project/app/issues/2) | [Merged PR #7](https://github.com/finance-lab-project/app/pull/7) |
+| `orm` | [Design the minimal Anchor mapping, transaction and projection API](https://github.com/finance-lab-project/orm/issues/1) | [Merged PR #4](https://github.com/finance-lab-project/orm/pull/4) |
+| `app` | [Bootstrap the Maven parent and Java application assembly](https://github.com/finance-lab-project/app/issues/3) | [Merged PR #8](https://github.com/finance-lab-project/app/pull/8) |
+| `orm` | [Implement scoped JDBC transactions, codecs and failure outcomes](https://github.com/finance-lab-project/orm/issues/2) | [Merged PR #5](https://github.com/finance-lab-project/orm/pull/5) |
+| `orm` | [Implement Anchor SQL generation and current/history projections](https://github.com/finance-lab-project/orm/issues/3) | [Merged PR #6](https://github.com/finance-lab-project/orm/pull/6) |
+| `budget` | [Implement RUB Budget values and the configurable category catalog](https://github.com/finance-lab-project/budget/issues/2) | [Merged PR #6](https://github.com/finance-lab-project/budget/pull/6) |
+| `budget` | [Implement atomic Budget/catalog saves and recorded history](https://github.com/finance-lab-project/budget/issues/3) | [Merged PR #7](https://github.com/finance-lab-project/budget/pull/7) |
+| `budget` | [Build the Russian monthly planner, category settings and history views](https://github.com/finance-lab-project/budget/issues/4) | [Merged PR #8](https://github.com/finance-lab-project/budget/pull/8) |
+| `app` | [Implement the configured single-account login and session boundary](https://github.com/finance-lab-project/app/issues/4) | [Merged PR #9](https://github.com/finance-lab-project/app/pull/9) |
+| `app` | [Prepare the single-VM deployment and weekly backup/restore runbook](https://github.com/finance-lab-project/app/issues/5) | [Merged PR #10](https://github.com/finance-lab-project/app/pull/10) |
+| `app` | [Verify and release the private Budget R1 on Yandex Cloud](https://github.com/finance-lab-project/app/issues/6) | [Candidate checked, cloud acceptance pending](r1-verification.md) |
 | `portfolio` | [Later — Review Portfolio requirements and module boundary](https://github.com/finance-lab-project/portfolio/issues/1) | Later; outside R1 |
 | `fire` | [Later — Review FIRE requirements and calculation contracts](https://github.com/finance-lab-project/fire/issues/1) | Later; outside R1 |
 
@@ -50,7 +42,7 @@ Dependencies are specified in the individual issues. The [R1 tracker](https://gi
 
 Use one private project board per repository. Project status records the work lifecycle; issue bodies hold scope, dependencies and evidence. Public source does not imply public access to the deployed app. Track design and delivery directly, with no separate learning issues or learning gates. Former learning records are removed from active planning, not marked as completed competence.
 
-Keep the active queue small: schema and runtime review first, followed by the ORM API and scoped build work. Portfolio and FIRE contain planning docs only and do not enter the R1 runtime.
+Portfolio and FIRE remain outside the R1 runtime.
 
 ## Earlier work
 
