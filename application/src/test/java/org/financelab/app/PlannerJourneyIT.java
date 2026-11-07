@@ -52,13 +52,13 @@ class PlannerJourneyIT {
             // An older browser budget opens under the new catalog without rewriting its saved data.
             page.evaluate("localStorage.setItem('finance-lab.guest.v1.2091-03',JSON.stringify({income:'300',investment:'0',spending:Array(10).fill('')}))");
             period(page, "2091","03");
-            assertThat(page.locator("#income")).hasValue("300");
+            assertThat(page.locator("#income")).hasValue("300,00");
             button(page,"Категории").click(); button(page,"Добавить категорию").click();
             page.locator("#categories input").last().fill("Учебная поездка");
             button(page,"Сохранить категории").click();
             assertThat(page.locator("#status")).hasText("Категории сохранены.");
             button(page,"План месяца").click();
-            page.getByLabel("Учебная поездка").fill("25,50");
+            page.locator("#plan").getByRole(AriaRole.TEXTBOX, new Locator.GetByRoleOptions().setName("Учебная поездка").setExact(true)).fill("25,50");
             page.locator("#save").click();
             assertThat(page.locator("#balance")).hasText("274,50 ₽");
             button(page,"История").click();
@@ -71,7 +71,7 @@ class PlannerJourneyIT {
             assertThat(page.locator("#catalog-review")).containsText("Категории сохранены в аккаунте.");
             button(page,"Перенести месяцы").click();
             button(page,"Подтвердить перенос").click();
-            assertThat(page.locator("#months")).containsText("Сохранено в аккаунте.");
+            assertThat(page.locator("#months")).containsText("Суммы прошлых версий перенесены");
             page.getByText("Открыть мой бюджет").click();
             period(page,"2091","03");
             assertThat(page.locator("#balance")).hasText("274,50 ₽");
@@ -80,12 +80,15 @@ class PlannerJourneyIT {
             button(page,"Сохранить категории").click();
             assertThat(page.locator("#status")).hasText("Категории сохранены.");
             button(page,"План месяца").click();
-            assertThat(page.getByLabel("Поездки")).hasValue("25,50");
-            page.getByLabel("Поездки").fill("51"); page.locator("#save").click();
+            assertThat(page.locator("#plan").getByRole(AriaRole.TEXTBOX, new Locator.GetByRoleOptions().setName("Поездки").setExact(true))).hasValue("25,50");
+            page.locator("#plan").getByRole(AriaRole.TEXTBOX, new Locator.GetByRoleOptions().setName("Поездки").setExact(true)).fill("51"); page.locator("#save").click();
             assertThat(page.locator("#status")).hasText("Сохранено в аккаунте.");
             button(page,"История").click();
             assertThat(page.locator("#revision-detail")).containsText("Поездки");
             page.locator("#revision").selectOption("1");
+            assertThat(page.locator("#revision-detail")).containsText("300,00 ₽");
+            page.locator("#revision").selectOption("2");
+            assertThat(page.locator("#revision-detail")).containsText("25,50 ₽");
             assertThat(page.locator("#revision-detail")).containsText("Учебная поездка");
             button(page,"Выйти").click(); period(page,"2091","03"); button(page,"История").click();
             assertThat(page.locator("#revision-detail")).containsText("Учебная поездка");
@@ -126,7 +129,7 @@ class PlannerJourneyIT {
             assertThat(first.locator("#balance")).hasText("12 050,00 ₽");
             guest.setOffline(false);
             first.reload();
-            assertThat(first.locator("#income")).hasValue("12 345,67");
+            assertThat(first.locator("#income")).hasValue("12 345,67");
             onscreen(first);
             capture(first, "guest-desktop.png");
 

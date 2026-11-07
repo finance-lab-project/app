@@ -71,13 +71,17 @@ async function transfer(item, decision = {}) {
     const target = imported.mapping?.[line.id];
     if (target && !params.has("map-"+i)) params.set("map-"+i,target);
   });
+  if (item.history.length > 1) params.set("earlier",JSON.stringify(item.history.slice(0,-1).map(s => {
+    const amounts = new Map(s.lines.map(l => [l.id,l.amount]));
+    return {income:s.income,investment:s.investment,spending:draft.lines.map(l => amounts.get(l.id) ?? "")};
+  })));
   try {
     if (localStorage.getItem(key(month)) !== raw) throw Error("Месяц изменился в другой вкладке. Откройте перенос заново.");
     const {response, reply} = await post(params);
     detail.replaceChildren();
     if (response.ok && reply.saved) {
       const retained = item.history.length > 1 ? JSON.stringify({...JSON.parse(raw),transferred:draft.version}) : null;
-      detail.textContent = await replaceMonth(month, raw, retained) ? "Сохранено в аккаунте." + (retained ? " История осталась в браузере." : "")
+      detail.textContent = await replaceMonth(month, raw, retained) ? "Сохранено в аккаунте." + (reply.copiedHistory ? " Суммы прошлых версий перенесены; оригиналы остались в браузере." : retained ? " Прошлые версии остались в браузере." : "")
         : "Сохранено в аккаунте. В браузере осталась более новая версия.";
     } else if (response.status === 409 && reply.version !== undefined) {
       detail.append(elem("p", "Проверьте соответствие категорий и суммы. Переносятся только заполненные поля."));

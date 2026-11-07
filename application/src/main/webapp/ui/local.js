@@ -49,11 +49,12 @@ export function startPlanner(root, accountStorage) {
     else if (kind === "unknown" && write) status("Результат сохранения не подтверждён. Ваш ввод остался на экране. Проверьте сохранённые данные перед новой попыткой.");
     else status(write ? "Не удалось сохранить. Ваш ввод остался на экране." : "Не удалось прочитать данные. Попробуйте загрузить их снова.");
   }
+  const formatInput = raw => { const n = kopecks(raw); return n === null ? "" : money(n).slice(0,-2); };
   function drawLine(line, i) {
     const id = "spend-" + i;
     const label = el("label", line.label + (line.archived ? " · в архиве" : ""), {className:"amount", htmlFor:id});
     const box = el("span", undefined, {className:"amount-box"});
-    const input = el("input", undefined, {id, name:id, type:"text", inputMode:"decimal", autocomplete:"off", maxLength:80, value:line.amount});
+    const input = el("input", undefined, {id, name:id, type:"text", inputMode:"decimal", autocomplete:"off", maxLength:80, value:formatInput(line.amount)});
     input.setAttribute("aria-describedby", id + "-error");
     const unit = el("span", "₽"); unit.setAttribute("aria-hidden","true");
     box.append(input, unit); label.append(box, el("small", "", {id:id+"-error"}));
@@ -125,7 +126,7 @@ export function startPlanner(root, accountStorage) {
     try {
       if (panel === "month") {
         view = await request("month",{month});
-        $("#income").value = view.income; $("#investment").value = view.investment;
+        $("#income").value = formatInput(view.income); $("#investment").value = formatInput(view.investment);
         $("#spending").replaceChildren(...view.lines.map(drawLine)); totals();
         status(view.version ? savedText : "Пустой месяц. Сохраните план после ввода сумм.");
       } else if (panel === "catalog") {

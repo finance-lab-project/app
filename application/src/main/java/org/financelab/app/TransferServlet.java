@@ -24,8 +24,8 @@ public final class TransferServlet extends HttpServlet {
         PlannerPages.page(response, "Перенос в аккаунт", "<a href=\"./\">Мой бюджет</a>", """
                 <main class="reading"><h1>Из браузера в аккаунт</h1>
                 <p>Перенесите сохранённые месяцы, чтобы открыть их на другом устройстве.
-                Если месяц уже есть в аккаунте, вы сможете сравнить суммы. Переносится текущая версия плана.
-                Если версий несколько, история останется доступна в этом браузере после выхода.</p>
+                Для нового месяца будут перенесены и суммы прошлых версий. История аккаунта отметит время переноса.
+                Для существующего месяца вы сможете сравнить текущие суммы; прежние версии останутся в своих хранилищах.</p>
                 <ul hidden id="starter-labels">%s</ul><div id="transfer"><input type="hidden" id="csrf" value="%s">
                 <section id="catalog-transfer" hidden><h2>Категории из браузера</h2><div id="catalog-review"></div>
                 <button class="secondary" type="button" id="copy-categories">Перенести категории</button></section>
@@ -107,6 +107,9 @@ public final class TransferServlet extends HttpServlet {
         else reply(res, 409, Map.of("message", "Перенос категорий не подтверждён. Откройте перенос заново и проверьте категории."));
     }
 
+    private record EarlierPlan(String income, String investment, List<String> spending) { }
+    private record Amounts(BudgetAmount income, BudgetAmount investment, List<BudgetAmount> spending) { }
+
     private static void importMonth(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String month = required(req, "month");
         if (!month.matches("(?!0000)[0-9]{4}-(0[1-9]|1[0-2])")) throw new IllegalArgumentException();
@@ -132,15 +135,28 @@ public final class TransferServlet extends HttpServlet {
         }
         String[] labels = req.getParameterValues("label");
         int size = labels == null ? PlannerPages.STARTERS.size() : labels.length;
+        var earlier = new ArrayList<Amounts>();
+        String sourceHistory = req.getParameter("earlier");
+        if (view.version() == 0 && sourceHistory != null) {
+            for (var p : JSON.readValue(sourceHistory, EarlierPlan[].class)) {
+                if (p.spending() == null || p.spending().size() != size) throw new IllegalArgumentException();
+                earlier.add(new Amounts(parseAmount(p.income()), parseAmount(p.investment()),
+                        p.spending().stream().map(org.financelab.budget.adapter.presentation.RussianBudgetFormat::parseAmount).toList()));
+            }
+        }
+        var destinations = new HashMap<Integer, UUID>();
         for (int i = 0; i < size; i++) {
             var value = amount(req, "spend-" + i);
-            if (value.value().isEmpty()) continue;
+            int index = i;
+            if (value.value().isEmpty() && earlier.stream().noneMatch(p -> p.spending().get(index).value().isPresent())) continue;
             String label = labels == null ? PlannerPages.STARTERS.get(i) : labels[i];
             String target = req.getParameter("map-" + i);
             var matches = lines.stream().filter(s -> target == null ? label.equals(s.category().label())
                     : s.category().id().toString().equals(target)).toList();
             if (matches.size() != 1 || !assigned.add(matches.getFirst().category().id())) { unresolved.put("map-" + i, label); continue; }
             var line = matches.getFirst();
+            destinations.put(i, line.category().id());
+            if (value.value().isEmpty()) continue;
             difference(changes, line.category().label(), line.line().amount(), value);
             draft = draft.withSpending(line.category().id(), value);
         }
@@ -154,13 +170,22 @@ public final class TransferServlet extends HttpServlet {
                     "unresolved", unresolved, "options", options));
             return;
         }
-        var command = new BudgetStore.SaveBudget(draft.month(), view.version(), view.catalog().revision().version(),
-                draft.income().amount(), draft.spending(catalog).stream()
-                .map(s -> new BudgetStore.SpendingValue(s.category().id(), s.line().amount())).toList(),
-                draft.investment().amount());
-        var result = service.save(command);
+        // Replay only into an empty month. Never splice unrelated drafts into an existing account history.
+        long expected = view.version();
+        for (var p : earlier) {
+            Budget prior = current.withIncome(p.income()).withInvestment(p.investment());
+            for (var to : destinations.entrySet()) prior = prior.withSpending(to.getValue(), p.spending().get(to.getKey()));
+            var saved = service.save(command(prior, catalog, expected, view.catalog().revision().version()));
+            if (saved instanceof SaveResult.Saved<BudgetStore.BudgetRevision> s) expected = s.revision().version();
+            else if (saved instanceof SaveResult.Unchanged<BudgetStore.BudgetRevision> u) expected = u.revision().version();
+            else {
+                reply(res, 409, Map.of("message", "Перенос версий остановлен. Проверьте историю аккаунта; оригиналы остались в браузере."));
+                return;
+            }
+        }
+        var result = service.save(command(draft, catalog, expected, view.catalog().revision().version()));
         if (result instanceof SaveResult.Saved<?> || result instanceof SaveResult.Unchanged<?>) {
-            reply(res, 200, Map.of("saved", true));
+            reply(res, 200, Map.of("saved", true, "copiedHistory", !earlier.isEmpty()));
         } else if (result instanceof SaveResult.Conflict<?>) {
             reply(res, 409, Map.of("message", "Месяц или категории изменились. Проверьте актуальные данные и повторите перенос."));
         } else if (result instanceof SaveResult.Invalid<?>) {
@@ -168,6 +193,11 @@ public final class TransferServlet extends HttpServlet {
         } else {
             reply(res, 503, Map.of("message", "Сохранение не подтверждено. Откройте бюджет и проверьте историю. Месяц остался в браузере."));
         }
+    }
+
+    private static BudgetStore.SaveBudget command(Budget b, CategoryCatalog catalog, long version, long catalogVersion) {
+        return new BudgetStore.SaveBudget(b.month(), version, catalogVersion, b.income().amount(), b.spending(catalog).stream()
+                .map(s -> new BudgetStore.SpendingValue(s.category().id(), s.line().amount())).toList(), b.investment().amount());
     }
 
     private static void difference(List<Difference> result, String label, BudgetAmount old, BudgetAmount next) {
