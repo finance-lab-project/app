@@ -1,0 +1,67 @@
+:root {
+  color-scheme: light;
+  --ink: #172c29; --muted: #465c56; --primary: #006953; --pale: #d4efe1;
+  --line: #c6d4cd; --canvas: #f4f7f2; --paper: #fff;
+  --lumo-primary-color: #006953; --lumo-primary-text-color: #00614d;
+  --vaadin-background-color: var(--paper); --vaadin-text-color: var(--ink);
+  --vaadin-accent-color: var(--primary);
+  font-family: Roboto, system-ui, sans-serif; color: var(--ink); background: var(--canvas);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--canvas); color: var(--ink); font: 1rem/1.5 Roboto, system-ui, sans-serif; }
+a { color: var(--primary); text-underline-offset: .18em; }
+a:hover { text-decoration: underline; }
+button, input, select { font: inherit; }
+button, .button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .65; }
+:where(a,button,input,select):focus-visible { outline: 3px solid #006c97; outline-offset: 3px; }
+.appbar { background: var(--paper); border-bottom: 1px solid var(--line); }
+.appbar nav { max-width: 75rem; margin: auto; padding: .7rem clamp(1rem,4vw,3rem); display: flex; gap: 1rem;
+  align-items: center; min-height: 4.25rem; }
+.appbar nav form { margin: 0; }
+.brand { margin-right: auto; font-weight: 760; font-size: 1.35rem; letter-spacing: -.055em; color: var(--ink); text-decoration: none; }
+.brand::before { content: ""; display: inline-block; width: .8em; height: .8em; margin-right: .4em;
+  border-radius: 35% 35% 35% 0; background: var(--primary); }
+.primary,.secondary,.button,.subtle { border-radius: 2rem; font-weight: 620; display: inline-flex;
+  align-items: center; justify-content: center; min-height: 2.8rem; padding: .55rem 1.35rem; text-decoration: none; }
+.primary { border: 1px solid var(--primary); background: var(--primary); color: white; }
+.primary:hover { background: #004e3c; }
+.secondary { color: var(--primary); border: 1px solid #869e91; background: transparent; }
+.subtle { color: #80423d; background: transparent; border: 0; }
+h1,h2,p,dl { margin-top: 0; }
+h1 { font-size: clamp(2rem, 4.7vw, 3.25rem); line-height: 1.12; letter-spacing: -.045em; margin-bottom: .55rem; }
+h2 { font-size: 1.35rem; line-height: 1.27; letter-spacing: -.025em; margin-bottom: 1rem; }
+.intro,.helper { color: var(--muted); }
+.auth label { display: block; font-weight: 600; }
+.auth input:not([type=hidden]), select { display: block; width: 100%; min-height: 3rem; padding: .55rem .8rem;
+  background: white; color: var(--ink); border-radius: .55rem; border: 1px solid #798e83; }
+.surface,.reading { background: var(--paper); border: 1px solid var(--line); border-radius: 1.3rem; padding: clamp(1.1rem,3vw,2rem); }
+.error { color: #a02427; }
+.actions { display: flex; gap: .8rem; align-items: center; flex-wrap: wrap; margin-top: 1.5rem; }
+#status,.helper { font-size: .92rem; }
+#status { margin: .8rem 0 0; color: var(--muted); }
+footer { max-width: 75rem; margin: 0 auto; padding: 1rem clamp(1rem,4vw,3rem) 2rem; }
+.auth,.reading { max-width: 43rem; margin: clamp(1rem,6vh,4rem) auto; }
+.auth { max-width: 31rem; }
+.auth h1,.reading h1 { font-size: clamp(1.85rem,5vw,2.5rem); }
+.auth form { margin: 1.4rem 0; }
+.auth label { margin: 1rem 0 .3rem; }
+.auth form .primary { margin-top: 1.4rem; width: 100%; }
+.password { display: flex; border: 1px solid #798e83; border-radius: .55rem; }
+.auth .password input { flex: 1; min-width: 0; border: 0; }
+.password button { background: transparent; border: 0; color: var(--primary); padding: .5rem .8rem; }
+.reading h2 { margin-top: 1.5rem; }
+.app-frame { min-height: 100vh; padding-bottom: var(--notice-space, 0px); background: var(--canvas); color: var(--ink); font: 1rem/1.5 Roboto, system-ui, sans-serif; }
+.app-frame h1,.app-frame h2 { color: var(--ink); font-family: inherit; font-weight: 700; }
+.cookie-notice { position: fixed; z-index: 10; bottom: 0; inset-inline: 0; padding: .6rem max(1rem,env(safe-area-inset-right)) max(.6rem,env(safe-area-inset-bottom));
+  background: #f8fcf8; border-top: 1px solid #99afa2; box-shadow: 0 -3px 12px #14291b16; }
+.cookie-notice > div { display: flex; gap: 1rem; align-items: center; justify-content: space-between; max-width: 69rem; margin: auto; }
+.cookie-notice p { margin: 0; font-size: .9rem; }
+[hidden] { display: none !important; }
+@media(max-width:700px) {
+  .auth,.reading { margin: 1rem; }
+  .appbar nav { gap: .65rem; flex-wrap: wrap; }
+  .cookie-notice > div { gap: .6rem; }
+  .cookie-notice button { padding-inline: .85rem; }
+}
+.policy { white-space: pre-wrap; overflow-wrap: anywhere; }

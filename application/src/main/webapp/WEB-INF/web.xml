@@ -9,6 +9,11 @@
     </filter-mapping>
     <servlet><servlet-name>account</servlet-name><servlet-class>org.financelab.app.AccountServlet</servlet-class></servlet>
     <servlet-mapping><servlet-name>account</servlet-name><url-pattern>/login</url-pattern><url-pattern>/logout</url-pattern></servlet-mapping>
+    <servlet><servlet-name>planner-pages</servlet-name><servlet-class>org.financelab.app.AppPages</servlet-class></servlet>
+    <servlet-mapping><servlet-name>planner-pages</servlet-name><url-pattern>/local</url-pattern><url-pattern>/privacy</url-pattern></servlet-mapping>
+    <servlet-mapping><servlet-name>planner-pages</servlet-name><url-pattern>/ui/*</url-pattern></servlet-mapping>
+    <servlet><servlet-name>transfer</servlet-name><servlet-class>org.financelab.app.TransferServlet</servlet-class></servlet>
+    <servlet-mapping><servlet-name>transfer</servlet-name><url-pattern>/transfer</url-pattern></servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
         <cookie-config><http-only>true</http-only><secure>true</secure></cookie-config>

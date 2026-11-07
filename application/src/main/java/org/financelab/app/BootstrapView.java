@@ -1,37 +1,52 @@
 package org.financelab.app;
 
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClientCallable;
+import com.vaadin.flow.component.Html;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.html.NativeButton;
-import com.vaadin.flow.component.html.Input;
-import com.vaadin.flow.dom.Element;
-import com.vaadin.flow.server.VaadinServletRequest;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinServletRequest;
+import org.financelab.budget.application.BudgetService;
+import org.financelab.budget.adapter.ui.BudgetPlanner;
+import org.financelab.budget.adapter.ui.PlannerCommands;
 
 @Route("")
-public class BootstrapView extends Div {
+@PageTitle("Бюджет на месяц · Finance Lab")
+@StyleSheet("context://ui/shell.css")
+@StyleSheet("context://ui/planner.css")
+public final class BootstrapView extends Div {
+    private final BudgetService service;
+
     public BootstrapView() {
-        OwnerIdentity.requireCurrent();
-        Span status = new Span("Готово");
-        status.setId("status");
-        add(new H1("Finance Lab"), new Span("Начальная сборка приложения"),
-                new Button("Проверить соединение", event -> {
-                    OwnerIdentity.requireCurrent();
-                    status.setText("Соединение работает");
-                }), status);
         var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
-        var logout = new Element("form");
-        logout.setAttribute("method", "post");
-        logout.setAttribute("action", request.getContextPath() + "/logout");
-        var csrf = new Input();
-        csrf.setType("hidden");
-        csrf.getElement().setAttribute("name", "csrf");
-        csrf.setValue(AccountServlet.csrf(request.getSession()));
-        var submit = new NativeButton("Выйти");
-        submit.getElement().setAttribute("type", "submit");
-        logout.appendChild(csrf.getElement(), submit.getElement());
-        getElement().appendChild(logout);
+        service = ApplicationLifecycle.service(request, OwnerIdentity::requireCurrent);
+        var actions = """
+                <a data-save-before-leave router-ignore href="transfer">Из браузера</a>
+                <form method="post" action="logout"><input type="hidden" name="csrf" value="%s">
+                <button type="submit" class="secondary">Выйти</button></form>"""
+                .formatted(AccountServlet.csrf(request.getSession()));
+        add(new Html(AppPages.frame(actions, BudgetPlanner.month(true))));
+    }
+
+    @Override protected void onAttach(AttachEvent event) {
+        super.onAttach(event);
+        event.getUI().getPage().executeJs("document.documentElement.lang = 'ru'");
+        getElement().executeJs("""
+                const root = this;
+                Promise.all([import(new URL('ui/local.js', document.baseURI)),
+                             import(new URL('ui/notice.js', document.baseURI))]).then(([ui, notice]) => {
+                  notice.showNotice(root);
+                  ui.startPlanner(root, async (action, data) =>
+                    JSON.parse(await root.$server.planner(action, JSON.stringify(data))));
+                });
+                """);
+    }
+
+    /** Vaadin checks session and CSRF before dispatch; owner identity is rechecked by the service. */
+    @ClientCallable
+    public String planner(String action, String payload) {
+        return PlannerCommands.execute(service, action, payload);
     }
 }

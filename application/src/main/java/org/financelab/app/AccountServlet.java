@@ -12,7 +12,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-/** Plain forms keep all application resources behind the authentication boundary. */
+/** Native sign-in and sign-out forms on the same origin as the planner. */
 public final class AccountServlet extends HttpServlet {
     private static final String CSRF = AccountServlet.class.getName() + ".csrf";
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -43,7 +43,7 @@ public final class AccountServlet extends HttpServlet {
             // Same attributes as the live cookie; remove it from the browser too.
             response.addHeader("Set-Cookie", "JSESSIONID=; Path=" + cookiePath(request)
                     + "; Max-Age=0; Secure; HttpOnly; SameSite=Lax");
-            redirect(request, response, "/login");
+            redirect(request, response, "/local");
             return;
         }
         if (request.getUserPrincipal() != null) { response.sendError(409); return; }
@@ -64,7 +64,7 @@ public final class AccountServlet extends HttpServlet {
         session.setMaxInactiveInterval(config.idleSeconds());
         session.setAttribute(AuthenticationFilter.AUTHENTICATED_AT, System.currentTimeMillis());
         session.setAttribute(CSRF, newToken());
-        redirect(request, response, "/");
+        redirect(request, response, "/transfer");
     }
 
     static String csrf(HttpSession session) {
@@ -92,17 +92,18 @@ public final class AccountServlet extends HttpServlet {
         var session = request.getSession(true);
         var config = (ApplicationConfig) request.getServletContext().getAttribute(ApplicationLifecycle.CONFIG_ATTRIBUTE);
         session.setMaxInactiveInterval(config.idleSeconds());
-        response.setContentType("text/html;charset=UTF-8");
-        response.setHeader("Content-Security-Policy", "default-src 'none'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
-        response.getWriter().printf("""
-                <!doctype html><html lang="ru"><meta charset="utf-8">
-                <meta name="viewport" content="width=device-width,initial-scale=1">
-                <title>Вход — Finance Lab</title><h1>Вход в Finance Lab</h1>
-                %s<form method="post">
-                <input type="hidden" name="csrf" value="%s">
-                <p><label>Имя пользователя <input name="username" autocomplete="username" maxlength="128" required></label></p>
-                <p><label>Пароль <input type="password" name="password" autocomplete="current-password" maxlength="1024" required></label></p>
-                <button type="submit">Войти</button></form></html>
-                """, error ? "<p role=\"alert\">Не удалось войти. Проверьте данные или повторите попытку позже.</p>" : "", csrf(session));
+        AppPages.page(response, "Вход", "<a class=\"text-link\" href=\"local\">К бюджету</a>", """
+                <main class="auth"><section class="surface"><h1>Вход в Finance Lab</h1>
+                <p class="intro">Войдите, чтобы открыть свой бюджет на другом устройстве.</p>
+                %s<form method="post"><input type="hidden" name="csrf" value="%s">
+                <label for="username">Имя пользователя</label><input id="username" name="username" type="text"
+                    autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="128" required>
+                <label for="password">Пароль</label><div class="password"><input id="password" type="password"
+                    name="password" autocomplete="current-password" maxlength="1024" required>
+                <button id="visibility" type="button" aria-controls="password" aria-pressed="false">Показать</button></div>
+                <button class="primary" type="submit">Войти</button></form>
+                <p class="helper">Для входа используется cookie сеанса. <a href="privacy">О данных и cookie</a></p>
+                <a href="local">Продолжить в браузере</a></section></main>"""
+                .formatted(error ? "<p class=\"error\" role=\"alert\">Не удалось войти. Проверьте данные или повторите попытку позже.</p>" : "", csrf(session)), "login");
     }
 }
