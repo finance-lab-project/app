@@ -16,8 +16,8 @@ contains the guest planner, configured login and the authenticated Budget worksp
 - `application/`: `org.financelab:application:war:0.1.0`, assembled as
   `application/target/finance-lab.war`. Vaadin 25.3.5, Servlet 6.1 provided by
   Jetty 12.1.14 EE11, runtime pgJDBC 42.7.14 and the Budget/ORM libraries.
-- Run `scripts/prepare-budget.sh` before the first build. It builds Budget 0.1.0 at
-  `94fe727e54eee105699078fe286d6f370d9426e4` and its pinned ORM 0.1.0 at
+- Run `scripts/prepare-budget.sh` before the first build. It builds Budget 0.2.0 at
+  `1660e6e6f6b6736d3760b8016d89e644f749bcf9` and its pinned ORM 0.1.0 at
   `8daaf91d07d2e30b563322b22a0c6da7545578e5`. The WAR test checks both embedded source revisions.
 - Flyway 13.12.0 is packaged for the separate administrative migration command in the [deployment runbook](single-vm.md).
   The runtime uses a PostgreSQL account with Budget DML privileges.

@@ -9,24 +9,25 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.financelab.budget.application.BudgetService;
-import tools.jackson.databind.json.JsonMapper;
+import org.financelab.budget.adapter.ui.BudgetPlanner;
+import org.financelab.budget.adapter.ui.PlannerCommands;
 
 @Route("")
 @PageTitle("Бюджет на месяц · Finance Lab")
+@StyleSheet("context://ui/shell.css")
 @StyleSheet("context://ui/planner.css")
 public final class BootstrapView extends Div {
-    private static final JsonMapper JSON = JsonMapper.builder().build();
     private final BudgetService service;
 
     public BootstrapView() {
         var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
         service = ApplicationLifecycle.service(request, OwnerIdentity::requireCurrent);
         var actions = """
-                <a id="account-action" router-ignore href="transfer">Из браузера</a>
+                <a data-save-before-leave router-ignore href="transfer">Из браузера</a>
                 <form method="post" action="logout"><input type="hidden" name="csrf" value="%s">
                 <button type="submit" class="secondary">Выйти</button></form>"""
                 .formatted(AccountServlet.csrf(request.getSession()));
-        add(new Html(PlannerPages.frame(actions, PlannerPages.planner(true))));
+        add(new Html(AppPages.frame(actions, BudgetPlanner.month(true))));
     }
 
     @Override protected void onAttach(AttachEvent event) {
@@ -46,13 +47,6 @@ public final class BootstrapView extends Div {
     /** Vaadin checks session and CSRF before dispatch; owner identity is rechecked by the service. */
     @ClientCallable
     public String planner(String action, String payload) {
-        try {
-            return JSON.writeValueAsString(PlannerCommands.run(service, action, JSON.readTree(payload)));
-        } catch (IllegalArgumentException | java.time.DateTimeException | tools.jackson.core.JacksonException invalid) {
-            return "{\"error\":\"invalid\"}";
-        } catch (RuntimeException failure) {
-            // A disconnected client must not assume a write rolled back or retry it automatically.
-            return "{\"error\":\"unknown\"}";
-        }
+        return PlannerCommands.execute(service, action, payload);
     }
 }

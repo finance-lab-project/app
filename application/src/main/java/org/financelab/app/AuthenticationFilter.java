@@ -42,7 +42,7 @@ public final class AuthenticationFilter implements Filter {
         String path = request.getRequestURI().substring(request.getContextPath().length());
         boolean read = "GET".equals(request.getMethod()) || "HEAD".equals(request.getMethod());
         if (path.equals("/login") || read && (PUBLIC_READS.contains(path)
-                || path.startsWith("/ui/") && PlannerPages.PUBLIC_ASSETS.contains(path.substring(3)))) {
+                || path.startsWith("/ui/") && AppPages.PUBLIC_ASSETS.contains(path.substring(3)))) {
             chain.doFilter(request, response);
             return;
         }

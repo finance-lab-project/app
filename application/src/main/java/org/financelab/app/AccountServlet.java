@@ -92,7 +92,7 @@ public final class AccountServlet extends HttpServlet {
         var session = request.getSession(true);
         var config = (ApplicationConfig) request.getServletContext().getAttribute(ApplicationLifecycle.CONFIG_ATTRIBUTE);
         session.setMaxInactiveInterval(config.idleSeconds());
-        PlannerPages.page(response, "Вход", "<a class=\"text-link\" href=\"local\">К бюджету</a>", """
+        AppPages.page(response, "Вход", "<a class=\"text-link\" href=\"local\">К бюджету</a>", """
                 <main class="auth"><section class="surface"><h1>Вход в Finance Lab</h1>
                 <p class="intro">Войдите, чтобы открыть свой бюджет на другом устройстве.</p>
                 %s<form method="post"><input type="hidden" name="csrf" value="%s">

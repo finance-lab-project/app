@@ -81,7 +81,7 @@ export APP_DB_URL="jdbc:postgresql://127.0.0.1:$dbport/finance_lab" APP_DB_USER=
 FLYWAY_URL="$APP_DB_URL" FLYWAY_USER=finance_migrate FLYWAY_PASSWORD=synthetic-migration \
     "$JAVA_HOME/bin/java" -cp 'application/target/finance-lab/WEB-INF/classes:application/target/finance-lab/WEB-INF/lib/*' \
     org.financelab.app.BudgetMigration
-psql_admin < ops/single-vm/budget-grants.sql
+unzip -p application/target/finance-lab/WEB-INF/lib/budget-0.2.0.jar db/permissions/runtime.sql | psql_admin -v runtime_role=finance_app
 # A missing account configuration must never yield a usable application.
 env -u APP_MODE -u APP_ACCOUNT_FILE scripts/run.sh > target/jetty-unconfigured.log 2>&1 &
 jetty_pid=$!

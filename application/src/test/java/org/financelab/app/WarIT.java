@@ -21,12 +21,13 @@ class WarIT {
             var entries = war.stream().map(entry -> entry.getName()).toList();
             assertTrue(entries.stream().anyMatch(name -> name.contains("VAADIN/build/") && name.endsWith(".js")));
             assertTrue(entries.contains("WEB-INF/lib/postgresql-42.7.14.jar"));
+            assertFalse(entries.contains("ui/local.js"), "The planner is served from the Budget JAR");
             assertFalse(entries.stream().anyMatch(name -> name.matches(
                     "WEB-INF/lib/(spring-.*|jetty-.*|authentication-.*|password4j-.*|jakarta.servlet-api-.*|junit-.*|playwright-.*|portfolio-.*|fire-.*|camunda-.*|artemis-.*)\\.jar")));
             for (String[] library : new String[][]{
-                    {"budget", "94fe727e54eee105699078fe286d6f370d9426e4"},
-                    {"orm", "8daaf91d07d2e30b563322b22a0c6da7545578e5"}}) {
-                var entry = war.getEntry("WEB-INF/lib/" + library[0] + "-0.1.0.jar");
+                    {"budget-0.2.0.jar", "1660e6e6f6b6736d3760b8016d89e644f749bcf9"},
+                    {"orm-0.1.0.jar", "8daaf91d07d2e30b563322b22a0c6da7545578e5"}}) {
+                var entry = war.getEntry("WEB-INF/lib/" + library[0]);
                 assertNotNull(entry);
                 try (var jar = new java.util.jar.JarInputStream(war.getInputStream(entry))) {
                     assertEquals(library[1], jar.getManifest().getMainAttributes().getValue("Build-Source-Revision"));

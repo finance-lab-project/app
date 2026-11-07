@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Build the merged module sources at immutable commits until the Maven registry is provisioned.
+# Build the pinned module sources until the Maven registry is provisioned.
 set -euo pipefail
-revision=94fe727e54eee105699078fe286d6f370d9426e4
+revision=1660e6e6f6b6736d3760b8016d89e644f749bcf9
 source_dir=$(mktemp -d)
 trap 'rm -rf "$source_dir"' EXIT
 git -C "$source_dir" init --quiet

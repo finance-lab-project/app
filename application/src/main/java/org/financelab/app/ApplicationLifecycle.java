@@ -23,7 +23,7 @@ public final class ApplicationLifecycle implements ServletContextListener {
         try {
             String policy = policyFile == null ? "" : java.nio.file.Files.readString(java.nio.file.Path.of(policyFile));
             context.setAttribute("privacyPolicy", policy.isBlank() ? "" : "<h2>Политика оператора</h2><div class=\"policy\">"
-                    + PlannerPages.escape(policy) + "</div>");
+                    + AppPages.escape(policy) + "</div>");
         } catch (java.io.IOException e) {
             throw new IllegalStateException("Cannot read configured privacy policy");
         }

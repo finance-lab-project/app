@@ -14,6 +14,7 @@
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
     <dependencyManagement><dependencies>
+        <dependency><groupId>org.financelab</groupId><artifactId>budget</artifactId><version>0.2.0</version></dependency>
         <dependency><groupId>com.vaadin</groupId><artifactId>vaadin-bom</artifactId><version>${vaadin.version}</version><type>pom</type><scope>import</scope></dependency>
         <dependency><groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.7.14</version></dependency>
         <dependency><groupId>org.flywaydb</groupId><artifactId>flyway-core</artifactId><version>13.12.0</version></dependency>
@@ -21,7 +22,7 @@
     </dependencies></dependencyManagement>
     <dependencies>
         <dependency><groupId>com.vaadin</groupId><artifactId>vaadin-core</artifactId></dependency>
-        <dependency><groupId>org.financelab</groupId><artifactId>budget</artifactId><version>0.1.0</version></dependency>
+        <dependency><groupId>org.financelab</groupId><artifactId>budget</artifactId></dependency>
         <dependency><groupId>org.flywaydb</groupId><artifactId>flyway-core</artifactId></dependency>
         <dependency><groupId>org.flywaydb</groupId><artifactId>flyway-database-postgresql</artifactId></dependency>
         <dependency><groupId>jakarta.servlet</groupId><artifactId>jakarta.servlet-api</artifactId><version>6.1.0</version><scope>provided</scope></dependency>
