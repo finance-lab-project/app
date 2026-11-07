@@ -32,6 +32,7 @@ export function startPlanner(root, accountStorage) {
   }
   function lock(state) {
     busy = state;
+    $("#month").disabled = $("#year").disabled = state;
     for (const s of [".planner-nav", ".date-controls", "#month-panel", "#catalog-panel", "#history-panel"]) $(s).inert = state;
   }
   async function request(action, data) {
