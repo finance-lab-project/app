@@ -16,7 +16,7 @@ Each step is a separate work item. This index does not dispatch subsequent steps
 | [3. Complete workflow correctness](03-workflows.md) | Do editing, saving, history, category changes and guest transfer behave consistently across layers and failures? | Runtime checks recorded; two UI defects and transfer recovery limitation |
 | [4. PostgreSQL and custom ORM integrity](04-postgresql-orm.md) | Are atomicity, concurrency, owner scoping and historical projections enforced? | Database/ORM checks recorded; one category projection integrity finding |
 | [5. Security boundaries](05-security.md) | Do authentication, authorization, session handling and input/output boundaries protect account data? | Source/runtime checks recorded; no new reportable vulnerability, deployment limits retained |
-| 6. Builds, tests and delivery | Can the exact software be rebuilt, tested and distributed with reliable provenance? | Not started |
+| [6. Builds, tests and delivery](06-builds-tests-delivery.md) | Can the exact software be rebuilt, tested and distributed with reliable provenance? | Reproducibility recorded; two delivery defects, persistence gate gap and release plan |
 | 7. Performance and resilience | What do representative measurements and controlled failures show? | Not started |
 | 8. Deployment and recovery | Can the deployed service be operated, diagnosed, backed up and restored as documented? | Not started |
 
