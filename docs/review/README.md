@@ -18,7 +18,7 @@ Each step is a separate work item. This index does not dispatch subsequent steps
 | [5. Security boundaries](05-security.md) | Do authentication, authorization, session handling and input/output boundaries protect account data? | Source/runtime checks recorded; no new reportable vulnerability, deployment limits retained |
 | [6. Builds, tests and delivery](06-builds-tests-delivery.md) | Can the exact software be rebuilt, tested and distributed with reliable provenance? | Reproducibility recorded; two delivery defects, persistence gate gap and release plan |
 | [7. Performance and resilience](07-performance-resilience.md) | What do representative measurements and controlled failures show? | Local measurements and controlled recovery recorded; query growth, deadline and target-capacity gaps |
-| 8. Deployment and recovery | Can the deployed service be operated, diagnosed, backed up and restored as documented? | Not started |
+| [8. Deployment and recovery](08-deployment-recovery.md) | Can the deployed service be operated, diagnosed, backed up and restored as documented? | Public boundary and isolated encrypted recovery recorded; deployed controls and operational acceptance unverified |
 
 Use read-only production observations. Run write tests and failure experiments
 with synthetic data in isolated environments.
