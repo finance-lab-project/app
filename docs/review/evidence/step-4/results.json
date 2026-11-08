@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "observation_date": "2026-11-08",
+  "timezone": "Europe/Moscow",
+  "source_baseline": {
+    "app": "f78682778eebed86730ec457f63c96648f19370d",
+    "budget": "43d86d28965a241cd45f7938c1adfb2ec50f8132",
+    "orm": "8daaf91d07d2e30b563322b22a0c6da7545578e5"
+  },
+  "environment": {
+    "os_architecture": "macOS arm64",
+    "java": "27.0.1.0.3",
+    "maven": "3.10.0",
+    "postgresql_server": "18.6",
+    "postgresql_client": "18.6",
+    "postgresql_image": "postgres:18.6",
+    "python": "3.9.6",
+    "jdbc": "42.7.14",
+    "hikari": "7.1.0",
+    "flyway": "13.12.0",
+    "junit": "6.1.3",
+    "database_timezone": "UTC",
+    "test_jvm_timezone": "Pacific/Honolulu",
+    "storage": "disposable container with tmpfs; random loopback port"
+  },
+  "migration": {
+    "sha256": "33396e787b738b46ce9933d1ff17abacec8326430f49f96758cea466658f0f0c",
+    "orm_fixture_matches_frozen_budget": true,
+    "budget_table_count": 24,
+    "direct_reader_database": "Flyway migrate/validate succeeded; second migrate applied zero migrations",
+    "schema_harness_database": "same V1 applied directly through psql; no verification-POM dependencies used"
+  },
+  "orm_unit": [
+    {
+      "name": "org.financelab.orm.CodecsTest",
+      "tests": 3,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.financelab.orm.MappingTest",
+      "tests": 3,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    }
+  ],
+  "orm_integration": [
+    {
+      "name": "org.financelab.orm.AnchorMappingIT",
+      "tests": 31,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.financelab.orm.JdbcTransactionsIT",
+      "tests": 44,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    }
+  ],
+  "sql_harness": {
+    "checks": 112,
+    "passed": 112,
+    "failed": 0,
+    "method": "unchanged Budget verification/check.py with fresh schema",
+    "negative_case_verification": "expected SQLSTATE and every Budget table unchanged; commit-time markers for deferred rejection"
+  },
+  "direct_review": {
+    "name": "org.financelab.budget.adapter.postgres.IntegrityReviewIT",
+    "tests": 8,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "interpretation": "Three passing characterization cases reproduce S4-01; five are passing controls/recovery/permission cases.",
+    "observations": [
+      {
+        "case": "bare",
+        "finding": "S4-01",
+        "committedFixture": true,
+        "currentCategories": 10,
+        "historicalCategories": 10,
+        "integrityError": false
+      },
+      {
+        "case": "futureIncomplete",
+        "finding": "S4-01",
+        "committedFixture": true,
+        "currentCategories": 10,
+        "historicalCategories": 10,
+        "integrityError": false
+      },
+      {
+        "case": "differentInitialTimes",
+        "finding": "S4-01",
+        "committedFixture": true,
+        "currentCategories": 11,
+        "historicalCategories": 11,
+        "integrityError": false
+      },
+      {
+        "case": "terminateBeforeCommit",
+        "outcome": "UNKNOWN",
+        "sqlState": "57P01",
+        "persistedProbeRows": 0,
+        "callbackCalls": 1,
+        "poolRecovered": true
+      },
+      {
+        "case": "terminateBeforeNextStatement",
+        "outcome": "NOT_COMMITTED",
+        "sqlState": "57P01",
+        "persistedProbeRows": 0,
+        "callbackCalls": 1,
+        "poolRecovered": true
+      },
+      {
+        "case": "runtimeFactPermissions",
+        "updateSqlState": "42501",
+        "deleteSqlState": "42501",
+        "outcome": "NOT_COMMITTED"
+      },
+      {
+        "case": "legitimateLaterCategory",
+        "currentCategories": 11,
+        "historicalCategories": 10
+      },
+      {
+        "case": "visibleMissingStatus",
+        "integrityError": true
+      }
+    ]
+  },
+  "reused_evidence": {
+    "budget_integration_tests": 29,
+    "source": "Step 3 evidence/step-3/results.json",
+    "rerun_in_step_4": false,
+    "same_frozen_source": true
+  },
+  "harness_development": {
+    "pilot_tests": 8,
+    "pilot_failures": 1,
+    "cause": "Expected-error control used an assertion-throwing diagnostic sink; replaced it with a collecting sink.",
+    "final_fresh_run_tests": 8,
+    "final_fresh_run_failures": 0,
+    "production_code_changed": false
+  },
+  "reproduction_sha256": {
+    "IntegrityReviewIT.java": "022e209c565d1ac3a88e145d83dd6b90c399387d65e27d91f1329919b627406e",
+    "README.md": "bbb0ffb853bd4292a895f18312e24ecb127913425455a423ae0c79b34e975da2",
+    "run.sh": "e3abf836e4dcd4bf8e6a5ba0920be081dded33d1aaff6128c9f676e94132a4f8"
+  },
+  "production_database_accessed": false,
+  "tracked_runtime_sources_unchanged": true,
+  "limitations": [
+    "Deployed commit, artifact checksum, schema and effective grants remain unverified.",
+    "Malformed category fixtures were deliberately inserted with runtime rights; ordinary saves were not shown to create them.",
+    "Wire-level packet loss after a real commit was not tested; existing after-commit acknowledgement loss uses a wrapper.",
+    "No backup/restore, load, service outage or full authentication review was performed in this step."
+  ]
+}
