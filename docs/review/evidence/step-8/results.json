@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "observation_date": "2026-11-08",
+  "app_revision": "f78682778eebed86730ec457f63c96648f19370d",
+  "budget_revision": "43d86d28965a241cd45f7938c1adfb2ec50f8132",
+  "orm_revision": "8daaf91d07d2e30b563322b22a0c6da7545578e5",
+  "merged_pr_19": "5dc2e43668ea06889d5a5966b42b11bcc0fd8e3f",
+  "public_observations": {
+    "observed_at_utc": "2026-11-08T06:58:42Z",
+    "method": "Python urllib HTTP client; HTTPS default certificate and hostname validation; no sign-in, login POST, retained cookie or account data",
+    "hostname": "finance-lab-project.com",
+    "requests": [
+      {
+        "name": "http-root",
+        "path": "http://finance-lab-project.com/",
+        "status": 308,
+        "location": "https://finance-lab-project.com/"
+      },
+      {
+        "name": "https-login",
+        "path": "https://finance-lab-project.com/login",
+        "status": 200,
+        "password_input": true,
+        "csrf_input": true
+      },
+      {
+        "name": "https-local",
+        "path": "https://finance-lab-project.com/local",
+        "status": 200,
+        "planner_markup": true
+      },
+      {
+        "name": "https-protected",
+        "path": "https://finance-lab-project.com/transfer",
+        "status": 401
+      },
+      {
+        "name": "https-forwarded",
+        "path": "https://finance-lab-project.com/login",
+        "headers": {
+          "Forwarded": "proto=http;host=spoof.example.invalid",
+          "X-Forwarded-Proto": "http"
+        },
+        "status": 200,
+        "password_input": true,
+        "csrf_input": true,
+        "spoof_hostname_in_response": false
+      }
+    ],
+    "scope": "Five point-in-time public requests; no deployed artifact identity, firewall/listener/host/provider acceptance claim"
+  },
+  "isolated_drill": {
+    "completed": true,
+    "versions": {
+      "postgresql": [
+        "psql (PostgreSQL) 18.6 (Debian 18.6-1.pgdg13+2)"
+      ],
+      "age": [
+        "1.2.1"
+      ],
+      "awscli": [
+        "aws-cli/2.23.6 Python/3.13.5 Linux/6.12.76-linuxkit source/aarch64.debian.13"
+      ],
+      "bash": [
+        "GNU bash, version 5.2.37(1)-release (aarch64-unknown-linux-gnu)",
+        "Copyright (C) 2022 Free Software Foundation, Inc.",
+        "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>"
+      ],
+      "caddy": [
+        "2.6.2"
+      ],
+      "systemd": [
+        "systemd 257 (257.13-1~deb13u1)",
+        "+PAM +AUDIT +SELINUX +APPARMOR +IMA +IPE +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBCRYPTSETUP_PLUGINS +LIBFDISK +PCRE2 +PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD +BPF_FRAMEWORK +BTF -XKBCOMMON -UTMP +SYSVINIT +LIBARCHIVE"
+      ],
+      "shellcheck": [
+        "ShellCheck - shell script analysis tool",
+        "version: 0.10.0",
+        "license: GNU General Public License, version 3"
+      ]
+    },
+    "checked_in_recovery_drill": "exit 0",
+    "schema_source": "Accepted WAR nested Budget JAR V1 SQL and runtime grants",
+    "seeding": "Direct SQL fixture; Flyway and Java/browser application not executed",
+    "table_data_and_owner_grants_equal": true,
+    "table_snapshots": {
+      "tables": [
+        {
+          "table": "amount_state",
+          "rows": 2,
+          "sha256": "6875eee86e00fb90a27b62080d0a329ec94362eac1fb0031ec1f0055172cde2e"
+        },
+        {
+          "table": "budget",
+          "rows": 1,
+          "sha256": "77c6f798098c6b8aba741aec15a490d25e9325e2c0f3188891991f6921be9d54"
+        },
+        {
+          "table": "budget_currency",
+          "rows": 1,
+          "sha256": "fe846aa868ac522f51dec73ebd276552e6f756fc4a8d61b4610c136ccb7200b3"
+        },
+        {
+          "table": "budget_guard",
+          "rows": 1,
+          "sha256": "907f91d8433d017deae1a3c56a3f48ac5352dbe7d9df4df367e62683b49dd5c1"
+        },
+        {
+          "table": "budget_line",
+          "rows": 3,
+          "sha256": "968ca5db621b442d30eed49e55534030c99bd702666e8a7d7c747338c31b2996"
+        },
+        {
+          "table": "budget_month",
+          "rows": 1,
+          "sha256": "7065a5cf55eb7fb76543c70ad12d78094ee163326b48e857b15f632c4c54d7a1"
+        },
+        {
+          "table": "budget_owner",
+          "rows": 1,
+          "sha256": "ee804806b0f92f4d4b5b0b2bc840d1455fe10f81250a23efc11ca8a9d5e41501"
+        },
+        {
+          "table": "budget_revision",
+          "rows": 2,
+          "sha256": "04f189c3dd11dfd996ad36f52e5561aae69a35a22263a0900229b27fea6b2a00"
+        },
+        {
+          "table": "catalog_guard",
+          "rows": 1,
+          "sha256": "57a68b03d510dde496a1b7277b247578977dff2f8df8b99830d7818a96bd0a58"
+        },
+        {
+          "table": "catalog_revision",
+          "rows": 2,
+          "sha256": "4c086f64f3bfeeae0253e86c773b745d04dd7138d1e7c96a7829e1966800a59a"
+        },
+        {
+          "table": "category",
+          "rows": 1,
+          "sha256": "8e6e451b806fea6250ac9a771f41f7d5e474222e4f43def926effdf4e62330eb"
+        },
+        {
+          "table": "category_name",
+          "rows": 2,
+          "sha256": "53123fb1bf4ab794cdc6862fb315eef69bf25452e3ea422f59a7bfa5ebdf55bb"
+        },
+        {
+          "table": "category_owner",
+          "rows": 1,
+          "sha256": "4565f37096e91613d6aec14bd8fb588fe55c0ec61fc9d1dcc63ec0f28bf8e0f7"
+        },
+        {
+          "table": "category_position",
+          "rows": 1,
+          "sha256": "1487088463caa6912089ea3339da0e68a71ce7c0043fa68400434f1923b16f3d"
+        },
+        {
+          "table": "category_status",
+          "rows": 2,
+          "sha256": "5e95129ba26925e7690c70a66d1a33d45f5349db82fc851cda3ca9ca4f180b4c"
+        },
+        {
+          "table": "category_status_history",
+          "rows": 1,
+          "sha256": "71c9cffe27ebd5c0c681c599dea7a470ea71cf5d2a4535afca7fc1435daa4ced"
+        },
+        {
+          "table": "currency",
+          "rows": 1,
+          "sha256": "d03e31fdcaab2cffce3c09b2e5841f7fb640cbd5d4601fd4c497da2cd3c5a2d5"
+        },
+        {
+          "table": "line_amount",
+          "rows": 4,
+          "sha256": "2ddea72b50800df7bf1ce65cb254f0a6c2611f760e007953f2625df0d0526c85"
+        },
+        {
+          "table": "line_amount_state",
+          "rows": 6,
+          "sha256": "fd5077d05414546c8b3f3a9e690de9ed8940c78991208cfdbc4317f33821caff"
+        },
+        {
+          "table": "line_category",
+          "rows": 1,
+          "sha256": "f25b12a9c9dbe4200f1c782a9d615d345f393e9de40b50a9d279f0bae4ca73e2"
+        },
+        {
+          "table": "line_in_budget",
+          "rows": 3,
+          "sha256": "39e937ab05bd86ef73315b3fdf916eeb360b38b68105c0283b738a9b1e9aae19"
+        },
+        {
+          "table": "line_key",
+          "rows": 3,
+          "sha256": "f759b82c36f15a657cfeafc26ebc1673ead69bbceb769339b59233ae1e54632c"
+        },
+        {
+          "table": "line_kind",
+          "rows": 3,
+          "sha256": "28ad6eda3a0a8d5808d621dd2126b06115fd4a9d9067dd64297a7fdf64303a61"
+        },
+        {
+          "table": "line_kind_attribute",
+          "rows": 3,
+          "sha256": "1a328e2ae941832fbaf04588826b984ec858a4fa21a89a378057df556ce3d7e2"
+        }
+      ],
+      "owners_and_acl_sha256": "89266944a53812f62b0937583e7a6fa15e71bd5f08d6b2c672c630cd5751466b"
+    },
+    "runtime_role_projection": [
+      "1|Synthetic original|INCOME|UNSET|unset",
+      "1|Synthetic original|INVESTMENT|SET|0.00",
+      "1|Synthetic original|SPENDING|SET|0.00",
+      "2|Synthetic renamed|INCOME|SET|123.45",
+      "2|Synthetic renamed|INVESTMENT|UNSET|unset",
+      "2|Synthetic renamed|SPENDING|SET|12.34"
+    ],
+    "backup_role_cannot_read_age_identity": true,
+    "verified_pre_change_ciphertext_receipt": true,
+    "failed_mail_submission_exit_code": 1,
+    "missing_owner_restore_exit_code": 1,
+    "failed_import_left_new_empty_database": true,
+    "existing_empty_target_refused": true,
+    "fetch_removed_ciphertext_and_partial": true,
+    "fetch_new_cluster_and_validation_s": 2.345,
+    "extended_phase_s": 5.625,
+    "scope": "Local synthetic recovery pipeline, not service-manager/provider/end-to-end recovery time",
+    "elapsed_drill_container_s": 18.936,
+    "app_revision": "f78682778eebed86730ec457f63c96648f19370d",
+    "accepted_sha256": {
+      "application/target/finance-lab.war": "a2a81f71a567587934cf7c830b3adf2b4c10d4fa1e9004f9fc60fbfdba27307a",
+      "authentication/target/authentication-0.1.0.jar": "661f6f65ccbde13e31cc432870ce16bb8e0e466cede7b8235bce8dd505645a24",
+      "authentication/target/lib/password4j-1.8.4.jar": "d1406a158533b65bda7c20cebf7bf2a9a0626f8931fd1dc3d39243af5849edf5",
+      "config/jetty-auth.xml": "fd8b7ab5d9393f7e1e945e6df0f384c4ac96a8da878d3dbc0ffaf28773cfb494",
+      "build-parent/pom.xml": "aa61d398a42e3df231b696532a545872296bba8d039b453cf5ad98f5b284a34f"
+    },
+    "ops_sha256": {
+      "ops/single-vm/Caddyfile": "4f827e0d66137845775d58eb1197ed4f1b078f19bcf186545b37b10001b9d5aa",
+      "ops/single-vm/backup": "a27f594f29fb3811d3f74b98030ecdba916fa0fc6ab82557cfac295d846b9d67",
+      "ops/single-vm/checks/Dockerfile": "96d40122015f9aac29b27ecb2429e95011d10f20b51a018850c4af969d7b9206",
+      "ops/single-vm/checks/recovery.sh": "de99a76e86c35330bfce6c46ccb1e24fa0a30bb13df0f2529f34f6237a578a2b",
+      "ops/single-vm/fetch-backup": "376d1eaec05293a36163de2ea1995405b7cda8a515e9b581fa2db202c5194899",
+      "ops/single-vm/finance-lab-backup.timer": "474fd19bea7dc89bd168178cfc7fff9ebc40994bb3a028dee8d17544a1476a34",
+      "ops/single-vm/finance-lab-backup@.service": "87413efbb02592744920add39b8d891c4e5ceec392528f62949f0e8e0deb8a11",
+      "ops/single-vm/finance-lab.service": "e70aefdfcfa543deb3111b55055f6057ee4888ecf0b06450581b1a84df753040",
+      "ops/single-vm/lifecycle.json": "6563c3ff391022bcb1d3cac3edc2658310df6f57596774291e656f3234ef83bf",
+      "ops/single-vm/pg_hba.conf": "b6834897ae044b02dac1c7ca5814188eae3f2f4b205da84506dae06f4680eac1",
+      "ops/single-vm/postgresql.conf": "7910050628005bd6d621e6839a96bff12c33075fe1e8af2d8163d4d1b76b725f",
+      "ops/single-vm/report-backup": "ca168ff8d359cfa91672808a5b5a14b2cbea177c4ef6cfd92d65512e941a4508",
+      "ops/single-vm/restore": "7bbf9fd077e19cc6fd1f491de962075ab629f0bfa426600fc287e1dcf102ba33",
+      "ops/single-vm/roles.sql": "0c4954586a79158e513e88ce7acd0f0b0ea99d400a548e255fe10aa0cd57caff"
+    },
+    "images": {
+      "finance-lab-recovery-check:local": "sha256:b114d4ccb07e2e0f08ceae3f2ba068bbc48d5faf696f71ac5cb13c3125ff6beb",
+      "motoserver/moto:5.1.14": "sha256:800719627036dc38dc699e9f314f624f2c98ac3d8bb754db078cb2698f08ee77"
+    }
+  },
+  "independent_post_checks": {
+    "fixture_containers_absent": true,
+    "fixture_volumes_absent": true,
+    "app_budget_orm_original_checkouts_clean": true
+  },
+  "live_github_observations": {
+    "issue_6_state": "open",
+    "pr_12_state": "open",
+    "pr_12_scope": "Prior local implementation evidence; not fresh production verification"
+  },
+  "unverified": [
+    "deployed artifact and configuration identity",
+    "actual host listeners, firewall, service overrides and boot recovery",
+    "current automatic backup, off-VM verified receipt and independently accessible recovery bundle",
+    "provider bucket policy and actual elapsed retention/expiration",
+    "current production mailbox delivery",
+    "complete timed lost-host recovery through application acceptance and cutover",
+    "combined constrained-host capacity and disk headroom",
+    "current billing period and human release acceptance"
+  ]
+}
