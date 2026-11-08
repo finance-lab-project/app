@@ -72,11 +72,15 @@ create releases, tags, packages or a registry.
 
 ## Planned Zenodo publication
 
-At the end, combine the reviewed business findings and technical step reports
-into a report covering scope, exact software versions, methods, results,
-limitations and reproduction instructions. Link each conclusion to its
-underlying evidence. Choose the title, authors, licenses, citation metadata and
-publication files from the completed work.
+The [combined publication candidate](publication/README.md), prepared on
+8 November 2026, brings together the initial product/business review and all
+eight technical steps. It provides standalone LaTeX, a checked PDF, equivalent
+Markdown, proposed deposit metadata, checksums and the frozen evidence bundle.
+It follows the author's [previous report](https://doi.org/10.5281/zenodo.23293506)
+in presentation, evidence handling and assistance disclosure. Its document
+license does not relicense application or reproduction code. The candidate has
+not been deposited in Zenodo; release acceptance and operational evidence gaps
+remain explicit in the report.
 
 Software archives may have separate version-specific records linked from the
 report where independently useful. Zenodo supports

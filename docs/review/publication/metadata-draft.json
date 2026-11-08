@@ -1,0 +1,57 @@
+{
+  "title": "Finance Lab MVP Review: Product Findings, Technical Integrity and Release Evidence",
+  "upload_type": "publication",
+  "publication_type": "report",
+  "creators": [
+    {
+      "name": "Serdyuchenko, Anton",
+      "orcid": "0000-0001-7770-2201"
+    }
+  ],
+  "access_right": "open",
+  "license": "cc-by-4.0",
+  "version": "1.0",
+  "language": "eng",
+  "keywords": [
+    "personal finance",
+    "Budget MVP",
+    "modular monolith",
+    "Vaadin",
+    "PostgreSQL",
+    "Anchor Modeling",
+    "custom ORM",
+    "reproducibility",
+    "resilience",
+    "software review",
+    "synthetic data",
+    "AI-assisted engineering"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.23293506",
+      "relation": "references",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/finance-lab-project/app/tree/f78682778eebed86730ec457f63c96648f19370d",
+      "relation": "documents",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/finance-lab-project/budget/tree/43d86d28965a241cd45f7938c1adfb2ec50f8132",
+      "relation": "documents",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/finance-lab-project/orm/tree/8daaf91d07d2e30b563322b22a0c6da7545578e5",
+      "relation": "documents",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/finance-lab-project/app/tree/7edfb504d98ebe88df51a92124e217573addbd41/docs/review",
+      "relation": "references",
+      "scheme": "url"
+    }
+  ],
+  "description": "<p>This report consolidates the product review and eight technical review steps of Finance Lab's first Budget MVP, recorded on 7-8 November 2026. The reviewed system is a Java/Vaadin modular monolith with a PostgreSQL Anchor Modeling schema, a custom JDBC mapper, a browser-local guest planner and one configured authenticated account. Exact application, Budget and ORM revisions define the runtime baseline; a separate merged documentation revision anchors the review evidence. Recorded normal workflows support precise money handling, explicit saves, historical views and category archiving. Targeted probes reproduced a confirmed-save/read-refresh defect, a rapid dialog-reuse race, an incremental history-transfer limitation and missing initial-category integrity validation. Delivery checks found reproducible accepted binaries alongside Bash 3.2 publication-guard and inherited Maven metadata defects, with persistence integration suites outside the automatic gate. No new reportable security vulnerability was found within the recorded review scope. Local measurements retained 707 latency samples: saved-month reads used 60 prepared statements at 10 categories and 260 at 50, while browser RPC p95 increased from 44.42 to 144.17 milliseconds. Controlled database and explicit JVM restarts preserved selected confirmed state. An isolated encrypted recovery drill preserved data fingerprints for all 24 Budget tables, owners, grants and selected historical projections. Deployed artifact correspondence, constrained-host capacity, provider backup behavior and complete timed operational recovery remain unverified. The report provides a traceable basis for corrective releases and acceptance work; it does not establish market demand, general security, sustainable capacity, independent reproduction or production readiness.</p>\n<p>Classification: Technical Report / Pilot Engineering Study; not peer-reviewed research. Published financial examples and test fixtures are synthetic. OpenAI ChatGPT/Codex assisted the review, execution, synthesis and LaTeX preparation; Anton Serdyuchenko is the author. CC BY 4.0 covers this report and its new document sources/metadata; archived reproduction code retains its upstream licensing status. This is a report publication candidate. Production acceptance and market validation remain unverified.</p>"
+}
