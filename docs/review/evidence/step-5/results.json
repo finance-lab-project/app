@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "observation_date": "2026-11-08",
+  "timezone": "Europe/Moscow",
+  "source_baseline": {
+    "app": "f78682778eebed86730ec457f63c96648f19370d",
+    "budget": "43d86d28965a241cd45f7938c1adfb2ec50f8132",
+    "orm": "8daaf91d07d2e30b563322b22a0c6da7545578e5"
+  },
+  "environment": {
+    "os_architecture": "macOS arm64",
+    "java": "27.0.1.0.3",
+    "maven": "3.10.0",
+    "node": "24.22.2",
+    "npm": "11.19.1",
+    "jetty": "12.1.14 EE11",
+    "postgresql": "18.6",
+    "playwright_java": "1.64.0",
+    "flow_server": "25.3.7",
+    "tls": "disposable self-signed loopback test connector",
+    "database_role": "finance_app with exact frozen Budget runtime grants"
+  },
+  "original_application_unit": [
+    {
+      "name": "org.financelab.app.ApplicationConfigTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.financelab.app.OwnerIdentityTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.financelab.auth.ConfiguredAccountTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "packaged_war": {
+    "name": "org.financelab.app.WarIT",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "planner_journeys": {
+    "name": "org.financelab.app.PlannerJourneyIT",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "original_authentication_phases": [
+    {
+      "phase": "absolute",
+      "name": "org.financelab.app.AuthenticationIT",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "phase": "boundary",
+      "name": "org.financelab.app.AuthenticationIT",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "phase": "idle",
+      "name": "org.financelab.app.AuthenticationIT",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "phase": "rotated",
+      "name": "org.financelab.app.AuthenticationIT",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "new_security_probes": {
+    "name": "org.financelab.app.SecurityReviewIT",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "observations": [
+      {
+        "case": "vaadinCsrfAndLogoutReplay",
+        "missingRpcTokenRejected": true,
+        "logoutClearsCookie": true,
+        "oldSessionRpcRejected": true
+      },
+      {
+        "case": "nativeCsrf",
+        "crossSessionTokenRejected": true,
+        "foreignAndNullOriginsRejected": true,
+        "sessionAndTokenRotated": true,
+        "staleTokenRejected": true,
+        "missingOriginRejected": true,
+        "invalidTransferShapeRejected": true
+      },
+      {
+        "case": "ownerIsolation",
+        "forgedOwnerReadReturnedOwnData": true,
+        "foreignCategorySaveRejected": true,
+        "bothBudgetValuesAndRevisionCountsUnchanged": true
+      },
+      {
+        "case": "literalCategoryRendering",
+        "labelRoundTrippedExactly": true,
+        "htmlNotCreated": true,
+        "scriptNotExecuted": true,
+        "catalogStillReadable": true
+      },
+      {
+        "case": "anonymousBoundary",
+        "closedPaths": 13,
+        "forgedIdentityRejected": true,
+        "publicReads": 4,
+        "publicWritesRejected": 3
+      }
+    ]
+  },
+  "build_checks": {
+    "two_clean_archives_byte_identical": true,
+    "five_sha256_values_match_prior_baseline_verification": true,
+    "sha256": {
+      "application/target/finance-lab.war": "a2a81f71a567587934cf7c830b3adf2b4c10d4fa1e9004f9fc60fbfdba27307a",
+      "authentication/target/authentication-0.1.0.jar": "661f6f65ccbde13e31cc432870ce16bb8e0e466cede7b8235bce8dd505645a24",
+      "authentication/target/lib/password4j-1.8.4.jar": "d1406a158533b65bda7c20cebf7bf2a9a0626f8931fd1dc3d39243af5849edf5",
+      "config/jetty-auth.xml": "fd8b7ab5d9393f7e1e945e6df0f384c4ac96a8da878d3dbc0ffaf28773cfb494",
+      "build-parent/pom.xml": "aa61d398a42e3df231b696532a545872296bba8d039b453cf5ad98f5b284a34f"
+    },
+    "unconfigured_account_failed_closed": true,
+    "normal_startup_without_test_tls_succeeded": true,
+    "verifier_exit_code": 0,
+    "test_services_stopped": true,
+    "tracked_runtime_sources_unchanged": true
+  },
+  "harness_development": {
+    "pilot_tests": 5,
+    "pilot_failures": 1,
+    "cause": "The test expected exactly no-store, while a container error response correctly supplied must-revalidate,no-cache,no-store. The test now checks the no-store directive.",
+    "final_fresh_run_tests": 5,
+    "final_fresh_run_failures": 0,
+    "production_changes": false
+  },
+  "reproduction_sha256": {
+    "SecurityReviewIT.java": "6d38e93f10c2ae626478800a094a5c96c81ac15ec5db58a815eb19f8bc9c45de",
+    "run.sh": "95fb658293ea73eb3db1b13af0bfb31fc0375daced4cdb1ef9e4a633262633a4"
+  },
+  "production_accessed": false,
+  "new_reportable_security_findings": 0,
+  "limitations": [
+    "The deployed commit, artifact, effective network/proxy/grants and external IAM remain unverified.",
+    "Static coverage is the 73 tracked frozen app files; Budget and ORM are supporting integration sources, not separately complete security audits.",
+    "Dependency advisory databases and full dependency implementations were not audited.",
+    "Public TLS, proxy behavior, exhaustion/load, backup/restore and service outage behavior were not tested here.",
+    "Earlier S2/S3/S4 correctness findings remain unchanged."
+  ]
+}
