@@ -14,7 +14,7 @@ Each step is a separate work item. This index does not dispatch subsequent steps
 | [1. Source, build and deployment identity](01-baseline.md) | Which exact sources and build outputs are under review, and can they be matched to production? | Source/build inventory recorded; deployed identity unverified |
 | [2. Architecture and boundaries](02-architecture.md) | Are responsibilities, dependencies and transaction ownership consistent with the agreed design? | Source review recorded; two follow-ups and transfer clarification |
 | [3. Complete workflow correctness](03-workflows.md) | Do editing, saving, history, category changes and guest transfer behave consistently across layers and failures? | Runtime checks recorded; two UI defects and transfer recovery limitation |
-| 4. PostgreSQL and custom ORM integrity | Are atomicity, concurrency, owner scoping and historical projections enforced? | Not started |
+| [4. PostgreSQL and custom ORM integrity](04-postgresql-orm.md) | Are atomicity, concurrency, owner scoping and historical projections enforced? | Database/ORM checks recorded; one category projection integrity finding |
 | 5. Security boundaries | Do authentication, authorization, session handling and input/output boundaries protect account data? | Not started |
 | 6. Builds, tests and delivery | Can the exact software be rebuilt, tested and distributed with reliable provenance? | Not started |
 | 7. Performance and resilience | What do representative measurements and controlled failures show? | Not started |
