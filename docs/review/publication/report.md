@@ -21,13 +21,13 @@ This report consolidates the product review and eight technical review steps of 
 
 ## 1. Objectives and scope
 
-Finance Lab's initial product objective is monthly financial planning: record income, spending and investments, see the remaining balance, explicitly save a month and inspect earlier versions. The implemented account model supports one configured owner. Guests can work with browser-local data; authenticated storage adds PostgreSQL persistence and cross-browser access for that owner. Portfolio and FIRE are deferred modules, not reviewed implemented products. [E0, E2]
+Finance Lab supports monthly financial planning: recording income, spending and investments, calculating the remaining balance, explicitly saving a month and inspecting earlier versions. The implemented access model supports one configured account. Guests can work with browser-local data; authenticated storage provides PostgreSQL persistence and cross-browser access for that account. [E0, E2]
 
-The owner requested a product/business review followed by a stepwise technical review, with each technical result saved on GitHub and later combined for Zenodo. The technical questions concern source identity, module boundaries, end-to-end correctness, persistence integrity, security, delivery, performance and operational recovery. This report combines those records without implementing their proposed fixes.
+The review assesses the implemented planning workflow and its technical foundations. It covers source identity, module boundaries, workflow correctness, persistence integrity, security, delivery, performance and operational recovery. The findings draw on the initial functional review and eight versioned technical reports.
 
-The application is the Java/Vaadin rewrite without Spring. Archived React, Go, BFF and platform repositories are outside the runtime baseline. The related AgentOps report supplies this publication's documentary conventions and style; its earlier transition-plan milestones are not acceptance criteria silently transferred to the implemented MVP. No model-driven agent integration or general agent reliability is demonstrated here. [R1, E1]
+The reviewed runtime is a Java/Vaadin modular monolith with PostgreSQL storage and a custom JDBC mapper. The source revisions and system boundary are defined in Section 3. [E1, E2]
 
-The product component is a bounded functional and usability review, not customer discovery or an experiment on adoption. There were no interviews, representative users, conversion cohorts, retention measurements, price tests or revenue data in the reviewed evidence. Product recommendations therefore remain hypotheses for owner prioritization.
+The product assessment examines the implemented workflow and selected usability properties. The evidence does not include interviews, representative-user studies, adoption or retention measurements, price tests or revenue data.
 
 ## 2. Methodology and evidence handling
 
@@ -39,7 +39,7 @@ The technical reports retain original finding IDs, test methods, failed pilot co
 
 The runtime baseline is distinct from the review-document snapshot. Merged review PRs #13-#20 add reports and external fixtures; merge status is a version-control observation, not evidence of deployment, independent validation or resolution of the findings. Review snapshot D contains the complete eight-step record after PR #20. [E1-E8]
 
-Public artifacts contain synthetic amounts and labels, source revisions and sanitized outcomes. Real passwords, cookies, recovery keys, financial records, private operator paths and provider credentials are excluded. The operator's statement that no deployment manifest was available is retained as an evidence limit; public page appearance cannot identify server archive bytes.
+Public artifacts contain synthetic amounts and labels, source revisions and sanitized outcomes. Real passwords, cookies, recovery keys, financial records, private operator paths and provider credentials are excluded. A deployment manifest was unavailable in the reviewed evidence; public page appearance cannot identify server archive bytes.
 
 ## 3. Reviewed system and recorded environments
 
@@ -77,7 +77,7 @@ The original business review raised four release/product concerns. Its priority 
 | B1 / high | Production acceptance was unconfirmed in available release records. Complete and reconcile the existing acceptance evidence; this overlaps S1-01 and S8-01/S8-02 rather than establishing a separate production defect. |
 | B2 / medium | Guest data remains in a browser profile, and clearing it can remove the only copy. If ongoing public guest use is intended, evaluate export/restore before encouraging reliance on it. This is a conditional product proposal, not a promise to add a feature. |
 | B3 / medium | Budget/ORM integration regression checks depended on manual execution. Step 6 confirmed the automatic-gate gap as S6-03. |
-| B4 / low | The sign-in wording could suggest cross-device access without clearly explaining owner-only accounts. Clarifying access expectations is a usability recommendation; no user-comprehension study was performed. |
+| B4 / low | The sign-in wording could suggest cross-device access without clearly explaining the single-account access model. Clarifying access expectations is a usability recommendation; no user-comprehension study was performed. |
 
 Browser-local storage and the single-account boundary are documented design choices. The concern is the fit between visitor expectations, durability requirements and the intended product audience. The review does not infer that guest storage is encrypted, portable or an account backup.
 
@@ -125,9 +125,9 @@ Real backend-termination probes also distinguished failure outcomes. A statement
 
 Step 5 covered all 73 tracked app files at snapshot A, with baseline, focused and architecture/resource reviews. Budget and ORM consumers were traced for the relevant boundaries; this was not an exhaustive separate security audit of both module repositories. Multiple AI review passes are not independent external peer review. [E5]
 
-Seven app unit cases, the packaged security/browser case, two planner journeys, four authentication phases and five additional security probes completed. Thirteen protected/alias paths remained closed under forged identity headers; public read/write controls behaved as expected. Tests rejected cross-session or stale CSRF tokens, foreign/null origins and malformed transfer requests. Forged owner/budget fields did not select another account, and a foreign-category save changed neither owner's values or revisions.
+Seven app unit cases, the packaged security/browser case, two planner journeys, four authentication phases and five additional security probes completed. Thirteen protected/alias paths remained closed under forged identity headers; public read/write controls behaved as expected. Tests rejected cross-session or stale CSRF tokens, foreign/null origins and malformed transfer requests. Forged owner/budget fields did not select another account, and a foreign-category save changed neither dataset's values or revisions.
 
-Stored HTML/SQL-looking category text round-tripped literally, created no injected element and executed no script. Invalid Vaadin RPC tokens were rejected; logout denied replay of the old session. The source derives identity from the container principal, renews session/token state, uses secure cookie attributes and an owner-only Argon2id verifier file. Missing account configuration failed closed in the local verifier.
+Stored HTML/SQL-looking category text round-tripped literally, created no injected element and executed no script. Invalid Vaadin RPC tokens were rejected; logout denied replay of the old session. The source derives identity from the container principal, renews session/token state, uses secure cookie attributes and an Argon2id verifier file with restricted permissions. Missing account configuration failed closed in the local verifier.
 
 No new reportable security vulnerability was found within those source and test boundaries. This is not certification of the deployed service, assurance against every attack or a current dependency-advisory inventory. The global login cooldown is a documented availability/guessing tradeoff; sustained session exhaustion was not measured. Plaintext browser-profile guest storage remains a disclosed boundary. Effective host grants, provider IAM, key custody and current public deployment settings were not attested.
 
@@ -206,7 +206,7 @@ The combined drill container took 18.936 seconds, excluding image building. The 
 
 S8-01 retains the deployed provenance/control gap, including S1-01. S8-02 retains absent fresh evidence for the actual weekly job, independently recoverable off-VM key/bundle and verified receipt, live provider expiration, real inbox delivery, complete timed recovery, billing period and human release acceptance. It does not assert that private operational work or records do not exist. Issue #6 was open when inspected in Step 8.
 
-The runbook's approximate seven-day-plus-completion loss window depends on successful weekly backups; missed jobs enlarge it. Its four-hour recovery target starts when the operator begins recovery and extends through verified access/cutover. Neither target is established by the tiny local drill. Source rollback procedures distinguish keeping the database with a compatible previous app from restoring a separate cluster for incompatible schema; subsequent-write loss needs an owner decision.
+The runbook's approximate seven-day-plus-completion loss window depends on successful weekly backups; missed jobs enlarge it. Its four-hour recovery target starts when the operator begins recovery and extends through verified access/cutover. Neither target is established by the tiny local drill. Source rollback procedures distinguish keeping the database with a compatible previous app from restoring a separate cluster for incompatible schema. A rollback that would discard subsequent committed writes requires an explicit decision about the acceptable data-loss window.
 
 ## 13. Consolidated findings and disposition
 
@@ -217,7 +217,7 @@ Original IDs remain usable across the reports. Source/runtime defects, limitatio
 | S1-01, S8-01 / evidence gap | Deployed source, bytes and effective controls are unidentified by this review. | Compare a protected deployed manifest/configuration record with the accepted candidate; publish a sanitized summary. |
 | S1-02 / evidence gap | Successful CI exposes hashes without retained candidate binaries. | Retain exact retrievable artifacts, manifest and runtime references. |
 | S1-03 / delivery evidence | Declared coordinates do not establish tags, releases or registry packages. | Verify approved remote project/version state and retain readback evidence before publication. |
-| S1-04 / metadata gap | Source snapshots lack explicit code licensing/citation files. | Owner must choose software licensing/attribution. This report's CC BY 4.0 and author metadata do not relicense code. |
+| S1-04 / metadata gap | Source snapshots lack explicit code licensing/citation files. | Select software licensing and attribution before publication. This report's CC BY 4.0 and author metadata do not relicense code. |
 | S2-01 = S3-01 / medium defect | Refresh failure obscures an already confirmed save. | Preserve revision acknowledgement and test post-commit read failure against the shared planner. |
 | S2-02 / low defect | App's direct ORM/Hikari usage is declared only transitively. | Align direct build dependencies with composition ownership. |
 | S3-02 / medium defect | Rapid unsaved-dialog reuse can ignore Discard. | Correct event/listener lifecycle and keep the ordinary-navigation control. |
@@ -226,41 +226,41 @@ Original IDs remain usable across the reports. Source/runtime defects, limitatio
 | S6-01 / medium defect | Bash 3.2 publisher guards allow invalid fixtures to reach local deployment. | Use explicit rejection/supported shell and verify all four negative guard cases. |
 | S6-02 / low defect | Effective module POM source/SCM metadata points under app. | Correct module metadata and compare published POM, JAR and provenance. |
 | S6-03, B3 / validation gap | Persistence integration and review probes are outside the automatic gate. | Gate relevant suites and turn accepted fixes' characterization cases into strict regression checks. |
-| S7-01 / measured cost | Saved-month prepared statements grow with categories. | Evaluate a Budget-owned bulk projection while retaining owner/snapshot/as-of semantics. |
+| S7-01 / measured cost | Saved-month prepared statements grow with categories. | Evaluate bulk projection within Budget while retaining owner/snapshot/as-of semantics. |
 | S7-02 / medium resilience gap | Pool acquisition timeout does not bound executing lock/query work. | Select/test execution and cancellation policy without automatic unknown-outcome writes. |
 | S7-03 / validation gap | Combined constrained-Linux CPU/memory/disk/backup headroom is unverified. | Measure the accepted workload on comparable approved resources. |
 | S8-02, B1 / acceptance gap | Current provider scheduling, retention, recovery and human acceptance are unverified. | Inspect fresh operational evidence and time complete off-VM recovery through app access. |
 | B2 / product proposal | Browser-local guest data lacks a portable backup path. | Decide intended public use and evaluate export/restore as a separate product decision. |
-| B4 / usability proposal | Owner-only sign-in expectations are unclear. | Clarify visitor-facing access/storage wording and verify comprehension if consequential. |
+| B4 / usability proposal | Single-account sign-in expectations are unclear. | Clarify visitor-facing access/storage wording and verify comprehension if consequential. |
 
 S2-01 and S3-01 describe one confirmed-save problem at different evidence stages; they must not be counted as separate defects. Business concerns B1/B3 overlap operational/CI gaps. No vulnerability is added to this register solely because a correctness or availability finding exists.
 
 ## 14. Release implications and proposed order
 
-The smallest justified next release focuses on dispositions for the reproduced UI/projection/delivery defects and the missing acceptance evidence. The priority is an engineering recommendation grounded in these cases; it is not a new implementation commitment or permission to deploy.
+The proposed next release focuses on the reproduced UI, projection and delivery defects, together with the missing acceptance evidence. This sequence reflects the observed cases rather than a new delivery commitment.
 
-First, select the intended fixes and convert their reproductions into assertions for corrected behavior. Preserve the stale-version, owner-isolation, pinned-history and unknown-outcome controls. Explicitly decide whether the transfer limitation and guest portability are acceptable for the intended audience. A finding can be accepted with a clear limit; it cannot be treated as fixed by merging its report.
+Corrective work requires regression assertions for the intended behavior, alongside the existing stale-version, account-isolation, pinned-history and unknown-outcome controls. The acceptability of limited history transfer and browser-local guest storage depends on the intended audience. Merging a finding's report does not resolve the underlying finding.
 
-Second, align the automatic checks with the release's persistence and workflow claims, validate publisher negative cases on the supported shell, repair effective Maven provenance and retain candidate bytes. No line-coverage target or architecture rewrite is inferred from this review.
+Release verification should align automatic checks with persistence and workflow claims, publisher rejection cases, effective Maven provenance and retained candidate bytes. No line-coverage target or architecture rewrite follows from these findings.
 
 The existing release-preparation plan orders dependencies as build parent, ORM, Budget and app/authentication/WAR. Reviewed coordinates are parent 0.1.0, ORM 0.1.0, Budget 0.2.0 and app/authentication 0.1.0. Proposed tags and versions still require approved release commits and checks that the registry coordinates are unused. Fixes may require changed versions/pins. The existing GitLab Maven decision is retained; no alternate registry is silently selected. [E9]
 
-Finally, establish actual deployed correspondence, complete the approved workload/backup capacity measurement, retain off-VM verified recovery material and finish current operational acceptance. Publishing this report is a documentary action separate from software packages, GitHub releases and production cutover. Portfolio/FIRE do not need placeholder packages while implementations remain deferred.
+Operational acceptance requires deployed-artifact correspondence, workload and backup capacity measurements, verified off-VM recovery material and a completed recovery exercise. Publication of the report is separate from software package releases and production cutover.
 
 ## 15. Assistance, authorship and accountability
 
-Anton Serdyuchenko set the review objective, requested the business/technical split, chose stepwise progression, reported merges and requested this synthesis in the prior report's format. The source review, external test design and execution, fault injection, result interpretation, report drafting and LaTeX preparation were substantially delegated to OpenAI ChatGPT/Codex.
+Anton Serdyuchenko defined the review scope and publication objectives and is responsible for the report's authorship and editorial decisions. OpenAI ChatGPT/Codex substantially assisted source inspection, test design and execution, fault injection, analysis, drafting and LaTeX preparation.
 
-| Activity | Human role | AI assistance / execution |
+| Activity | Author contribution | AI assistance / execution |
 | --- | --- | --- |
-| Scope and progression | Requested the review, steps, GitHub retention and later publication. | Proposed the review sequence and carried out each requested step. |
-| Technical evidence | Requested continuation and supplied the absence of a deployment manifest. | Inspected sources, wrote external probes, ran tools, diagnosed fixture failures and recorded limits. |
-| Review merges | User reported PR merges; merge state was checked through GitHub. | Prepared the review PRs; merge status was not treated as proof of release acceptance. |
-| Consolidation | Requested the prior publication's rules, style and TeX format. | Reconciled findings, prepared source/PDF/metadata and checked consistency/layout. |
+| Scope and progression | Defined the review scope and publication objectives. | Developed the review sequence and performed the recorded technical analysis. |
+| Technical evidence | Provided deployment-context information, including the unavailable manifest. | Developed and executed probes, diagnosed fixture failures and documented evidence limits. |
+| Review records | Review progression and merges are recorded in the project history. | Prepared review documents and verified GitHub merge status. |
+| Consolidation | Report authorship and editorial review. | Reconciled findings, prepared document sources and checked compilation and layout. |
 
-No human contribution percentage, independent expert review, causal productivity effect or competence score was measured. Multi-pass AI checks remain within the assisted review process. The report does not infer that Anton independently executed every test or diagnosed every failure. ChatGPT/Codex are assistance systems, not authors.
+Contribution percentages, causal productivity effects and individual performance were not measured. Multiple AI review passes do not constitute external expert review or independent reproduction. ChatGPT/Codex are assistance systems, not authors.
 
-The author remains responsible for final factual review, licensing/attribution decisions and the release/deposit decision. This publication candidate records the requested work; it does not certify that the author has independently reproduced it or already accepted production release.
+Final factual review, licensing and attribution, and the publication decision remain the author's responsibility. Production release acceptance and independent reproduction are not established by this publication candidate.
 
 ## 16. Limitations
 
@@ -288,8 +288,6 @@ A passing characterization should be expected to change after a fix. Regression 
 
 For a later publication version, report the actual fix revisions, updated dependencies, changed acceptance decisions and which cases were rerun. Retain individual performance runs and measurement boundaries before drawing comparative conclusions. New production-readiness statements require current protected manifest/configuration, provider and recovery evidence with an approved sanitized public summary.
 
-The document's source and metadata follow the prior report's publication conventions: one human author, explicit AI assistance, report-only CC BY 4.0, English technical-report classification and fixed evidence anchors. The previous DOI is cited as a reference, not reused as this report's DOI or represented as a previous version of the same work.
-
 ## 18. Evidence table and revision anchors
 
 A, B, O and D denote the full commits in Section 3. The report links to D for the retained review record, while A/B/O identify the software examined. These anchors are not claims that every historical command ran at D or that D was deployed.
@@ -312,7 +310,7 @@ The supplied evidence-manifest.json records report/dataset paths, D-pinned URLs 
 
 ## References
 
-- **R1.** Serdyuchenko, A. (2026). [Foundations for AgentOps: Linux Diagnostics and a Read-Only YandexGPT Tool Call](https://doi.org/10.5281/zenodo.23293506) (Version 1.0) [Technical report]. Zenodo. Documentary/style precedent, with a different engineering scope. Its report/source license is CC BY 4.0. This report adapts its LaTeX presentation and evidence conventions with new content.
+- **R1.** Serdyuchenko, A. (2026). [Foundations for AgentOps: Linux Diagnostics and a Read-Only YandexGPT Tool Call](https://doi.org/10.5281/zenodo.23293506) (Version 1.0) [Technical report]. Zenodo.
 - **R2.** HikariCP. [Configuration: connectionTimeout](https://github.com/brettwooldridge/HikariCP#frequently-used). Pool-acquisition semantics; consulted during Step 7, 8 November 2026.
 - **R3.** PostgreSQL 18. [Client connection defaults: statement_timeout and lock_timeout](https://www.postgresql.org/docs/18/runtime-config-client.html#GUC-STATEMENT-TIMEOUT). Timeout semantics; consulted during Step 7, 8 November 2026.
 - **R4.** PostgreSQL 18. [pg_restore](https://www.postgresql.org/docs/18/app-pgrestore.html). Single-transaction import boundary; consulted during Step 8, 8 November 2026.
@@ -323,7 +321,7 @@ The supplied evidence-manifest.json records report/dataset paths, D-pinned URLs 
 
 **Title:** Finance Lab MVP Review: Product Findings, Technical Integrity and Release Evidence
 
-**Author / creator:** Serdyuchenko, Anton. ORCID 0000-0001-7770-2201, matching the referenced publication. No affiliation is asserted. AI assistance is disclosed in Section 15.
+**Author / creator:** Serdyuchenko, Anton. ORCID 0000-0001-7770-2201. No affiliation is asserted. AI assistance is disclosed in Section 15.
 
 **Resource type:** Publication / Report (Technical Report). Pilot Engineering Study is a descriptive classification, not a claim of peer review.
 
@@ -335,7 +333,7 @@ The supplied evidence-manifest.json records report/dataset paths, D-pinned URLs 
 
 **Description:** Use the Abstract, followed by the technical-report/pilot-study classification, synthetic-data statement and AI-assistance disclosure. The metadata draft omits publication date and DOI instead of inventing them.
 
-**Related identifiers:** Documents the A/B/O software snapshots; references the D review evidence and R1 prior report. R1's DOI must not be assigned to this new object or used as an IsNewVersionOf relationship. No direct T2 acceptance or continuation-of-the-same-study claim is encoded.
+**Related identifiers:** Documents the A/B/O software snapshots and references the D review evidence and the related engineering report R1. No version relationship is assigned between the two reports.
 
 **Deposit files:** PDF, standalone main.tex and equivalent report.md; retain business-review.md, evidence-manifest.json and metadata-draft.json with the source bundle. SHA256SUMS identifies the prepared files. Final DOI/date changes require rebuilding the PDF and updating the checksums before deposit.
 

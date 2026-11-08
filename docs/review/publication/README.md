@@ -1,8 +1,7 @@
 # Finance Lab MVP review - publication candidate
 
-Prepared 8 November 2026, version 1.0. This is the combined product and
-eight-step technical review, formatted after Anton Serdyuchenko's
-[previous technical report](https://doi.org/10.5281/zenodo.23293506).
+Prepared 8 November 2026, version 1.0. Combined product assessment and
+eight-step technical review of the Budget MVP, prepared for Zenodo deposit.
 
 ## Files
 

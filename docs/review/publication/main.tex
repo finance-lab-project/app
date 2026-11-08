@@ -66,8 +66,7 @@ and production release acceptance are not established.
 sources, and document metadata use
 \href{https://creativecommons.org/licenses/by/4.0/}{Creative Commons Attribution
 4.0 International (CC BY 4.0)}. Software and reproduction-code licensing remains
-separate. Presentation and evidence conventions are adapted from the author's
-\href{https://doi.org/10.5281/zenodo.23293506}{earlier report}; the content is new.}
+separate.}
 \end{minipage}
 \vspace*{14mm}
 \end{titlepage}
@@ -82,13 +81,13 @@ This report consolidates the product review and eight technical review steps of 
 \section*{1. Objectives and scope}
 \pdfbookmark[1]{1. Objectives and scope}{review2}
 
-Finance Lab's initial product objective is monthly financial planning: record income, spending and investments, see the remaining balance, explicitly save a month and inspect earlier versions. The implemented account model supports one configured owner. Guests can work with browser-local data; authenticated storage adds PostgreSQL persistence and cross-browser access for that owner. Portfolio and FIRE are deferred modules, not reviewed implemented products. [E0, E2]
+Finance Lab supports monthly financial planning: recording income, spending and investments, calculating the remaining balance, explicitly saving a month and inspecting earlier versions. The implemented access model supports one configured account. Guests can work with browser-local data; authenticated storage provides PostgreSQL persistence and cross-browser access for that account. [E0, E2]
 
-The owner requested a product/\allowbreak{}business review followed by a stepwise technical review, with each technical result saved on GitHub and later combined for Zenodo. The technical questions concern source identity, module boundaries, end-to-end correctness, persistence integrity, security, delivery, performance and operational recovery. This report combines those records without implementing their proposed fixes.
+The review assesses the implemented planning workflow and its technical foundations. It covers source identity, module boundaries, workflow correctness, persistence integrity, security, delivery, performance and operational recovery. The findings draw on the initial functional review and eight versioned technical reports.
 
-The application is the Java/\allowbreak{}Vaadin rewrite without Spring. Archived React, Go, BFF and platform repositories are outside the runtime baseline. The related AgentOps report supplies this publication's documentary conventions and style; its earlier transition-plan milestones are not acceptance criteria silently transferred to the implemented MVP. No model-driven agent integration or general agent reliability is demonstrated here. [R1, E1]
+The reviewed runtime is a Java/\allowbreak{}Vaadin modular monolith with PostgreSQL storage and a custom JDBC mapper. The source revisions and system boundary are defined in Section 3. [E1, E2]
 
-The product component is a bounded functional and usability review, not customer discovery or an experiment on adoption. There were no interviews, representative users, conversion cohorts, retention measurements, price tests or revenue data in the reviewed evidence. Product recommendations therefore remain hypotheses for owner prioritization.
+The product assessment examines the implemented workflow and selected usability properties. The evidence does not include interviews, representative-user studies, adoption or retention measurements, price tests or revenue data.
 
 \section*{2. Methodology and evidence handling}
 \pdfbookmark[1]{2. Methodology and evidence handling}{review3}
@@ -101,7 +100,7 @@ The technical reports retain original finding IDs, test methods, failed pilot co
 
 The runtime baseline is distinct from the review-document snapshot. Merged review PRs \#13-\#20 add reports and external fixtures; merge status is a version-control observation, not evidence of deployment, independent validation or resolution of the findings. Review snapshot D contains the complete eight-step record after PR \#20. [E1-E8]
 
-Public artifacts contain synthetic amounts and labels, source revisions and sanitized outcomes. Real passwords, cookies, recovery keys, financial records, private operator paths and provider credentials are excluded. The operator's statement that no deployment manifest was available is retained as an evidence limit; public page appearance cannot identify server archive bytes.
+Public artifacts contain synthetic amounts and labels, source revisions and sanitized outcomes. Real passwords, cookies, recovery keys, financial records, private operator paths and provider credentials are excluded. A deployment manifest was unavailable in the reviewed evidence; public page appearance cannot identify server archive bytes.
 
 \section*{3. Reviewed system and recorded environments}
 \pdfbookmark[1]{3. Reviewed system and recorded environments}{review4}
@@ -152,7 +151,7 @@ The original business review raised four release/\allowbreak{}product concerns. 
 B1 /\allowbreak{} high & Production acceptance was unconfirmed in available release records. Complete and reconcile the existing acceptance evidence; this overlaps S1-01 and S8-01/\allowbreak{}S8-02 rather than establishing a separate production defect. \\ \addlinespace[3pt]
 B2 /\allowbreak{} medium & Guest data remains in a browser profile, and clearing it can remove the only copy. If ongoing public guest use is intended, evaluate export/\allowbreak{}restore before encouraging reliance on it. This is a conditional product proposal, not a promise to add a feature. \\ \addlinespace[3pt]
 B3 /\allowbreak{} medium & Budget/\allowbreak{}ORM integration regression checks depended on manual execution. Step 6 confirmed the automatic-gate gap as S6-03. \\ \addlinespace[3pt]
-B4 /\allowbreak{} low & The sign-in wording could suggest cross-device access without clearly explaining owner-only accounts. Clarifying access expectations is a usability recommendation; no user-comprehension study was performed. \\ \addlinespace[3pt]
+B4 /\allowbreak{} low & The sign-in wording could suggest cross-device access without clearly explaining the single-account access model. Clarifying access expectations is a usability recommendation; no user-comprehension study was performed. \\ \addlinespace[3pt]
 \end{longtable}}
 
 Browser-local storage and the single-account boundary are documented design choices. The concern is the fit between visitor expectations, durability requirements and the intended product audience. The review does not infer that guest storage is encrypted, portable or an account backup.
@@ -205,9 +204,9 @@ Real backend-termination probes also distinguished failure outcomes. A statement
 
 Step 5 covered all 73 tracked app files at snapshot A, with baseline, focused and architecture/\allowbreak{}resource reviews. Budget and ORM consumers were traced for the relevant boundaries; this was not an exhaustive separate security audit of both module repositories. Multiple AI review passes are not independent external peer review. [E5]
 
-Seven app unit cases, the packaged security/\allowbreak{}browser case, two planner journeys, four authentication phases and five additional security probes completed. Thirteen protected/\allowbreak{}alias paths remained closed under forged identity headers; public read/\allowbreak{}write controls behaved as expected. Tests rejected cross-session or stale CSRF tokens, foreign/\allowbreak{}null origins and malformed transfer requests. Forged owner/\allowbreak{}budget fields did not select another account, and a foreign-category save changed neither owner's values or revisions.
+Seven app unit cases, the packaged security/\allowbreak{}browser case, two planner journeys, four authentication phases and five additional security probes completed. Thirteen protected/\allowbreak{}alias paths remained closed under forged identity headers; public read/\allowbreak{}write controls behaved as expected. Tests rejected cross-session or stale CSRF tokens, foreign/\allowbreak{}null origins and malformed transfer requests. Forged owner/\allowbreak{}budget fields did not select another account, and a foreign-category save changed neither dataset's values or revisions.
 
-Stored HTML/\allowbreak{}SQL-looking category text round-tripped literally, created no injected element and executed no script. Invalid Vaadin RPC tokens were rejected; logout denied replay of the old session. The source derives identity from the container principal, renews session/\allowbreak{}token state, uses secure cookie attributes and an owner-only Argon2id verifier file. Missing account configuration failed closed in the local verifier.
+Stored HTML/\allowbreak{}SQL-looking category text round-tripped literally, created no injected element and executed no script. Invalid Vaadin RPC tokens were rejected; logout denied replay of the old session. The source derives identity from the container principal, renews session/\allowbreak{}token state, uses secure cookie attributes and an Argon2id verifier file with restricted permissions. Missing account configuration failed closed in the local verifier.
 
 No new reportable security vulnerability was found within those source and test boundaries. This is not certification of the deployed service, assurance against every attack or a current dependency-advisory inventory. The global login cooldown is a documented availability/\allowbreak{}guessing tradeoff; sustained session exhaustion was not measured. Plaintext browser-profile guest storage remains a disclosed boundary. Effective host grants, provider IAM, key custody and current public deployment settings were not attested.
 
@@ -302,7 +301,7 @@ The combined drill container took 18.936 seconds, excluding image building. The 
 
 S8-01 retains the deployed provenance/\allowbreak{}control gap, including S1-01. S8-02 retains absent fresh evidence for the actual weekly job, independently recoverable off-VM key/\allowbreak{}bundle and verified receipt, live provider expiration, real inbox delivery, complete timed recovery, billing period and human release acceptance. It does not assert that private operational work or records do not exist. Issue \#6 was open when inspected in Step 8.
 
-The runbook's approximate seven-day-plus-completion loss window depends on successful weekly backups; missed jobs enlarge it. Its four-hour recovery target starts when the operator begins recovery and extends through verified access/\allowbreak{}cutover. Neither target is established by the tiny local drill. Source rollback procedures distinguish keeping the database with a compatible previous app from restoring a separate cluster for incompatible schema; subsequent-write loss needs an owner decision.
+The runbook's approximate seven-day-plus-completion loss window depends on successful weekly backups; missed jobs enlarge it. Its four-hour recovery target starts when the operator begins recovery and extends through verified access/\allowbreak{}cutover. Neither target is established by the tiny local drill. Source rollback procedures distinguish keeping the database with a compatible previous app from restoring a separate cluster for incompatible schema. A rollback that would discard subsequent committed writes requires an explicit decision about the acceptable data-loss window.
 
 \clearpage
 \section*{13. Consolidated findings and disposition}
@@ -318,7 +317,7 @@ Original IDs remain usable across the reports. Source/\allowbreak{}runtime defec
 S1-01, S8-01 /\allowbreak{} evidence gap & Deployed source, bytes and effective controls are unidentified by this review. & Compare a protected deployed manifest/\allowbreak{}configuration record with the accepted candidate; publish a sanitized summary. \\ \addlinespace[3pt]
 S1-02 /\allowbreak{} evidence gap & Successful CI exposes hashes without retained candidate binaries. & Retain exact retrievable artifacts, manifest and runtime references. \\ \addlinespace[3pt]
 S1-03 /\allowbreak{} delivery evidence & Declared coordinates do not establish tags, releases or registry packages. & Verify approved remote project/\allowbreak{}version state and retain readback evidence before publication. \\ \addlinespace[3pt]
-S1-04 /\allowbreak{} metadata gap & Source snapshots lack explicit code licensing/\allowbreak{}citation files. & Owner must choose software licensing/\allowbreak{}attribution. This report's CC BY 4.0 and author metadata do not relicense code. \\ \addlinespace[3pt]
+S1-04 /\allowbreak{} metadata gap & Source snapshots lack explicit code licensing/\allowbreak{}citation files. & Select software licensing and attribution before publication. This report's CC BY 4.0 and author metadata do not relicense code. \\ \addlinespace[3pt]
 S2-01 = S3-01 /\allowbreak{} medium defect & Refresh failure obscures an already confirmed save. & Preserve revision acknowledgement and test post-commit read failure against the shared planner. \\ \addlinespace[3pt]
 S2-02 /\allowbreak{} low defect & App's direct ORM/\allowbreak{}Hikari usage is declared only transitively. & Align direct build dependencies with composition ownership. \\ \addlinespace[3pt]
 S3-02 /\allowbreak{} medium defect & Rapid unsaved-dialog reuse can ignore Discard. & Correct event/\allowbreak{}listener lifecycle and keep the ordinary-navigation control. \\ \addlinespace[3pt]
@@ -327,12 +326,12 @@ S4-01 /\allowbreak{} medium defect & Production catalog projection omits require
 S6-01 /\allowbreak{} medium defect & Bash 3.2 publisher guards allow invalid fixtures to reach local deployment. & Use explicit rejection/\allowbreak{}supported shell and verify all four negative guard cases. \\ \addlinespace[3pt]
 S6-02 /\allowbreak{} low defect & Effective module POM source/\allowbreak{}SCM metadata points under app. & Correct module metadata and compare published POM, JAR and provenance. \\ \addlinespace[3pt]
 S6-03, B3 /\allowbreak{} validation gap & Persistence integration and review probes are outside the automatic gate. & Gate relevant suites and turn accepted fixes' characterization cases into strict regression checks. \\ \addlinespace[3pt]
-S7-01 /\allowbreak{} measured cost & Saved-month prepared statements grow with categories. & Evaluate a Budget-owned bulk projection while retaining owner/\allowbreak{}snapshot/\allowbreak{}as-of semantics. \\ \addlinespace[3pt]
+S7-01 /\allowbreak{} measured cost & Saved-month prepared statements grow with categories. & Evaluate bulk projection within Budget while retaining owner/\allowbreak{}snapshot/\allowbreak{}as-of semantics. \\ \addlinespace[3pt]
 S7-02 /\allowbreak{} medium resilience gap & Pool acquisition timeout does not bound executing lock/\allowbreak{}query work. & Select/\allowbreak{}test execution and cancellation policy without automatic unknown-outcome writes. \\ \addlinespace[3pt]
 S7-03 /\allowbreak{} validation gap & Combined constrained-Linux CPU/\allowbreak{}memory/\allowbreak{}disk/\allowbreak{}backup headroom is unverified. & Measure the accepted workload on comparable approved resources. \\ \addlinespace[3pt]
 S8-02, B1 /\allowbreak{} acceptance gap & Current provider scheduling, retention, recovery and human acceptance are unverified. & Inspect fresh operational evidence and time complete off-VM recovery through app access. \\ \addlinespace[3pt]
 B2 /\allowbreak{} product proposal & Browser-local guest data lacks a portable backup path. & Decide intended public use and evaluate export/\allowbreak{}restore as a separate product decision. \\ \addlinespace[3pt]
-B4 /\allowbreak{} usability proposal & Owner-only sign-in expectations are unclear. & Clarify visitor-facing access/\allowbreak{}storage wording and verify comprehension if consequential. \\ \addlinespace[3pt]
+B4 /\allowbreak{} usability proposal & Single-account sign-in expectations are unclear. & Clarify visitor-facing access/\allowbreak{}storage wording and verify comprehension if consequential. \\ \addlinespace[3pt]
 \end{longtable}}
 
 S2-01 and S3-01 describe one confirmed-save problem at different evidence stages; they must not be counted as separate defects. Business concerns B1/\allowbreak{}B3 overlap operational/\allowbreak{}CI gaps. No vulnerability is added to this register solely because a correctness or availability finding exists.
@@ -340,36 +339,36 @@ S2-01 and S3-01 describe one confirmed-save problem at different evidence stages
 \section*{14. Release implications and proposed order}
 \pdfbookmark[1]{14. Release implications and proposed order}{review15}
 
-The smallest justified next release focuses on dispositions for the reproduced UI/\allowbreak{}projection/\allowbreak{}delivery defects and the missing acceptance evidence. The priority is an engineering recommendation grounded in these cases; it is not a new implementation commitment or permission to deploy.
+The proposed next release focuses on the reproduced UI, projection and delivery defects, together with the missing acceptance evidence. This sequence reflects the observed cases rather than a new delivery commitment.
 
-First, select the intended fixes and convert their reproductions into assertions for corrected behavior. Preserve the stale-version, owner-isolation, pinned-history and unknown-outcome controls. Explicitly decide whether the transfer limitation and guest portability are acceptable for the intended audience. A finding can be accepted with a clear limit; it cannot be treated as fixed by merging its report.
+Corrective work requires regression assertions for the intended behavior, alongside the existing stale-version, account-isolation, pinned-history and unknown-outcome controls. The acceptability of limited history transfer and browser-local guest storage depends on the intended audience. Merging a finding's report does not resolve the underlying finding.
 
-Second, align the automatic checks with the release's persistence and workflow claims, validate publisher negative cases on the supported shell, repair effective Maven provenance and retain candidate bytes. No line-coverage target or architecture rewrite is inferred from this review.
+Release verification should align automatic checks with persistence and workflow claims, publisher rejection cases, effective Maven provenance and retained candidate bytes. No line-coverage target or architecture rewrite follows from these findings.
 
 The existing release-preparation plan orders dependencies as build parent, ORM, Budget and app/\allowbreak{}authentication/\allowbreak{}WAR. Reviewed coordinates are parent 0.1.0, ORM 0.1.0, Budget 0.2.0 and app/\allowbreak{}authentication 0.1.0. Proposed tags and versions still require approved release commits and checks that the registry coordinates are unused. Fixes may require changed versions/\allowbreak{}pins. The existing GitLab Maven decision is retained; no alternate registry is silently selected. [E9]
 
-Finally, establish actual deployed correspondence, complete the approved workload/\allowbreak{}backup capacity measurement, retain off-VM verified recovery material and finish current operational acceptance. Publishing this report is a documentary action separate from software packages, GitHub releases and production cutover. Portfolio/\allowbreak{}FIRE do not need placeholder packages while implementations remain deferred.
+Operational acceptance requires deployed-artifact correspondence, workload and backup capacity measurements, verified off-VM recovery material and a completed recovery exercise. Publication of the report is separate from software package releases and production cutover.
 
 \clearpage
 \section*{15. Assistance, authorship and accountability}
 \pdfbookmark[1]{15. Assistance, authorship and accountability}{review16}
 
-Anton Serdyuchenko set the review objective, requested the business/\allowbreak{}technical split, chose stepwise progression, reported merges and requested this synthesis in the prior report's format. The source review, external test design and execution, fault injection, result interpretation, report drafting and LaTeX preparation were substantially delegated to OpenAI ChatGPT/\allowbreak{}Codex.
+Anton Serdyuchenko defined the review scope and publication objectives and is responsible for the report's authorship and editorial decisions. OpenAI ChatGPT/\allowbreak{}Codex substantially assisted source inspection, test design and execution, fault injection, analysis, drafting and LaTeX preparation.
 
 {\fontsize{9.5}{11.5}\selectfont
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.35\textwidth}@{}}\toprule
-\textbf{Activity} & \textbf{Human role} & \textbf{AI assistance /\allowbreak{} execution} \\ \midrule\endfirsthead
-\toprule\textbf{Activity} & \textbf{Human role} & \textbf{AI assistance /\allowbreak{} execution} \\ \midrule\endhead
+\textbf{Activity} & \textbf{Author contribution} & \textbf{AI assistance /\allowbreak{} execution} \\ \midrule\endfirsthead
+\toprule\textbf{Activity} & \textbf{Author contribution} & \textbf{AI assistance /\allowbreak{} execution} \\ \midrule\endhead
 \bottomrule\endfoot
-Scope and progression & Requested the review, steps, GitHub retention and later publication. & Proposed the review sequence and carried out each requested step. \\ \addlinespace[3pt]
-Technical evidence & Requested continuation and supplied the absence of a deployment manifest. & Inspected sources, wrote external probes, ran tools, diagnosed fixture failures and recorded limits. \\ \addlinespace[3pt]
-Review merges & User reported PR merges; merge state was checked through GitHub. & Prepared the review PRs; merge status was not treated as proof of release acceptance. \\ \addlinespace[3pt]
-Consolidation & Requested the prior publication's rules, style and TeX format. & Reconciled findings, prepared source/\allowbreak{}PDF/\allowbreak{}metadata and checked consistency/\allowbreak{}layout. \\ \addlinespace[3pt]
+Scope and progression & Defined the review scope and publication objectives. & Developed the review sequence and performed the recorded technical analysis. \\ \addlinespace[3pt]
+Technical evidence & Provided deployment-context information, including the unavailable manifest. & Developed and executed probes, diagnosed fixture failures and documented evidence limits. \\ \addlinespace[3pt]
+Review records & Review progression and merges are recorded in the project history. & Prepared review documents and verified GitHub merge status. \\ \addlinespace[3pt]
+Consolidation & Report authorship and editorial review. & Reconciled findings, prepared document sources and checked compilation and layout. \\ \addlinespace[3pt]
 \end{longtable}}
 
-No human contribution percentage, independent expert review, causal productivity effect or competence score was measured. Multi-pass AI checks remain within the assisted review process. The report does not infer that Anton independently executed every test or diagnosed every failure. ChatGPT/\allowbreak{}Codex are assistance systems, not authors.
+Contribution percentages, causal productivity effects and individual performance were not measured. Multiple AI review passes do not constitute external expert review or independent reproduction. ChatGPT/\allowbreak{}Codex are assistance systems, not authors.
 
-The author remains responsible for final factual review, licensing/\allowbreak{}attribution decisions and the release/\allowbreak{}deposit decision. This publication candidate records the requested work; it does not certify that the author has independently reproduced it or already accepted production release.
+Final factual review, licensing and attribution, and the publication decision remain the author's responsibility. Production release acceptance and independent reproduction are not established by this publication candidate.
 
 \section*{16. Limitations}
 \pdfbookmark[1]{16. Limitations}{review17}
@@ -398,8 +397,6 @@ Use disposable synthetic environments and the pinned runtime sources, not a curr
 A passing characterization should be expected to change after a fix. Regression tests for accepted fixes must assert the intended corrected behavior rather than merely duplicate the old failure. Preserve negative controls and transaction semantics when reducing query count or introducing deadlines.
 
 For a later publication version, report the actual fix revisions, updated dependencies, changed acceptance decisions and which cases were rerun. Retain individual performance runs and measurement boundaries before drawing comparative conclusions. New production-readiness statements require current protected manifest/\allowbreak{}configuration, provider and recovery evidence with an approved sanitized public summary.
-
-The document's source and metadata follow the prior report's publication conventions: one human author, explicit AI assistance, report-only CC BY 4.0, English technical-report classification and fixed evidence anchors. The previous DOI is cited as a reference, not reused as this report's DOI or represented as a previous version of the same work.
 
 \clearpage
 \section*{18. Evidence table and revision anchors}
@@ -431,7 +428,7 @@ The supplied evidence-manifest.json records report/\allowbreak{}dataset paths, D
 \pdfbookmark[1]{References}{review20}
 
 \begin{itemize}
-\item \textbf{R1.} Serdyuchenko, A. (2026). \href{https://doi.org/10.5281/zenodo.23293506}{Foundations for AgentOps: Linux Diagnostics and a Read-Only YandexGPT Tool Call} (Version 1.0) [Technical report]. Zenodo. Documentary/\allowbreak{}style precedent, with a different engineering scope. Its report/\allowbreak{}source license is CC BY 4.0. This report adapts its LaTeX presentation and evidence conventions with new content.
+\item \textbf{R1.} Serdyuchenko, A. (2026). \href{https://doi.org/10.5281/zenodo.23293506}{Foundations for AgentOps: Linux Diagnostics and a Read-Only YandexGPT Tool Call} (Version 1.0) [Technical report]. Zenodo.
 \item \textbf{R2.} HikariCP. \href{https://github.com/brettwooldridge/HikariCP\#frequently-used}{Configuration: connectionTimeout}. Pool-acquisition semantics; consulted during Step 7, 8 November 2026.
 \item \textbf{R3.} PostgreSQL 18. \href{https://www.postgresql.org/docs/18/runtime-config-client.html\#GUC-STATEMENT-TIMEOUT}{Client connection defaults: statement\_timeout and lock\_timeout}. Timeout semantics; consulted during Step 7, 8 November 2026.
 \item \textbf{R4.} PostgreSQL 18. \href{https://www.postgresql.org/docs/18/app-pgrestore.html}{pg\_restore}. Single-transaction import boundary; consulted during Step 8, 8 November 2026.
@@ -445,7 +442,7 @@ The supplied evidence-manifest.json records report/\allowbreak{}dataset paths, D
 
 \textbf{Title:} Finance Lab MVP Review: Product Findings, Technical Integrity and Release Evidence
 
-\textbf{Author /\allowbreak{} creator:} Serdyuchenko, Anton. ORCID 0000-0001-7770-2201, matching the referenced publication. No affiliation is asserted. AI assistance is disclosed in Section 15.
+\textbf{Author /\allowbreak{} creator:} Serdyuchenko, Anton. ORCID 0000-0001-7770-2201. No affiliation is asserted. AI assistance is disclosed in Section 15.
 
 \textbf{Resource type:} Publication /\allowbreak{} Report (Technical Report). Pilot Engineering Study is a descriptive classification, not a claim of peer review.
 
@@ -457,7 +454,7 @@ The supplied evidence-manifest.json records report/\allowbreak{}dataset paths, D
 
 \textbf{Description:} Use the Abstract, followed by the technical-report/\allowbreak{}pilot-study classification, synthetic-data statement and AI-assistance disclosure. The metadata draft omits publication date and DOI instead of inventing them.
 
-\textbf{Related identifiers:} Documents the A/\allowbreak{}B/\allowbreak{}O software snapshots; references the D review evidence and R1 prior report. R1's DOI must not be assigned to this new object or used as an IsNewVersionOf relationship. No direct T2 acceptance or continuation-of-the-same-study claim is encoded.
+\textbf{Related identifiers:} Documents the A/\allowbreak{}B/\allowbreak{}O software snapshots and references the D review evidence and the related engineering report R1. No version relationship is assigned between the two reports.
 
 \textbf{Deposit files:} PDF, standalone main.tex and equivalent report.md; retain business-review.md, evidence-manifest.json and metadata-draft.json with the source bundle. SHA256SUMS identifies the prepared files. Final DOI/\allowbreak{}date changes require rebuilding the PDF and updating the checksums before deposit.
 

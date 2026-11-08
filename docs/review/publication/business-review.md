@@ -5,8 +5,8 @@ Recorded: 7 November 2026. Consolidated for the publication: 8 November 2026.
 This is a sanitized record of the initial assisted Finance Lab guest/product
 review, which preceded the eight technical step reports. It is retained as E0
 in the combined report. It was recovered from the recorded review conversation;
-these live journeys were not rerun when writing the manuscript. The observations
-were performed/reported by Codex after the owner's review request. No independent
+these live journeys were not rerun when writing the manuscript. Codex performed
+and recorded the initial checks. No independent
 user study, customer interview or commercial measurement was performed.
 
 ## Recorded observations
