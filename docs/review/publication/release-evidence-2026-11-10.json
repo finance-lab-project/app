@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "observation_date": "2026-11-10",
+  "method": "Read public GitHub release/closure records and CI status; record anonymous public HTTPS checks separately. Protected production checks and release tests were not rerun for manuscript revision.",
+  "issue_states": [
+    {
+      "repository": "finance-lab-project/app",
+      "issues": [
+        {
+          "number": 6,
+          "title": "Verify and release the private Budget R1 on Yandex Cloud",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-10T10:50:10Z",
+          "url": "https://github.com/finance-lab-project/app/issues/6"
+        },
+        {
+          "number": 5,
+          "title": "Prepare the single-VM deployment and weekly backup/restore runbook",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-07T04:17:43Z",
+          "url": "https://github.com/finance-lab-project/app/issues/5"
+        },
+        {
+          "number": 4,
+          "title": "Implement the configured single-account login and session boundary",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-06T17:00:23Z",
+          "url": "https://github.com/finance-lab-project/app/issues/4"
+        },
+        {
+          "number": 3,
+          "title": "Bootstrap the Maven parent and Java application assembly",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-05T08:22:35Z",
+          "url": "https://github.com/finance-lab-project/app/issues/3"
+        },
+        {
+          "number": 2,
+          "title": "Validate and pin the Java/Vaadin/Jetty/PostgreSQL runtime stack",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-05T03:07:37Z",
+          "url": "https://github.com/finance-lab-project/app/issues/2"
+        },
+        {
+          "number": 1,
+          "title": "R1 \u2014 Deliver the private Russian Budget application",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-10T10:50:23Z",
+          "url": "https://github.com/finance-lab-project/app/issues/1"
+        }
+      ]
+    },
+    {
+      "repository": "finance-lab-project/budget",
+      "issues": [
+        {
+          "number": 4,
+          "title": "Build the Russian monthly planner, category settings and history views",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-05T17:16:04Z",
+          "url": "https://github.com/finance-lab-project/budget/issues/4"
+        },
+        {
+          "number": 3,
+          "title": "Implement atomic Budget/catalog saves and recorded history",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-05T16:43:30Z",
+          "url": "https://github.com/finance-lab-project/budget/issues/3"
+        },
+        {
+          "number": 2,
+          "title": "Implement RUB Budget values and the configurable category catalog",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-05T12:53:57Z",
+          "url": "https://github.com/finance-lab-project/budget/issues/2"
+        },
+        {
+          "number": 1,
+          "title": "Design R1 PostgreSQL schema, constraints and initial migration",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-04T17:16:48Z",
+          "url": "https://github.com/finance-lab-project/budget/issues/1"
+        }
+      ]
+    },
+    {
+      "repository": "finance-lab-project/orm",
+      "issues": [
+        {
+          "number": 3,
+          "title": "Implement Anchor SQL generation and current/history projections",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-05T11:55:26Z",
+          "url": "https://github.com/finance-lab-project/orm/issues/3"
+        },
+        {
+          "number": 2,
+          "title": "Implement scoped JDBC transactions, codecs and failure outcomes",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-05T10:40:50Z",
+          "url": "https://github.com/finance-lab-project/orm/issues/2"
+        },
+        {
+          "number": 1,
+          "title": "Design the minimal Anchor mapping, transaction and projection API",
+          "state": "closed",
+          "state_reason": "completed",
+          "closed_at": "2026-11-05T08:53:49Z",
+          "url": "https://github.com/finance-lab-project/orm/issues/1"
+        }
+      ]
+    }
+  ],
+  "release_issue": {
+    "number": 6,
+    "url": "https://github.com/finance-lab-project/app/issues/6",
+    "state": "closed",
+    "closed_at": "2026-11-10T10:50:10Z",
+    "updated_at": "2026-11-10T10:50:10Z",
+    "body": "Architecture: [canonical design](https://github.com/finance-lab-project/app/blob/main/docs/architecture.md).\n\nThis issue records scoped work for the clean Java/Vaadin rewrite. Its creation does not dispatch implementation.\n\nWork type: **delivery**.\n\n## Acceptance criteria\n\n- [x] Verify the exact root/module artifacts and their acceptance evidence against the R1 tracker.\n- [x] After explicit release/resource approval, verify HTTPS, private sign-in, monthly planning/category/history journeys and restart persistence on the selected VM.\n- [x] Download/decrypt a real release backup into a clean recovery environment and record the observed restore outcome/time without exposing financial data or secrets.\n- [x] Confirm weekly scheduling/retention/notification behavior, operator recovery documentation and actual resource cost/limitations.\n- [x] Publish only approved release metadata and close R1 only after human acceptance; report pending checks honestly.\n\n## Dependencies\n\n- [Build the Russian monthly planner, category settings and history views](https://github.com/finance-lab-project/budget/issues/4)\n- [Implement the configured single-account login and session boundary](https://github.com/finance-lab-project/app/issues/4)\n- [Prepare the single-VM deployment and weekly backup/restore runbook](https://github.com/finance-lab-project/app/issues/5)\n\n## Verification\n\nExact revision-bound build/integration/UI evidence, live private browser smoke checks, restart test, off-VM restore and explicit approval record.\n\n## Out of scope\n\nAutonomous provisioning/merge/publication, public financial data, Portfolio/FIRE delivery or claiming planned checks passed.\n\nNo merge, deployment or spending is authorized by this issue. Report completed checks factually in the PR.\n\n<!-- finance-lab-r1-checkpoint-2026-11-10:start -->\n## R1 accepted release \u2014 10 November 2026\n\n**All agreed checks passed.** The owner explicitly approved merging Budget #11 then app #12, activation with a verified backup and brief restart, all live acceptance checks, and conditional closure of app #6 followed by #1. The condition is satisfied by the results below.\n\n### Candidate and recovery verification\n\n\n- **Budget:** `scripts/verify.sh` passed **119 unit + 34 PostgreSQL integration tests**. `BUDGET_UI_PORT=28085 scripts/verify-ui.sh` passed **15 Chromium tests**, including the S3-01 regressions, deterministic Stay/reselect/Discard and malformed/valid category-history controls. Both new defects were reproduced against the previous source before their fixes.\n- **Assembled app:** `scripts/prepare-budget.sh` and `APP_HTTP_PORT=28083 APP_TEST_TLS_PORT=28084 scripts/verify.sh` passed with the pinned toolchain. Two clean WAR/authentication builds were byte-identical; seven unit tests per build, the independent parent consumer, WAR check, two planner journeys, four authentication phases, restart/rotation and bounded shutdown completed.\n- **Hosted verification:** [PR CI](https://github.com/finance-lab-project/app/actions/runs/42792802711) passed. The [exact-candidate Linux run](https://github.com/finance-lab-project/app/actions/runs/42794564231) completed successfully at app `d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37`; all five final checksums match the retained local bundle.\n- **Real provider recovery:** on 10 November, a fresh recovery-identity download, checksum verification, age decryption and clean PostgreSQL 18.6 restore passed with this exact candidate. Trusted local HTTPS, authenticated planner/catalog/history routes, secure session and logout were verified in **24.13 seconds**. Recorded history and pinned labels were separately covered with synthetic data. Temporary local services/database and plaintext dump were removed. Available runtimes/recovery equipment were used; replacement-VM provisioning and DNS cutover are outside this timing.\n- **Previous deployment:** before activation, the read-only baseline was app `f78682778eebed86730ec457f63c96648f19370d`, WAR `a2a81f71a567587934cf7c830b3adf2b4c10d4fa1e9004f9fc60fbfdba27307a`. The tested completion candidate is now active; the previous release is retained.\n\n\nThe deployed WAR SHA-256 is `b14e206910217d8da34aa99f7b181cd0b3316c2ea281fad95a73347f9cc21746`. The full sanitized source/artifact manifest and check links are in [PR #12](https://github.com/finance-lab-project/app/pull/12).\n\n### Live acceptance completed\n\n- **Approved merge sequence:** [Budget #11](https://github.com/finance-lab-project/budget/pull/11) merged as `9551d917d69dcf415fe51a7eda4ae669a2756ec7`, followed by [app #12](https://github.com/finance-lab-project/app/pull/12) as `43d51524ad1c8938b57624b1a9ee393da72d42e4`. Both reviewed heads were checked before merging. The deployed source is the exact tested app candidate `d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37`, with Budget `a0645781b1d5e25536b4651749a372d6fd906315` and ORM `8daaf91d07d2e30b563322b22a0c6da7545578e5`.\n- **Verified pre-change backup:** the existing backup unit completed successfully and its matching report arrived in the real mailbox. An independent recovery-identity download passed SHA-256, age decryption and PostgreSQL archive validation. Temporary plaintext was removed before activation.\n- **Production activation:** the retained, checksum-verified candidate was activated with a **5.08-second** application restart/readiness interval. All five root artifacts, embedded Budget/ORM JARs and unchanged migration/grants resources match the reviewed bundle and exact-candidate Linux output. The active process runs from the new release as the restricted application user. The previous compatible release remains available.\n- **Data and live access:** fingerprints of all **24 Budget tables** matched before/after the restart and after acceptance. Trusted public HTTPS, HTTP redirect, login and guest pages, protected access, spoofed-forwarding handling and the actual served planner resources passed. A real configured-account browser session verified current planner, category and history reads, secure HttpOnly session and logout revocation. Production financial data was not changed by these checks.\n- **Selected-VM functional persistence:** a fresh, separate PostgreSQL database and loopback-only copy of the deployed application passed two explicit monthly saves, totals, category rename and read-only historical values with the original pinned label. After restarting both isolated PostgreSQL and Jetty, a new authenticated session verified the saved current state and history. The two budget/three catalog revision counts matched; temporary services, data, inputs and listeners were removed.\n- **Final operational check:** application, proxy, PostgreSQL and backup timer were active, with boot configuration verified. Database/application/admin listeners remained on loopback. The persistent Sunday **03:00 Europe/Moscow** timer is enabled; its last scheduled run was 8 November and the next is **15 November 2026 at 03:00 Europe/Moscow**. The pre-change backup unit still reports success.\n\n### Backup and cost observations\n\nThe persistent weekly timer completed on **8 November at 03:00 Europe/Moscow**. Delivered report, provider object and independently downloaded checksum matched; the next scheduled run is **15 November at 03:00 Europe/Moscow**. Private storage, separate writer/recovery access, configured 28-day expiry and one-day multipart cleanup were checked. Preliminary folder cost/expense was **225.81 RUB at 09:48 Europe/Moscow on 10 November**; 2,600 RUB monthly alerts and the 2,340 RUB threshold were active. Alerts do not stop usage. These are dated observations and limits, not a completed monthly bill or observed expiration.\n\n### Follow-up disposition\n\n\nThe 10 November release-scope decision is to fix S3-02/S4-01 and document the other review observations as follow-ups. The [dated follow-up table](https://github.com/finance-lab-project/app/blob/d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37/docs/r1-verification.md#documented-follow-ups) covers transitive dependency declarations, latest-only interrupted history retry with browser originals preserved, publication-only guards/metadata, automatic persistence CI coverage, query growth/deadlines, sustained capacity, log byte limits and full replacement-VM/DNS-cutover timing.\n\nActual later retention expiry and a complete billing period remain observations to collect; they are not additional mandatory December release gates. The configured 28-day rule, first delivered scheduled backup, preliminary metering and the 2,600 RUB alert budget are recorded with their limits. Maven registry/tag/package publication is separate from this private release.\n\n\n**No outstanding release blockers remain within the approved R1 scope.** The eleven implementation prerequisites and this delivery acceptance are complete. Private infrastructure/account identifiers, object keys, receipts, recovery material and financial values remain outside GitHub.\n<!-- finance-lab-r1-checkpoint-2026-11-10:end -->\n"
+  },
+  "pull_requests": [
+    {
+      "repository": "finance-lab-project/app",
+      "number": 12,
+      "url": "https://github.com/finance-lab-project/app/pull/12",
+      "merged": true,
+      "head_sha": "d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37",
+      "merge_sha": "43d51524ad1c8938b57624b1a9ee393da72d42e4",
+      "body": "Refs #6 and #1. This PR completes the private R1 candidate and records its verified release. It pins the merged [S3-01 fix](https://github.com/finance-lab-project/budget/pull/10) plus [Budget PR #11](https://github.com/finance-lab-project/budget/pull/11) for S3-02/S4-01, updates the packaged-revision check, and records the accepted follow-up boundary. No schema or runtime-grants change is needed.\n\n**Released on 10 November 2026 after explicit approval: Budget #11 merged first, then app #12. All agreed live acceptance checks passed before issue closure.**\n\n## Exact candidate\n\n| Component | Source revision |\n| --- | --- |\n| App / this PR head | `d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37` |\n| Budget 0.2.0 | `a0645781b1d5e25536b4651749a372d6fd906315` |\n| ORM 0.1.0 | `8daaf91d07d2e30b563322b22a0c6da7545578e5` |\n\nThe active process/archive provenance, package manifests and retained off-VM bundle distinguish the original deployment from this candidate. The original 7 November evidence remains in the [verification record](https://github.com/finance-lab-project/app/blob/d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37/docs/r1-verification.md); current results are below.\n\n## Verification completed\n\n- **Budget:** `scripts/verify.sh` passed **119 unit + 34 PostgreSQL integration tests**. `BUDGET_UI_PORT=28085 scripts/verify-ui.sh` passed **15 Chromium tests**, including the S3-01 regressions, deterministic Stay/reselect/Discard and malformed/valid category-history controls. Both new defects were reproduced against the previous source before their fixes.\n- **Assembled app:** `scripts/prepare-budget.sh` and `APP_HTTP_PORT=28083 APP_TEST_TLS_PORT=28084 scripts/verify.sh` passed with the pinned toolchain. Two clean WAR/authentication builds were byte-identical; seven unit tests per build, the independent parent consumer, WAR check, two planner journeys, four authentication phases, restart/rotation and bounded shutdown completed.\n- **Hosted verification:** [PR CI](https://github.com/finance-lab-project/app/actions/runs/42792802711) passed. The [exact-candidate Linux run](https://github.com/finance-lab-project/app/actions/runs/42794564231) completed successfully at app `d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37`; all five final checksums match the retained local bundle.\n- **Real provider recovery:** on 10 November, a fresh recovery-identity download, checksum verification, age decryption and clean PostgreSQL 18.6 restore passed with this exact candidate. Trusted local HTTPS, authenticated planner/catalog/history routes, secure session and logout were verified in **24.13 seconds**. Recorded history and pinned labels were separately covered with synthetic data. Temporary local services/database and plaintext dump were removed. Available runtimes/recovery equipment were used; replacement-VM provisioning and DNS cutover are outside this timing.\n- **Previous deployment:** before activation, the read-only baseline was app `f78682778eebed86730ec457f63c96648f19370d`, WAR `a2a81f71a567587934cf7c830b3adf2b4c10d4fa1e9004f9fc60fbfdba27307a`. The tested completion candidate is now active; the previous release is retained.\n\n## Candidate SHA-256 manifest\n\nAll five entries match both the retained local files and the completed exact-candidate Linux job.\n\n| File | SHA-256 |\n| --- | --- |\n| `application/target/finance-lab.war` | `b14e206910217d8da34aa99f7b181cd0b3316c2ea281fad95a73347f9cc21746` |\n| `authentication/target/authentication-0.1.0.jar` | `d495826a88685a35d1eb349d29c795e9cb9c4a3833e61c63d4bdf41d09d677c6` |\n| `authentication/target/lib/password4j-1.8.4.jar` | `d1406a158533b65bda7c20cebf7bf2a9a0626f8931fd1dc3d39243af5849edf5` |\n| `config/jetty-auth.xml` | `fd8b7ab5d9393f7e1e945e6df0f384c4ac96a8da878d3dbc0ffaf28773cfb494` |\n| `build-parent/pom.xml` | `aa61d398a42e3df231b696532a545872296bba8d039b453cf5ad98f5b284a34f` |\n\nEmbedded Budget SHA-256: `4b7ae3103841016c75a3b82271d950d34d15ca85e3ecd8f7c2cefed18f72337d`. Embedded ORM SHA-256: `f172af011a04d74549cb917f2bab8feb4bd79ad1594fdee8b71815db2f1145e4`. The migration/grants resources are unchanged.\n\n## Release acceptance \u2014 10 November 2026\n\nThe owner explicitly approved the reviewed merge order, deployment with a verified backup and brief restart, all live checks, and closure of app #6 followed by #1 only if every agreed check passed. That condition is satisfied by the completed evidence below.\n\n- **Approved merge sequence:** [Budget #11](https://github.com/finance-lab-project/budget/pull/11) merged as `9551d917d69dcf415fe51a7eda4ae669a2756ec7`, followed by [app #12](https://github.com/finance-lab-project/app/pull/12) as `43d51524ad1c8938b57624b1a9ee393da72d42e4`. Both reviewed heads were checked before merging. The deployed source is the exact tested app candidate `d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37`, with Budget `a0645781b1d5e25536b4651749a372d6fd906315` and ORM `8daaf91d07d2e30b563322b22a0c6da7545578e5`.\n- **Verified pre-change backup:** the existing backup unit completed successfully and its matching report arrived in the real mailbox. An independent recovery-identity download passed SHA-256, age decryption and PostgreSQL archive validation. Temporary plaintext was removed before activation.\n- **Production activation:** the retained, checksum-verified candidate was activated with a **5.08-second** application restart/readiness interval. All five root artifacts, embedded Budget/ORM JARs and unchanged migration/grants resources match the reviewed bundle and exact-candidate Linux output. The active process runs from the new release as the restricted application user. The previous compatible release remains available.\n- **Data and live access:** fingerprints of all **24 Budget tables** matched before/after the restart and after acceptance. Trusted public HTTPS, HTTP redirect, login and guest pages, protected access, spoofed-forwarding handling and the actual served planner resources passed. A real configured-account browser session verified current planner, category and history reads, secure HttpOnly session and logout revocation. Production financial data was not changed by these checks.\n- **Selected-VM functional persistence:** a fresh, separate PostgreSQL database and loopback-only copy of the deployed application passed two explicit monthly saves, totals, category rename and read-only historical values with the original pinned label. After restarting both isolated PostgreSQL and Jetty, a new authenticated session verified the saved current state and history. The two budget/three catalog revision counts matched; temporary services, data, inputs and listeners were removed.\n- **Final operational check:** application, proxy, PostgreSQL and backup timer were active, with boot configuration verified. Database/application/admin listeners remained on loopback. The persistent Sunday **03:00 Europe/Moscow** timer is enabled; its last scheduled run was 8 November and the next is **15 November 2026 at 03:00 Europe/Moscow**. The pre-change backup unit still reports success.\n\n**No outstanding release blockers remain within the approved R1 scope.** The acceptance record is in [app #6](https://github.com/finance-lab-project/app/issues/6), followed by the [R1 tracker](https://github.com/finance-lab-project/app/issues/1).\n\n## Documented follow-ups\n\nThe 10 November release-scope decision is to fix S3-02/S4-01 and document the other review observations as follow-ups. The [dated follow-up table](https://github.com/finance-lab-project/app/blob/d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37/docs/r1-verification.md#documented-follow-ups) covers transitive dependency declarations, latest-only interrupted history retry with browser originals preserved, publication-only guards/metadata, automatic persistence CI coverage, query growth/deadlines, sustained capacity, log byte limits and full replacement-VM/DNS-cutover timing.\n\nActual later retention expiry and a complete billing period remain observations to collect; they are not additional mandatory December release gates. The configured 28-day rule, first delivered scheduled backup, preliminary metering and the 2,600 RUB alert budget are recorded with their limits. Maven registry/tag/package publication is separate from this private release.\n\nDetailed provider/host records, object keys, backup receipts, recovery material and financial values remain private. The accepted follow-ups below remain separate from release acceptance.\n"
+    },
+    {
+      "repository": "finance-lab-project/budget",
+      "number": 11,
+      "url": "https://github.com/finance-lab-project/budget/pull/11",
+      "merged": true,
+      "head_sha": "a0645781b1d5e25536b4651749a372d6fd906315",
+      "merge_sha": "9551d917d69dcf415fe51a7eda4ae669a2756ec7",
+      "body": "Rapid Stay/reselect/Discard now waits for the earlier dialog close before opening another decision, so the next Discard retains its own listener and navigation completes. Category projections now require initial name, position and status facts at the same coordinate before deciding a category did not yet exist. Missing or inconsistent initial facts fail current and pinned-history reads; valid later categories remain absent from earlier history.\n\nThe integrity check uses indexed minimum coordinates in the existing owner-category query, without loading complete histories or adding per-category round trips. No migration, ORM API or dependency change is needed.\n\nAddresses [S3-02](https://github.com/finance-lab-project/app/blob/main/docs/review/03-workflows.md#s3-02--medium-rapid-dialog-reuse-can-ignore-the-next-discard-decision) and [S4-01](https://github.com/finance-lab-project/app/blob/main/docs/review/04-postgresql-orm.md#s4-01--required-initial-category-facts-are-not-validated). Refs finance-lab-project/app#6 and finance-lab-project/app#1. The merged S3-01 fix is already in this branch's base.\n\n## Verification\n\nUsing the pinned local toolchain and disposable PostgreSQL 18.6:\n\n- Before the fixes, the rapid-dialog regression failed against the merged source. The four malformed-category cases had three expected failures; the existing visible-missing-status rejection remained a control.\n- `scripts/verify.sh`: 119 unit tests and all 34 PostgreSQL integration tests passed, including four malformed-fact cases and a valid later-category control.\n- `BUDGET_UI_PORT=28085 scripts/verify-ui.sh`: all 15 Chromium tests passed, including deterministic rapid dialog reuse and the merged S3-01 regressions.\n- `git diff --cached --check` passed.\n\nThis PR is a release prerequisite. App #12 will pin this exact revision and validate the assembled candidate; production deployment and final release acceptance remain pending.\n"
+    },
+    {
+      "repository": "finance-lab-project/budget",
+      "number": 10,
+      "url": "https://github.com/finance-lab-project/budget/pull/10",
+      "merged": true,
+      "head_sha": "8d4d45c871239da03eedc338363baab88f7db08e",
+      "merge_sha": "b8e0145fb8a00a1779fb128c32008802769a66b8",
+      "body": "A confirmed monthly or category save now marks the accepted revision and edit as clean before refreshing. If that read fails, the planner keeps the save confirmation with a separate refresh warning, and Save-and-navigate can continue. A failed refresh still requires a successful read before further writes.\n\nThe command adapter and browser storage both return the confirmed revision for saved and unchanged outcomes. The regression uses the packaged shared planner, command adapter and a real disposable PostgreSQL database with a synthetic owner; it fails only the client read after a confirmed write. It covers month/category saves, unchanged revisions, clean navigation guards, no write replay and Save-and-navigate. The guest test also checks that an unchanged save adds no history entry.\n\nAddresses [S3-01](https://github.com/finance-lab-project/app/blob/main/docs/review/03-workflows.md#s3-01--medium-a-failed-refresh-obscures-a-confirmed-save). Refs finance-lab-project/app#6; this is a scoped fix and does not complete release acceptance.\n\n## Verification\n\nPinned JDK 27.0.1.0.3, Jetty 12.1.14, Maven 3.10.0 and Node 24.22.2 were configured locally.\n\n- Before the runtime fix: `MAVEN_OPTS='-Xmx1024m -Dit.test=BudgetBrowserIT#confirmedSaveAcknowledgementSurvivesRefreshFailure' BUDGET_UI_PORT=28085 scripts/verify-ui.sh` reproduced the defect in both month/catalog cases: 2 expected assertion failures, showing a read-error message after a real confirmed save.\n- After the fix: `BUDGET_UI_PORT=28085 scripts/verify-ui.sh` passed 119 Budget unit tests and all 14 Chromium tests, including the four new parameterized regression cases, against PostgreSQL 18.6.\n- `git diff --check` passed.\n\nThe account servlet is confined to the verification WAR. The app's Budget pin and production deployment are unchanged.\n"
+    }
+  ],
+  "ci_runs": [
+    {
+      "id": 42794564231,
+      "url": "https://github.com/finance-lab-project/app/actions/runs/42794564231",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37"
+    },
+    {
+      "id": 42792802711,
+      "url": "https://github.com/finance-lab-project/app/actions/runs/42792802711",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37"
+    }
+  ],
+  "accepted_source_revisions": {
+    "app": "d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37",
+    "budget": "a0645781b1d5e25536b4651749a372d6fd906315",
+    "orm": "8daaf91d07d2e30b563322b22a0c6da7545578e5"
+  },
+  "deployed_war_sha256": "b14e206910217d8da34aa99f7b181cd0b3316c2ea281fad95a73347f9cc21746",
+  "reported_release_checks": {
+    "budget_unit": 119,
+    "budget_postgresql": 34,
+    "budget_browser": 15,
+    "app_unit_per_build": 7,
+    "provider_backup_recovery_s": 24.13,
+    "activation_readiness_s": 5.08,
+    "budget_tables_fingerprints_equal": 24,
+    "scheduled_weekly_backup_completed": "2026-11-08 03:00 Europe/Moscow"
+  },
+  "reported_fixed_findings": [
+    "S2-01 / S3-01",
+    "S3-02",
+    "S4-01"
+  ],
+  "remaining_boundaries": [
+    "Remaining observations documented as approved R1 follow-ups, not outstanding R1 blockers",
+    "Actual retention expiry and a complete billing period were not yet observed",
+    "Available-equipment recovery time excludes replacement-VM provisioning and DNS cutover",
+    "Maven registry/tag/package publication remains separate from the accepted private VM release"
+  ],
+  "public_requests": {
+    "observed_at_utc": "2026-11-10T11:10:46.196202+00:00",
+    "method": "Anonymous GET; default HTTPS certificate/hostname verification; no sign-in, retained cookies or account data",
+    "requests": [
+      {
+        "name": "http-root",
+        "url": "http://finance-lab-project.com/",
+        "status": 308,
+        "location": "https://finance-lab-project.com/",
+        "password_input": false,
+        "planner_markup": false
+      },
+      {
+        "name": "login",
+        "url": "https://finance-lab-project.com/login",
+        "status": 200,
+        "location": null,
+        "password_input": true,
+        "planner_markup": false
+      },
+      {
+        "name": "guest",
+        "url": "https://finance-lab-project.com/local",
+        "status": 200,
+        "location": null,
+        "password_input": false,
+        "planner_markup": true
+      },
+      {
+        "name": "protected",
+        "url": "https://finance-lab-project.com/transfer",
+        "status": 401,
+        "location": null,
+        "password_input": false,
+        "planner_markup": false
+      }
+    ]
+  },
+  "accepted_sha256": {
+    "application/target/finance-lab.war": "b14e206910217d8da34aa99f7b181cd0b3316c2ea281fad95a73347f9cc21746",
+    "authentication/target/authentication-0.1.0.jar": "d495826a88685a35d1eb349d29c795e9cb9c4a3833e61c63d4bdf41d09d677c6",
+    "authentication/target/lib/password4j-1.8.4.jar": "d1406a158533b65bda7c20cebf7bf2a9a0626f8931fd1dc3d39243af5849edf5",
+    "config/jetty-auth.xml": "fd8b7ab5d9393f7e1e945e6df0f384c4ac96a8da878d3dbc0ffaf28773cfb494",
+    "build-parent/pom.xml": "aa61d398a42e3df231b696532a545872296bba8d039b453cf5ad98f5b284a34f",
+    "embedded/budget-0.2.0.jar": "4b7ae3103841016c75a3b82271d950d34d15ca85e3ecd8f7c2cefed18f72337d",
+    "embedded/orm-0.1.0.jar": "f172af011a04d74549cb917f2bab8feb4bd79ad1594fdee8b71815db2f1145e4"
+  }
+}

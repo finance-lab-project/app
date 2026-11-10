@@ -1,0 +1,67 @@
+{
+  "title": "Finance Lab MVP Review: Product Findings, Technical Integrity and Release Evidence",
+  "upload_type": "publication",
+  "publication_type": "report",
+  "creators": [
+    {
+      "name": "Serdyuchenko, Anton",
+      "orcid": "0000-0001-7770-2201"
+    }
+  ],
+  "access_right": "open",
+  "license": "cc-by-4.0",
+  "version": "1.0",
+  "language": "eng",
+  "keywords": [
+    "personal finance",
+    "Budget MVP",
+    "modular monolith",
+    "Vaadin",
+    "PostgreSQL",
+    "Anchor Modeling",
+    "custom ORM",
+    "reproducibility",
+    "resilience",
+    "software review",
+    "synthetic data",
+    "AI-assisted engineering"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.23293506",
+      "relation": "references",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/finance-lab-project/app/tree/f78682778eebed86730ec457f63c96648f19370d",
+      "relation": "documents",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/finance-lab-project/budget/tree/43d86d28965a241cd45f7938c1adfb2ec50f8132",
+      "relation": "documents",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/finance-lab-project/orm/tree/8daaf91d07d2e30b563322b22a0c6da7545578e5",
+      "relation": "documents",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/finance-lab-project/app/tree/7edfb504d98ebe88df51a92124e217573addbd41/docs/review",
+      "relation": "references",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/finance-lab-project/app/tree/d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37",
+      "relation": "documents",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/finance-lab-project/budget/tree/a0645781b1d5e25536b4651749a372d6fd906315",
+      "relation": "documents",
+      "scheme": "url"
+    }
+  ],
+  "description": "<p>This report consolidates the product assessment and eight technical review steps of Finance Lab's Budget MVP, recorded on 7-8 November 2026, with a release-evidence update on 10 November. The system is a Java/Vaadin modular monolith with PostgreSQL Anchor Modeling, a custom JDBC mapper, browser-local guest storage and one configured authenticated account. The original review identified confirmed-save acknowledgement, dialog-lifecycle and category-integrity defects, an interrupted-history-transfer limitation, and delivery and operational evidence gaps. Local measurements retained 707 latency samples: saved-month reads used 60 prepared statements at 10 categories and 260 at 50; browser RPC p95 increased from 44.42 to 144.17 milliseconds. An isolated encrypted recovery drill preserved all 24 Budget table fingerprints, object ownership, grants and selected historical projections. Subsequent release records document fixes for the three correctness defects, successful revision-bound verification and approved production deployment on Yandex Cloud on 10 November. All 13 issues in app, Budget and ORM were closed, including the R1 tracker and delivery acceptance. The accepted release has a new app/Budget revision and recorded deployed artifact identity. The original measurements remain tied to their frozen baseline. Query/deadline, automatic-CI, sustained-capacity and full replacement-host recovery observations remain documented follow-ups within the accepted R1 scope. This engineering case study does not establish market demand, general security, independent reproduction or sustainable capacity beyond the reported checks.</p>\n<p>Classification: Technical Report / Pilot Engineering Study; not peer-reviewed research. Published financial examples and test fixtures are synthetic. OpenAI ChatGPT/Codex assisted review, execution, synthesis and LaTeX preparation; Anton Serdyuchenko is the author. CC BY 4.0 covers this report and its new document sources/metadata; archived reproduction code retains its upstream licensing status. The private Budget R1 release was accepted and deployed on Yandex Cloud on 10 November 2026. Market demand and general sustainable-capacity bounds were not measured.</p>"
+}

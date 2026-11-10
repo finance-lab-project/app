@@ -1,0 +1,336 @@
+{
+  "schema_version": 2,
+  "review_documentation_revision": "7edfb504d98ebe88df51a92124e217573addbd41",
+  "runtime_revisions": {
+    "app": "f78682778eebed86730ec457f63c96648f19370d",
+    "budget": "43d86d28965a241cd45f7938c1adfb2ec50f8132",
+    "orm": "8daaf91d07d2e30b563322b22a0c6da7545578e5"
+  },
+  "files": [
+    {
+      "path": "docs/review/01-baseline.md",
+      "git_blob_sha1": "c6598fa66d2200d88d6279bc7a0d6388e0bd04f5",
+      "sha256": "b383e83b0a5af5ad9624bca96d393856a36df99d1a96a1fca46b452762aea571",
+      "bytes": 9586,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/01-baseline.md",
+      "bundle_path": "evidence/docs/review/01-baseline.md"
+    },
+    {
+      "path": "docs/review/02-architecture.md",
+      "git_blob_sha1": "e22bef8f79d7850c53cb8d092f84ff040dc2a21b",
+      "sha256": "f952b783fdc8a97ceca78d37d14d8da8d2c568dc7a9d2063f9267aced464a1e8",
+      "bytes": 18532,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/02-architecture.md",
+      "bundle_path": "evidence/docs/review/02-architecture.md"
+    },
+    {
+      "path": "docs/review/03-workflows.md",
+      "git_blob_sha1": "03a1c64f8ac6aa048bfffd5c4c095a257d0a5401",
+      "sha256": "5fc8f2f5d342a2482f6b6a2a49cfc1cebfb628ded535126ab74339d7c783cf2a",
+      "bytes": 12343,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/03-workflows.md",
+      "bundle_path": "evidence/docs/review/03-workflows.md"
+    },
+    {
+      "path": "docs/review/04-postgresql-orm.md",
+      "git_blob_sha1": "21c6643be925cfc220a47824d6845ccfa326c3da",
+      "sha256": "c552ee1c2a6651e93a53b4b5224a0ab7dbfcdf05fee94872af08ee04df40ad35",
+      "bytes": 11609,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/04-postgresql-orm.md",
+      "bundle_path": "evidence/docs/review/04-postgresql-orm.md"
+    },
+    {
+      "path": "docs/review/05-security.md",
+      "git_blob_sha1": "0ab8625f53b3ac1442bc6ca6cb73509512ee9aa8",
+      "sha256": "13bfdc89ff886b4e0f968dfed5938c21d261031e95e1f6c28c704e5307dbc945",
+      "bytes": 8304,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/05-security.md",
+      "bundle_path": "evidence/docs/review/05-security.md"
+    },
+    {
+      "path": "docs/review/06-builds-tests-delivery.md",
+      "git_blob_sha1": "43c155ad2e5a9a0d2585f2a73c789c8735869d1a",
+      "sha256": "8af755ac2c5157583db5552ee121d8d096c9be741a32818e1474032ae217fd37",
+      "bytes": 10805,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/06-builds-tests-delivery.md",
+      "bundle_path": "evidence/docs/review/06-builds-tests-delivery.md"
+    },
+    {
+      "path": "docs/review/07-performance-resilience.md",
+      "git_blob_sha1": "e2678b564033ecbc426b1f330193158a94356cb4",
+      "sha256": "32ce9c35c051696787bb5d0a52d8c5d32afc84d4c22db9d7278ca511a2efa970",
+      "bytes": 14225,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/07-performance-resilience.md",
+      "bundle_path": "evidence/docs/review/07-performance-resilience.md"
+    },
+    {
+      "path": "docs/review/08-deployment-recovery.md",
+      "git_blob_sha1": "fe237a2886574a1593c9579855183646125f3bd3",
+      "sha256": "82b8c71c7bd6812085da9273894498e85cf338fa4900eb56a19c5fcfca7c35cc",
+      "bytes": 13374,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/08-deployment-recovery.md",
+      "bundle_path": "evidence/docs/review/08-deployment-recovery.md"
+    },
+    {
+      "path": "docs/review/README.md",
+      "git_blob_sha1": "95c27b77ae5ea857519913fc811dcbb995f20a90",
+      "sha256": "8ab487c2c63187f22fbdffc4f5a5a7bad5f29a3821ee090b9dd12ff593ca6374",
+      "bytes": 5986,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/README.md",
+      "bundle_path": "evidence/docs/review/README.md"
+    },
+    {
+      "path": "docs/review/evidence/step-3/confirmed-save-refresh-failure.png",
+      "git_blob_sha1": "5bd64d9c979cbfd7f07c486088ace98f0e9777c3",
+      "sha256": "2748ad2a1b689e31b1bd4a2c1b83098ed2cf7fb6bbbc71801ca974fd44f3126a",
+      "bytes": 113230,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-3/confirmed-save-refresh-failure.png",
+      "bundle_path": "evidence/docs/review/evidence/step-3/confirmed-save-refresh-failure.png"
+    },
+    {
+      "path": "docs/review/evidence/step-3/results.json",
+      "git_blob_sha1": "1f1176f0fd82c98475c9d018976bf31b058f5ebc",
+      "sha256": "86caa5fbc29dc4a03510e378581981d9dc6a844f1c8ba3abb7fa0c76d47cb77b",
+      "bytes": 17261,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-3/results.json",
+      "bundle_path": "evidence/docs/review/evidence/step-3/results.json"
+    },
+    {
+      "path": "docs/review/evidence/step-4/results.json",
+      "git_blob_sha1": "f1eacaaf031ef782684b81891dfed325c9a9fb1d",
+      "sha256": "1d9857bdae51182523cadd4b59268081c185212dc881c7361dacffde972617e9",
+      "bytes": 5174,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-4/results.json",
+      "bundle_path": "evidence/docs/review/evidence/step-4/results.json"
+    },
+    {
+      "path": "docs/review/evidence/step-5/results.json",
+      "git_blob_sha1": "7940827e9d909ca531f08b56fe160aabde3b9169",
+      "sha256": "316b0b3d552c35f4a71a4791a8e71a306c5b68914c200b111a54ee651ef95e19",
+      "bytes": 5544,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-5/results.json",
+      "bundle_path": "evidence/docs/review/evidence/step-5/results.json"
+    },
+    {
+      "path": "docs/review/evidence/step-5/security-scan.md",
+      "git_blob_sha1": "89c776e63f9fa689478b42756ff842b4d544c780",
+      "sha256": "b1b142e71cb82f772287fbbe58c76a1000a4bec5976694e80a0785b9fa55d2b4",
+      "bytes": 31376,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-5/security-scan.md",
+      "bundle_path": "evidence/docs/review/evidence/step-5/security-scan.md"
+    },
+    {
+      "path": "docs/review/evidence/step-5/source-coverage.json",
+      "git_blob_sha1": "791c3602d06b14a6e44112eef1a9eda13d959586",
+      "sha256": "7f6049805f9369405740d236d7f2f6bf9d8e352c54652f69da6d5c591ee9038e",
+      "bytes": 4923,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-5/source-coverage.json",
+      "bundle_path": "evidence/docs/review/evidence/step-5/source-coverage.json"
+    },
+    {
+      "path": "docs/review/evidence/step-6/results.json",
+      "git_blob_sha1": "ad56fc5aa70283ab4d19eb1bc1282727edf29960",
+      "sha256": "35ab142c3b6fc62cd0b0c0fce89607ff321ce16a876441fc140778fda8a0cae8",
+      "bytes": 10411,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-6/results.json",
+      "bundle_path": "evidence/docs/review/evidence/step-6/results.json"
+    },
+    {
+      "path": "docs/review/evidence/step-7/results.json",
+      "git_blob_sha1": "ae689842bd8f4483440f960e8d20932d9fa6994c",
+      "sha256": "7b79b355397c9c12525c427fa78baa1957e371d9cd4fccbbfca48843eff3cb3d",
+      "bytes": 42850,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-7/results.json",
+      "bundle_path": "evidence/docs/review/evidence/step-7/results.json"
+    },
+    {
+      "path": "docs/review/evidence/step-8/results.json",
+      "git_blob_sha1": "9ebe94cd7acc15540b142c8895b1d7c20b29e327",
+      "sha256": "194f7e49cea7fe9683ca704aab9efd5e419e9ef956652e67c6139346c6bf5ee9",
+      "bytes": 11530,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-8/results.json",
+      "bundle_path": "evidence/docs/review/evidence/step-8/results.json"
+    },
+    {
+      "path": "docs/review/release-preparation.md",
+      "git_blob_sha1": "cd30acb8ad3c406cedde8cd5ec63e2dfc2b4002a",
+      "sha256": "843f6ce4a3dacdc86a8fccb68e20406a2aba8825ffa1ef6734b9b46c018e9213",
+      "bytes": 7007,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/release-preparation.md",
+      "bundle_path": "evidence/docs/review/release-preparation.md"
+    },
+    {
+      "path": "docs/review/reproductions/step-3/README.md",
+      "git_blob_sha1": "a43fe40da547a0c452e71ef6aec8be0c02f6328e",
+      "sha256": "39d1bd581230f511857dd49f1e0f095196701233a816591d6c081ad9419791da",
+      "bytes": 4424,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-3/README.md",
+      "bundle_path": "evidence/docs/review/reproductions/step-3/README.md"
+    },
+    {
+      "path": "docs/review/reproductions/step-3/WorkflowReviewIT.java",
+      "git_blob_sha1": "7b7c5f4a578176f43c370138a40790335c389657",
+      "sha256": "6113cc8731c9b5084e40ecda98e626df17decbb4a1c67a1aacd41f13870cdfbf",
+      "bytes": 23302,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-3/WorkflowReviewIT.java",
+      "bundle_path": "evidence/docs/review/reproductions/step-3/WorkflowReviewIT.java"
+    },
+    {
+      "path": "docs/review/reproductions/step-3/run.sh",
+      "git_blob_sha1": "ad5bdda3c4f38b628b2358831a03e2f315c44473",
+      "sha256": "ad9fe0227153d71d9f1cb89db90574dd8f7a9fdeb8542149c1a075dfb8473490",
+      "bytes": 1904,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-3/run.sh",
+      "bundle_path": "evidence/docs/review/reproductions/step-3/run.sh"
+    },
+    {
+      "path": "docs/review/reproductions/step-4/IntegrityReviewIT.java",
+      "git_blob_sha1": "4bac6209621fb2a463d1da5e8fda35f171f319ba",
+      "sha256": "022e209c565d1ac3a88e145d83dd6b90c399387d65e27d91f1329919b627406e",
+      "bytes": 10792,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-4/IntegrityReviewIT.java",
+      "bundle_path": "evidence/docs/review/reproductions/step-4/IntegrityReviewIT.java"
+    },
+    {
+      "path": "docs/review/reproductions/step-4/README.md",
+      "git_blob_sha1": "a8bd36ac1514c48d5859602ecdd49d452fd1f1d2",
+      "sha256": "bbb0ffb853bd4292a895f18312e24ecb127913425455a423ae0c79b34e975da2",
+      "bytes": 4298,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-4/README.md",
+      "bundle_path": "evidence/docs/review/reproductions/step-4/README.md"
+    },
+    {
+      "path": "docs/review/reproductions/step-4/run.sh",
+      "git_blob_sha1": "df156bd73401fb283c42bcca748463d10a56ff94",
+      "sha256": "e3abf836e4dcd4bf8e6a5ba0920be081dded33d1aaff6128c9f676e94132a4f8",
+      "bytes": 3799,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-4/run.sh",
+      "bundle_path": "evidence/docs/review/reproductions/step-4/run.sh"
+    },
+    {
+      "path": "docs/review/reproductions/step-5/README.md",
+      "git_blob_sha1": "609e8a4afa66e62c5638b7a2d8c0c51584f480b7",
+      "sha256": "59c5081689539a1c71db7a935a76823c42b928bd19d46a718d52539e8192fcc0",
+      "bytes": 4111,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-5/README.md",
+      "bundle_path": "evidence/docs/review/reproductions/step-5/README.md"
+    },
+    {
+      "path": "docs/review/reproductions/step-5/SecurityReviewIT.java",
+      "git_blob_sha1": "2910551c5c78d5256decb0568f965cb2cf95ee70",
+      "sha256": "6d38e93f10c2ae626478800a094a5c96c81ac15ec5db58a815eb19f8bc9c45de",
+      "bytes": 15559,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-5/SecurityReviewIT.java",
+      "bundle_path": "evidence/docs/review/reproductions/step-5/SecurityReviewIT.java"
+    },
+    {
+      "path": "docs/review/reproductions/step-5/run.sh",
+      "git_blob_sha1": "1c2879c4c8f046368a16cab2f1218acab584cb1f",
+      "sha256": "95fb658293ea73eb3db1b13af0bfb31fc0375daced4cdb1ef9e4a633262633a4",
+      "bytes": 2308,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-5/run.sh",
+      "bundle_path": "evidence/docs/review/reproductions/step-5/run.sh"
+    },
+    {
+      "path": "docs/review/reproductions/step-6/README.md",
+      "git_blob_sha1": "8a806bdf12157af9dab642dc4b95c3a0e52ba354",
+      "sha256": "c8f2e0d21e4617ee60d98422ade4b0f357084bce52bb0d5c68c99aae0e1a2070",
+      "bytes": 4050,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-6/README.md",
+      "bundle_path": "evidence/docs/review/reproductions/step-6/README.md"
+    },
+    {
+      "path": "docs/review/reproductions/step-6/check.py",
+      "git_blob_sha1": "733a4354499124438601f0f309e8b8e270e7a1f4",
+      "sha256": "f7c5a3b36db6a50bcf92cc7d0bcd4de7e94e552f94b736dbaebc2454bac65ce5",
+      "bytes": 11844,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-6/check.py",
+      "bundle_path": "evidence/docs/review/reproductions/step-6/check.py"
+    },
+    {
+      "path": "docs/review/reproductions/step-7/PerformanceReviewMain.java",
+      "git_blob_sha1": "b5d7479d830b96fb2556a9715fd67665e5abddb9",
+      "sha256": "f3b641677b67fcdb6049286d0f76ff0f52e56e87c23bb4d52f5462ff69d3676f",
+      "bytes": 29235,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-7/PerformanceReviewMain.java",
+      "bundle_path": "evidence/docs/review/reproductions/step-7/PerformanceReviewMain.java"
+    },
+    {
+      "path": "docs/review/reproductions/step-7/README.md",
+      "git_blob_sha1": "3bd6c7b8771c5529548d0484e12d6738d26f7aa8",
+      "sha256": "7bad41d02bcb242dc42e892966e6ac6a859f1136170eaff2bba5184f77e33d62",
+      "bytes": 6371,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-7/README.md",
+      "bundle_path": "evidence/docs/review/reproductions/step-7/README.md"
+    },
+    {
+      "path": "docs/review/reproductions/step-7/run.py",
+      "git_blob_sha1": "731f6018101c341881dab4832ac18f74b16f45cf",
+      "sha256": "072c0843502a20e85ac23a1cf0f513a07541215e4209062ddd8e343b7e4df9b0",
+      "bytes": 13392,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-7/run.py",
+      "bundle_path": "evidence/docs/review/reproductions/step-7/run.py"
+    },
+    {
+      "path": "docs/review/reproductions/step-8/README.md",
+      "git_blob_sha1": "378422ded4b77f8a64f4401e4154e54eb25925d3",
+      "sha256": "ff7688d0f9e75f8272049afc176ac104706fbd30c0de57e8ca9c45f4c3cd4ca4",
+      "bytes": 4129,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-8/README.md",
+      "bundle_path": "evidence/docs/review/reproductions/step-8/README.md"
+    },
+    {
+      "path": "docs/review/reproductions/step-8/drill.py",
+      "git_blob_sha1": "98a2a1ef098e5c82276a6ce6f82af246de58b0b7",
+      "sha256": "da1aa8abc84166ae81dc15dd402ae85ff14d5cc1a1088afb329d86df24c2f5f3",
+      "bytes": 9774,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-8/drill.py",
+      "bundle_path": "evidence/docs/review/reproductions/step-8/drill.py"
+    },
+    {
+      "path": "docs/review/reproductions/step-8/run.py",
+      "git_blob_sha1": "940e4e7683d986cf5ceaa80776222fd094ffb237",
+      "sha256": "96b376ffe481d693e30116bcd38308bba3f70981ea13068490709d7cf289d0fb",
+      "bytes": 4558,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-8/run.py",
+      "bundle_path": "evidence/docs/review/reproductions/step-8/run.py"
+    },
+    {
+      "path": "docs/review/reproductions/step-8/seed.sql",
+      "git_blob_sha1": "5e4f89ccad3bfb954cebb33864280bbb3864803d",
+      "sha256": "ec1bad0971140cce4bcfde570fecd3af730986928b82a580f5cf02d7675d6537",
+      "bytes": 4109,
+      "url": "https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-8/seed.sql",
+      "bundle_path": "evidence/docs/review/reproductions/step-8/seed.sql"
+    }
+  ],
+  "business_record": {
+    "path": "business-review.md",
+    "recorded": "2026-11-07",
+    "consolidated": "2026-11-08",
+    "sha256": "b6999eea349494196fb47b3f678603402c1d8cf3b4e13a8f2b59e6363a72f0ed",
+    "scope": "Sanitized initial assisted guest/product review; not rerun or commercial research"
+  },
+  "release_update": {
+    "observation_date": "2026-11-10",
+    "narrative": "release-update-2026-11-10.md",
+    "primary_record_snapshot": "release-evidence-2026-11-10.json",
+    "accepted_source_revisions": {
+      "app": "d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37",
+      "budget": "a0645781b1d5e25536b4651749a372d6fd906315",
+      "orm": "8daaf91d07d2e30b563322b22a0c6da7545578e5"
+    },
+    "scope": "Later accepted production release; original review and measurements remain pinned to their earlier revisions."
+  },
+  "release_files": [
+    {
+      "path": "docs/r1-verification.md",
+      "source_revision": "d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37",
+      "git_blob_sha1": "25912ccb98a002de7d90bab3e7ae35b24a95c5f3",
+      "sha256": "6c937cc736869095fe6e012ea4cff768d0134856193be5b96e5e1e5783ae0b0d",
+      "bytes": 12519,
+      "url": "https://github.com/finance-lab-project/app/blob/d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37/docs/r1-verification.md",
+      "bundle_path": "evidence/release-2026-11-10/docs/r1-verification.md"
+    }
+  ]
+}

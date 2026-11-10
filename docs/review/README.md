@@ -7,6 +7,10 @@ ORM, browser storage and deployment configuration.
 
 ## Review sequence
 
+The table summarizes the review as recorded on 7-8 November. The accepted
+10 November R1 release and subsequent fixes are documented in the
+[dated release supplement](publication/release-update-2026-11-10.md).
+
 Each step is a separate work item. This index does not dispatch subsequent steps.
 
 | Step | Question | Status |
@@ -72,11 +76,14 @@ create releases, tags, packages or a registry.
 
 ## Planned Zenodo publication
 
-At the end, combine the reviewed business findings and technical step reports
-into a report covering scope, exact software versions, methods, results,
-limitations and reproduction instructions. Link each conclusion to its
-underlying evidence. Choose the title, authors, licenses, citation metadata and
-publication files from the completed work.
+The [combined publication candidate](publication/README.md), prepared on
+8 November 2026, brings together the initial product/business review and all
+eight technical steps. It provides standalone LaTeX, a checked PDF, equivalent
+Markdown, proposed deposit metadata, checksums and the frozen evidence bundle.
+A dated 10 November supplement records the accepted Yandex Cloud Budget R1
+release, deployed manifest and fix dispositions alongside the original review.
+Its document license does not relicense application or reproduction code.
+The candidate has not been deposited in Zenodo.
 
 Software archives may have separate version-specific records linked from the
 report where independently useful. Zenodo supports
