@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "review_documentation_revision": "7edfb504d98ebe88df51a92124e217573addbd41",
   "runtime_revisions": {
     "app": "f78682778eebed86730ec457f63c96648f19370d",
@@ -310,5 +310,27 @@
     "consolidated": "2026-11-08",
     "sha256": "b6999eea349494196fb47b3f678603402c1d8cf3b4e13a8f2b59e6363a72f0ed",
     "scope": "Sanitized initial assisted guest/product review; not rerun or commercial research"
-  }
+  },
+  "release_update": {
+    "observation_date": "2026-11-10",
+    "narrative": "release-update-2026-11-10.md",
+    "primary_record_snapshot": "release-evidence-2026-11-10.json",
+    "accepted_source_revisions": {
+      "app": "d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37",
+      "budget": "a0645781b1d5e25536b4651749a372d6fd906315",
+      "orm": "8daaf91d07d2e30b563322b22a0c6da7545578e5"
+    },
+    "scope": "Later accepted production release; original review and measurements remain pinned to their earlier revisions."
+  },
+  "release_files": [
+    {
+      "path": "docs/r1-verification.md",
+      "source_revision": "d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37",
+      "git_blob_sha1": "25912ccb98a002de7d90bab3e7ae35b24a95c5f3",
+      "sha256": "6c937cc736869095fe6e012ea4cff768d0134856193be5b96e5e1e5783ae0b0d",
+      "bytes": 12519,
+      "url": "https://github.com/finance-lab-project/app/blob/d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37/docs/r1-verification.md",
+      "bundle_path": "evidence/release-2026-11-10/docs/r1-verification.md"
+    }
+  ]
 }

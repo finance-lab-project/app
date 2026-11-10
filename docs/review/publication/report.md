@@ -7,15 +7,15 @@ ORCID: [0000-0001-7770-2201](https://orcid.org/0000-0001-7770-2201)
 **Technical Report / Pilot Engineering Study**  
 Version 1.0 - publication candidate  
 Review observations: 7-8 November 2026  
-Report prepared: 8 November 2026
+Report prepared: 8 November 2026; revised: 10 November 2026
 
-This is an AI-assisted engineering review of a bounded software snapshot. It has not undergone peer review. Test data and published financial examples are synthetic. The report separates observed behavior, source findings, prior implementation records and work still requiring evidence. Neither commercial validation nor production release acceptance is asserted.
+This is an AI-assisted engineering review of a bounded software snapshot. It has not undergone peer review. Test data and published financial examples are synthetic. The report separates observed behavior, source findings, prior implementation records and work still requiring evidence. The private Budget R1 release was accepted and deployed on Yandex Cloud on 10 November 2026; the later release evidence is recorded separately from the original review.
 
-Copyright 2026 Anton Serdyuchenko. The report, its Markdown and LaTeX sources, and its document metadata are licensed under [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/). This document license does not relicense the application, libraries or linked reproduction code. No DOI has been reserved for this report.
+Copyright 2026 Anton Serdyuchenko. The report, its Markdown and LaTeX sources, and its document metadata are licensed under [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/). This document license does not relicense the application, libraries or linked reproduction code.
 
 ## Abstract
 
-This report consolidates the product review and eight technical review steps of Finance Lab's first Budget MVP, recorded on 7-8 November 2026. The reviewed system is a Java/Vaadin modular monolith with a PostgreSQL Anchor Modeling schema, a custom JDBC mapper, a browser-local guest planner and one configured authenticated account. Exact application, Budget and ORM revisions define the runtime baseline; a separate merged documentation revision anchors the review evidence. Recorded normal workflows support precise money handling, explicit saves, historical views and category archiving. Targeted probes reproduced a confirmed-save/read-refresh defect, a rapid dialog-reuse race, an incremental history-transfer limitation and missing initial-category integrity validation. Delivery checks found reproducible accepted binaries alongside Bash 3.2 publication-guard and inherited Maven metadata defects, with persistence integration suites outside the automatic gate. No new reportable security vulnerability was found within the recorded review scope. Local measurements retained 707 latency samples: saved-month reads used 60 prepared statements at 10 categories and 260 at 50, while browser RPC p95 increased from 44.42 to 144.17 milliseconds. Controlled database and explicit JVM restarts preserved selected confirmed state. An isolated encrypted recovery drill preserved data fingerprints for all 24 Budget tables, owners, grants and selected historical projections. Deployed artifact correspondence, constrained-host capacity, provider backup behavior and complete timed operational recovery remain unverified. The report provides a traceable basis for corrective releases and acceptance work; it does not establish market demand, general security, sustainable capacity, independent reproduction or production readiness.
+This report consolidates the product assessment and eight technical review steps of Finance Lab's Budget MVP, recorded on 7-8 November 2026, with a release-evidence update on 10 November. The system is a Java/Vaadin modular monolith with PostgreSQL Anchor Modeling, a custom JDBC mapper, browser-local guest storage and one configured authenticated account. The original review identified confirmed-save acknowledgement, dialog-lifecycle and category-integrity defects, an interrupted-history-transfer limitation, and delivery and operational evidence gaps. Local measurements retained 707 latency samples: saved-month reads used 60 prepared statements at 10 categories and 260 at 50; browser RPC p95 increased from 44.42 to 144.17 milliseconds. An isolated encrypted recovery drill preserved all 24 Budget table fingerprints, object ownership, grants and selected historical projections. Subsequent release records document fixes for the three correctness defects, successful revision-bound verification and approved production deployment on Yandex Cloud on 10 November. All 13 issues in app, Budget and ORM were closed, including the R1 tracker and delivery acceptance. The accepted release has a new app/Budget revision and recorded deployed artifact identity. The original measurements remain tied to their frozen baseline. Query/deadline, automatic-CI, sustained-capacity and full replacement-host recovery observations remain documented follow-ups within the accepted R1 scope. This engineering case study does not establish market demand, general security, independent reproduction or sustainable capacity beyond the reported checks.
 
 **Keywords:** personal finance; Budget MVP; modular monolith; Vaadin; PostgreSQL; Anchor Modeling; custom ORM; reproducibility; resilience; software review; synthetic data; AI-assisted engineering.
 
@@ -23,7 +23,7 @@ This report consolidates the product review and eight technical review steps of 
 
 Finance Lab supports monthly financial planning: recording income, spending and investments, calculating the remaining balance, explicitly saving a month and inspecting earlier versions. The implemented access model supports one configured account. Guests can work with browser-local data; authenticated storage provides PostgreSQL persistence and cross-browser access for that account. [E0, E2]
 
-The review assesses the implemented planning workflow and its technical foundations. It covers source identity, module boundaries, workflow correctness, persistence integrity, security, delivery, performance and operational recovery. The findings draw on the initial functional review and eight versioned technical reports.
+The review assesses the implemented planning workflow and its technical foundations. It covers source identity, module boundaries, workflow correctness, persistence integrity, security, delivery, performance and operational recovery. The findings draw on the initial functional review and eight versioned technical reports. A dated 10 November supplement records subsequent fixes and accepted production deployment. [E11]
 
 The reviewed runtime is a Java/Vaadin modular monolith with PostgreSQL storage and a custom JDBC mapper. The source revisions and system boundary are defined in Section 3. [E1, E2]
 
@@ -31,15 +31,15 @@ The product assessment examines the implemented workflow and selected usability 
 
 ## 2. Methodology and evidence handling
 
-The review is a descriptive engineering case study of one project, performed with substantial AI assistance. It combines source inspection, existing implementation suites, targeted external probes, public read-only requests and isolated synthetic failure/recovery experiments. Observations occurred on 7-8 November; this synthesis inspected the merged reports on 8 November. Application tests were not rerun merely to write the consolidated report.
+The review is a descriptive engineering case study of one project, performed with substantial AI assistance. It combines source inspection, existing implementation suites, targeted external probes, public read-only requests and isolated synthetic failure/recovery experiments. Original review observations occurred on 7-8 November. The 10 November revision inspected release records, issue closure, exact-candidate CI status and current anonymous HTTPS responses. Protected production checks and application suites were not rerun for this manuscript revision.
 
-Four evidence classes are retained. **Recorded public behavior** describes the initial guest journeys and later anonymous HTTP requests. **Frozen source and completed local checks** describe exact code, artifacts and disposable fixtures. **Prior implementation evidence** includes the candidate verification record in open PR #12; it is not relabeled as a fresh review run. **Unverified operational or product claims** include actual deployed identity, private host/provider settings, demand and human release acceptance.
+Four evidence classes are retained. **Recorded public behavior** describes the initial guest journeys and later anonymous HTTP requests. **Frozen source and completed local checks** describe exact code, artifacts and disposable fixtures. **Release evidence** includes the subsequently merged PR #12, its accepted candidate manifest and the closed R1 acceptance records. **Remaining evidence limits** concern the explicitly retained follow-ups, market demand and verification beyond the reported release checks. [E11]
 
 The technical reports retain original finding IDs, test methods, failed pilot controls, corrected fixtures and limits. Passing a characterization assertion means that the named defective or limited behavior was reproduced. It does not show that the product now meets the intended requirement. Reused suites are identified by their original step; no aggregate passing-test total is constructed by adding reruns of the same cases.
 
 The runtime baseline is distinct from the review-document snapshot. Merged review PRs #13-#20 add reports and external fixtures; merge status is a version-control observation, not evidence of deployment, independent validation or resolution of the findings. Review snapshot D contains the complete eight-step record after PR #20. [E1-E8]
 
-Public artifacts contain synthetic amounts and labels, source revisions and sanitized outcomes. Real passwords, cookies, recovery keys, financial records, private operator paths and provider credentials are excluded. A deployment manifest was unavailable in the reviewed evidence; public page appearance cannot identify server archive bytes.
+Public artifacts contain synthetic amounts and labels, source revisions and sanitized outcomes. Real passwords, cookies, recovery keys, financial records, private operator paths and provider credentials are excluded. A deployment manifest was unavailable during the original review. The 10 November records subsequently establish both the previous and accepted deployed identities; public page appearance alone is not the source of that correspondence. [E11]
 
 ## 3. Reviewed system and recorded environments
 
@@ -50,7 +50,16 @@ Public artifacts contain synthetic amounts and labels, source revisions and sani
 | O: ORM | [finance-lab-project/orm](https://github.com/finance-lab-project/orm/tree/8daaf91d07d2e30b563322b22a0c6da7545578e5) - 8daaf91d07d2e30b563322b22a0c6da7545578e5 |
 | D: merged review | [app review evidence](https://github.com/finance-lab-project/app/tree/7edfb504d98ebe88df51a92124e217573addbd41/docs/review) - 7edfb504d98ebe88df51a92124e217573addbd41 |
 
-Budget's main branch had a different commit ID from B in Step 1, but the two trees were identical. That observation is not a source-content mismatch. The parent POM and both vendored parent copies were also identical. The accepted WAR contains Budget 0.2.0 and ORM 0.1.0; app/authentication and the separately publishable build parent declare 0.1.0. Declared Maven coordinates are not proof that packages or releases were published. [E1, E6]
+The original measurements use A/B/O. The accepted 10 November release uses the following later app and Budget revisions, with ORM unchanged. Release records also matched the previous deployment to A and its original WAR digest. [E11]
+
+| Accepted release | Exact source revision |
+| --- | --- |
+| A_R: deployed app candidate | [app](https://github.com/finance-lab-project/app/tree/d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37) - d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37 |
+| B_R: deployed Budget | [Budget](https://github.com/finance-lab-project/budget/tree/a0645781b1d5e25536b4651749a372d6fd906315) - a0645781b1d5e25536b4651749a372d6fd906315 |
+
+Budget PR #11 merged as 9551d917d69dcf415fe51a7eda4ae669a2756ec7, followed by app PR #12 as 43d51524ad1c8938b57624b1a9ee393da72d42e4. The deployed source is the tested candidate A_R, rather than the merge identifier. Appendix B retains both artifact manifests.
+
+Budget's main branch had a different commit ID from B in Step 1, but the two trees were identical. That observation is not a source-content mismatch. The parent POM and both vendored parent copies were also identical. The baseline WAR contains Budget 0.2.0 and ORM 0.1.0; app/authentication and the separately publishable build parent declare 0.1.0. Declared Maven coordinates are not proof that packages or releases were published. [E1, E6]
 
 | Area | Recorded configuration and boundary |
 | --- | --- |
@@ -74,14 +83,14 @@ The original business review raised four release/product concerns. Its priority 
 
 | ID / original priority | Recorded concern and bounded implication |
 | --- | --- |
-| B1 / high | Production acceptance was unconfirmed in available release records. Complete and reconcile the existing acceptance evidence; this overlaps S1-01 and S8-01/S8-02 rather than establishing a separate production defect. |
+| B1 / high | Acceptance was unconfirmed in the initial review records. The 10 November accepted release resolves this R1 acceptance gap; the dated observation overlaps S1-01 and S8-01/S8-02. [E11] |
 | B2 / medium | Guest data remains in a browser profile, and clearing it can remove the only copy. If ongoing public guest use is intended, evaluate export/restore before encouraging reliance on it. This is a conditional product proposal, not a promise to add a feature. |
 | B3 / medium | Budget/ORM integration regression checks depended on manual execution. Step 6 confirmed the automatic-gate gap as S6-03. |
 | B4 / low | The sign-in wording could suggest cross-device access without clearly explaining the single-account access model. Clarifying access expectations is a usability recommendation; no user-comprehension study was performed. |
 
 Browser-local storage and the single-account boundary are documented design choices. The concern is the fit between visitor expectations, durability requirements and the intended product audience. The review does not infer that guest storage is encrypted, portable or an account backup.
 
-The product evidence favors a reliability and clarity release around the existing planner before broadening scope. This is an inference from the observed failure modes and evidence gaps, not proof that a particular roadmap maximizes adoption or revenue. No demand, willingness-to-pay, active-user or production-use outcome is claimed.
+The product evidence favors a reliability and clarity release around the existing planner before broadening scope. This is an inference from the observed failure modes and evidence gaps, not proof that a particular roadmap maximizes adoption or revenue. No demand, willingness-to-pay or active-user outcome was measured. Production deployment and private R1 acceptance are documented in the later release evidence. [E11]
 
 ## 5. Architecture and module boundaries
 
@@ -91,7 +100,7 @@ The main dependency direction is coherent. App owns assembly, authentication, ro
 
 A monthly save, catalog save or initialization enters its own write callback. Current and historical reads use read-only snapshot callbacks and materialize values before returning. Guest transfer orchestrates catalog matching and revision replay in Budget's UI adapter, with separate transactions per replayed revision and final snapshot. It is not an atomic transaction spanning all months.
 
-Two boundary findings remain. S2-01 concerns the shared planner reducing a confirmed Saved/Unchanged result to saved=true, then depending on another read to complete the UI flow; Step 3 confirms its consequence as S3-01. S2-02 is a low-priority dependency declaration problem: app directly uses ORM/Hikari classes while obtaining them transitively through Budget. Neither finding requires replacing the modular monolith or custom ORM.
+The original review recorded two boundary findings. S2-01 concerned the shared planner reducing a confirmed Saved/Unchanged result to saved=true, then depending on another read to complete the UI flow; Step 3 confirmed its consequence as S3-01. It is fixed in B_R. S2-02 remains a documented low-priority dependency follow-up: app directly uses ORM/Hikari classes while obtaining them transitively through Budget. Neither finding requires replacing the modular monolith or custom ORM.
 
 ## 6. End-to-end workflow correctness
 
@@ -99,13 +108,13 @@ Step 3 completed 119 Budget unit cases, 29 PostgreSQL integration cases, seven a
 
 The recorded checks cover decimal bounds, zero versus unset, explicit saving, no-op history, local reload, account saves, historical labels and read-only history. Two authenticated sessions exercised stale month/catalog versions. Guest transfer checked preview/confirmation, conflict behavior and retention when clearing the local copy fails. These bounded controls are more informative than an undifferentiated green test count.
 
-**S3-01 / S2-01: confirmed save followed by failed refresh.** After a real authenticated save returned saved=true, a browser bridge wrapper rejected the following month read. The editor displayed a read error, disabled Save, retained dirty state and returned failure to navigation despite the confirmed commit. The finding concerns acknowledgement and recovery semantics; it does not show that the database lost the save. A follow-up should retain confirmed revision metadata and distinguish confirmed save from refresh failure.
+**S3-01 / S2-01: confirmed save followed by failed refresh.** After a real authenticated save returned saved=true, a browser bridge wrapper rejected the following month read. The editor displayed a read error, disabled Save, retained dirty state and returned failure to navigation despite the confirmed commit. The finding concerns acknowledgement and recovery semantics; it does not show that the database lost the save. Budget PR #10 subsequently retained confirmed revision metadata and separated the refresh warning from save acknowledgement; the fix is included in B_R. [E11]
 
-**S3-02: rapid dialog reuse.** After a dirty navigation prompt was cancelled, immediately reopening it allowed a queued close event from the first prompt to consume the new listener. The next Discard response then had no effective listener and did not navigate. A comparison that waited for the earlier dialog to close worked normally. The finding is a specific event-lifecycle race, not a claim that every dirty-navigation decision fails.
+**S3-02: rapid dialog reuse.** After a dirty navigation prompt was cancelled, immediately reopening it allowed a queued close event from the first prompt to consume the new listener. The next Discard response then had no effective listener and did not navigate. A comparison that waited for the earlier dialog to close worked normally. The finding is a specific event-lifecycle race. Budget PR #11 subsequently serialized dialog reuse and passed the deterministic regression; the fix is included in B_R. [E11]
 
 **S3-03: interrupted history transfer.** A synthetic source history contained income values 100, 200 and 300. When the second save failed before delegation, or returned Unknown before delegation, the stored prefix was 100; an explicit preview/confirmed retry produced account history 100, 300. When the second save committed and then returned Unknown, retry produced 100, 200, 300. No automatic write retry occurred.
 
-Once a prefix exists, the implementation follows the existing-month merge path instead of restarting full replay. The final value can therefore arrive without reconstructing a missing middle account revision. Browser originals and the source payload remain preserved. This is a recovery limitation, not evidence of lost latest data or a broken promise of atomic multi-month transfer. Resumable full-history replay is a later product/contract decision.
+Once a prefix exists, the implementation follows the existing-month merge path instead of restarting full replay. The final value can therefore arrive without reconstructing a missing middle account revision. Browser originals and the source payload remain preserved. This is a recovery limitation, not evidence of lost latest data or a broken promise of atomic multi-month transfer. Resumable full-history replay remains a documented follow-up rather than a private R1 requirement. [E11]
 
 ## 7. PostgreSQL and custom ORM integrity
 
@@ -117,7 +126,7 @@ Deferred reverse foreign keys enforce required Budget/line structure, guard/revi
 
 Probes initialized and saved a normal catalog, then added one owned category through runtime INSERT rights without disabling constraints. A bare category and a future name/position pair without status were silently hidden. Three initial facts spaced one microsecond apart were accepted. Visible name/position without status correctly failed, and a valid later category behaved correctly in current versus pinned historical views. Normal saves write the initial facts atomically; these probes do not show ordinary saves creating corruption.
 
-The ORM's passing malformed-category tests use a separate test projection helper. A targeted fix belongs in Budget's production reader with strict assertions against that reader, preserving the valid-later-category control. Passing a helper's tests cannot substitute for exercising its production consumer.
+The ORM's passing malformed-category tests use a separate test projection helper. Budget PR #11 subsequently fixed the production reader using initial-coordinate checks in the existing category query, without extra per-category round trips. The release verification records malformed-fact cases and the valid-later-category control. Passing the earlier test helper alone had not exercised this production consumer. [E11]
 
 Real backend-termination probes also distinguished failure outcomes. A statement failure before commit was NOT_COMMITTED; terminating the backend before the commit call failed was UNKNOWN, even though an external read observed zero rows in that fixture. Each callback ran once, no write replay occurred, active leases returned to zero and subsequent pooled reads worked. A true wire-level lost acknowledgement after server commit was not tested; that path remains a driver-wrapper injection.
 
@@ -129,7 +138,7 @@ Seven app unit cases, the packaged security/browser case, two planner journeys, 
 
 Stored HTML/SQL-looking category text round-tripped literally, created no injected element and executed no script. Invalid Vaadin RPC tokens were rejected; logout denied replay of the old session. The source derives identity from the container principal, renews session/token state, uses secure cookie attributes and an Argon2id verifier file with restricted permissions. Missing account configuration failed closed in the local verifier.
 
-No new reportable security vulnerability was found within those source and test boundaries. This is not certification of the deployed service, assurance against every attack or a current dependency-advisory inventory. The global login cooldown is a documented availability/guessing tradeoff; sustained session exhaustion was not measured. Plaintext browser-profile guest storage remains a disclosed boundary. Effective host grants, provider IAM, key custody and current public deployment settings were not attested.
+No new reportable security vulnerability was found within those source and test boundaries. This is not certification of the deployed service, assurance against every attack or a current dependency-advisory inventory. The global login cooldown is a documented availability/guessing tradeoff; sustained session exhaustion was not measured. Plaintext browser-profile guest storage remains a disclosed boundary. These deployed controls were outside Step 5's attestation. The later R1 record documents selected host/listener/grant, backup-access and public-deployment checks; this does not turn the earlier source review into a general security certification. [E11]
 
 ## 9. Builds, tests and delivery
 
@@ -173,13 +182,13 @@ Five fresh-context guest page loads had p50/maximum 52.06/190.26 ms; login POST 
 
 All 707 raw latency samples and 397 half-second Jetty RSS samples are retained. Percentiles use nearest rank, including the field named median_ms. Peak sampled Jetty RSS was 350.17 MiB; that excludes the client harness, browser, database, Docker VM, proxy and OS and can miss short peaks. One 424,629-byte pg_dump took 182.78 ms with two overlapping reads; it did not include encryption, upload or restore.
 
-S7-01 records category-dependent projection cost as an optimization candidate, not an SLO breach. S7-03 records the unverified combined constrained-Linux capacity boundary. Warm caches, sequential profiles, a single host, small samples and finite bursts prevent statistical tail, saturation, soak or production sizing claims.
+S7-01 records category-dependent projection cost as an optimization candidate, not an SLO breach. S7-03 records the limit of that local capacity evidence. The release record retains limited constrained-Linux and selected-VM observations, with sustained representative load left as a follow-up. [E11] Warm caches, sequential profiles, a single host, small samples and finite bursts prevent statistical tail, saturation, soak or production sizing claims.
 
 ## 11. Controlled failure and resilience findings
 
 **S7-02: executing-work deadlines.** The app configures four pool connections and a 5,000 ms connection-acquisition timeout. The fixture reported PostgreSQL statement_timeout=0 and lock_timeout=0; direct JDBC network/query timeouts were zero. A held catalog lock produced a real PostgreSQL lock wait while an authenticated save remained pending beyond 6.5 seconds. After release it returned Saved at 6,683.80 ms and added exactly one revision. [E7]
 
-Hikari's acquisition limit bounds waiting for a pool connection, not work already executing. PostgreSQL's zero statement/lock settings disable those limits. The finding is a medium resilience gap in the reviewed defaults; actual deployed overrides remain unverified. No agreed response target was demonstrated breached, and all four connections were not deliberately exhausted. Timeout/cancellation policy must preserve transaction cleanup and UNKNOWN outcome handling rather than add automatic write replay. [R2, R3]
+Hikari's acquisition limit bounds waiting for a pool connection, not work already executing. PostgreSQL's zero statement/lock settings disable those limits. The finding is a medium resilience gap in the reviewed defaults. The 10 November record documents disabled production statement/lock deadlines as an accepted follow-up; a new timeout policy was not a remaining R1 blocker. [E11] No agreed response target was demonstrated breached, and all four connections were not deliberately exhausted. Timeout/cancellation policy must preserve transaction cleanup and UNKNOWN outcome handling rather than add automatic write replay. [R2, R3]
 
 | Recovery probe | Observed result and timing boundary |
 | --- | --- |
@@ -204,32 +213,46 @@ The backup user could not read the private age identity. A closed local mail rel
 
 The combined drill container took 18.936 seconds, excluding image building. The local fetch/new-cluster/negative-case/retry/SQL-validation phase took 2.345 seconds. These are not operational RTOs. They omit provisioning, real provider transfer, full application startup/verification, human work, DNS/proxy cutover and acceptance. The added phase applied SQL directly; it did not run Flyway's ledger, SCRAM login or a recovered browser journey.
 
-S8-01 retains the deployed provenance/control gap, including S1-01. S8-02 retains absent fresh evidence for the actual weekly job, independently recoverable off-VM key/bundle and verified receipt, live provider expiration, real inbox delivery, complete timed recovery, billing period and human release acceptance. It does not assert that private operational work or records do not exist. Issue #6 was open when inspected in Step 8.
+**10 November release and acceptance update**
 
-The runbook's approximate seven-day-plus-completion loss window depends on successful weekly backups; missed jobs enlarge it. Its four-hour recovery target starts when the operator begins recovery and extends through verified access/cutover. Neither target is established by the tiny local drill. Source rollback procedures distinguish keeping the database with a compatible previous app from restoring a separate cluster for incompatible schema. A rollback that would discard subsequent committed writes requires an explicit decision about the acceptable data-loss window.
+The later records supersede the original deployment-identity and R1-acceptance gaps. App issue #6 and tracker #1 are closed. The inspected app, Budget and ORM listings contain 13 closed issues and no open issues. The approved private Budget R1 release is active on Yandex Cloud, with no outstanding blockers within its agreed scope. [E11]
+
+| Recorded release evidence | Completed result |
+| --- | --- |
+| Fixes and candidate verification | S2-01/S3-01, S3-02 and S4-01 fixed in B_R; 119 Budget unit, 34 PostgreSQL and 15 Chromium tests reported. Assembled-app checks and both inspected exact-candidate CI runs passed at A_R. |
+| Activation and data preservation | Verified backup and mailbox receipt preceded activation. Readiness interval 5.08 seconds; all 24 Budget table fingerprints matched before/after restart and acceptance. |
+| Live application and selected-VM checks | Configured-account planner/category/history reads, session/logout and protected/public access passed. Separate synthetic selected-VM saves, category history and PostgreSQL/Jetty restart readback passed. |
+| Actual backup and recovery | Scheduled 8 November backup, delivered report, provider object and independent download matched. A real-provider download/decrypt/clean-restore/application check took 24.13 seconds with available recovery equipment. |
+| Operating controls | App, proxy, PostgreSQL and persistent weekly timer active; boot configuration and restricted listeners recorded. The configured 28-day expiry and one-day multipart cleanup were checked. |
+
+The manuscript update independently inspected the public closure/release records and successful CI status. Four fresh anonymous requests again returned HTTP redirect 308, login/guest 200 and protected access 401. Private administration and authenticated production acceptance were not repeated for this editorial update.
+
+The 24.13-second recovery excludes replacement-VM provisioning and DNS cutover. Actual retention expiration and a full billing period remain later observations; sustained capacity, log byte limits, query/deadline policy and the other documented engineering items remain follow-ups. These limits do not reopen the accepted R1 release gates. [E11]
+
+The runbook's approximate seven-day-plus-completion loss window depends on successful weekly backups; missed jobs enlarge it. Its four-hour recovery target starts when the operator begins recovery and extends through verified access/cutover. The tiny local drill alone does not establish either target; the accepted release also records the real-provider exercise and its stated timing boundary. Source rollback procedures distinguish keeping the database with a compatible previous app from restoring a separate cluster for incompatible schema. A rollback that would discard subsequent committed writes requires an explicit decision about the acceptable data-loss window.
 
 ## 13. Consolidated findings and disposition
 
-Original IDs remain usable across the reports. Source/runtime defects, limitations, cost observations and missing evidence are not combined into one severity score. All findings below remain unresolved for the frozen runtime; preparing report metadata only addresses this document's own publication preparation.
+Original IDs remain usable across the reports. Source/runtime defects, limitations, cost observations and missing evidence are not combined into one severity score. The original findings describe the frozen review runtime. Their current dispositions below reflect the accepted 10 November release: the three correctness defects are fixed, deployment/acceptance evidence is recorded, and the remaining items are documented follow-ups. [E11]
 
-| IDs / class | Consolidated finding | Disposition for a later release |
+| IDs / original class | Consolidated review finding | Disposition on 10 November |
 | --- | --- | --- |
-| S1-01, S8-01 / evidence gap | Deployed source, bytes and effective controls are unidentified by this review. | Compare a protected deployed manifest/configuration record with the accepted candidate; publish a sanitized summary. |
-| S1-02 / evidence gap | Successful CI exposes hashes without retained candidate binaries. | Retain exact retrievable artifacts, manifest and runtime references. |
-| S1-03 / delivery evidence | Declared coordinates do not establish tags, releases or registry packages. | Verify approved remote project/version state and retain readback evidence before publication. |
-| S1-04 / metadata gap | Source snapshots lack explicit code licensing/citation files. | Select software licensing and attribution before publication. This report's CC BY 4.0 and author metadata do not relicense code. |
-| S2-01 = S3-01 / medium defect | Refresh failure obscures an already confirmed save. | Preserve revision acknowledgement and test post-commit read failure against the shared planner. |
-| S2-02 / low defect | App's direct ORM/Hikari usage is declared only transitively. | Align direct build dependencies with composition ownership. |
-| S3-02 / medium defect | Rapid unsaved-dialog reuse can ignore Discard. | Correct event/listener lifecycle and keep the ordinary-navigation control. |
-| S3-03 / recovery limitation | Retrying partial history replay can omit a middle account revision while retaining latest value/originals. | Document latest-only retry; choose whether resumable history is required. |
-| S4-01 / medium defect | Production catalog projection omits required initial-fact validation. | Validate the three malformed fixtures in Budget's real reader, preserving valid history. |
-| S6-01 / medium defect | Bash 3.2 publisher guards allow invalid fixtures to reach local deployment. | Use explicit rejection/supported shell and verify all four negative guard cases. |
-| S6-02 / low defect | Effective module POM source/SCM metadata points under app. | Correct module metadata and compare published POM, JAR and provenance. |
-| S6-03, B3 / validation gap | Persistence integration and review probes are outside the automatic gate. | Gate relevant suites and turn accepted fixes' characterization cases into strict regression checks. |
-| S7-01 / measured cost | Saved-month prepared statements grow with categories. | Evaluate bulk projection within Budget while retaining owner/snapshot/as-of semantics. |
-| S7-02 / medium resilience gap | Pool acquisition timeout does not bound executing lock/query work. | Select/test execution and cancellation policy without automatic unknown-outcome writes. |
-| S7-03 / validation gap | Combined constrained-Linux CPU/memory/disk/backup headroom is unverified. | Measure the accepted workload on comparable approved resources. |
-| S8-02, B1 / acceptance gap | Current provider scheduling, retention, recovery and human acceptance are unverified. | Inspect fresh operational evidence and time complete off-VM recovery through app access. |
+| S1-01, S8-01 / evidence gap | Deployment identity and selected controls were unknown in the original review. | Resolved for R1 by the accepted deployed manifest and selected live-control checks. [E11] |
+| S1-02 / evidence gap | Original CI exposed hashes without retained candidate binaries. | R1 has a retained off-VM bundle/manifest. Automatic CI artifact retention remains separate follow-up work. |
+| S1-03 / delivery evidence | Coordinates alone did not establish hosted releases/packages. | Private VM R1 released; Maven/tag/package publication remains a separate activity. |
+| S1-04 / metadata gap | Source snapshots lacked explicit code licensing/citation files. | Software-publication licensing remains separate; this report's license does not relicense code. |
+| S2-01 = S3-01 / medium defect | Refresh failure obscured an already confirmed save. | Fixed by Budget PR #10 and included in B_R; acknowledgement and refresh warning remain distinct. |
+| S2-02 / low defect | Direct ORM/Hikari usage was declared transitively. | Documented follow-up; revision-bound assembly passed R1 verification. |
+| S3-02 / medium defect | Rapid dialog reuse could ignore Discard. | Fixed by Budget PR #11; deterministic browser regression passed in B_R. |
+| S3-03 / recovery limitation | Partial replay retry can omit a middle account revision. | Accepted R1 limit: latest value and browser originals preserved; resumable history not promised. |
+| S4-01 / medium defect | Initial category facts were not validated by the production projection. | Fixed by Budget PR #11, with malformed-fact and valid-history regression coverage in B_R. |
+| S6-01 / medium defect | Bash 3.2 guards allowed invalid publication fixtures. | Follow-up before the corresponding Maven publication; separate from the private VM release. |
+| S6-02 / low defect | Effective module POM source/SCM metadata pointed under app. | Follow-up before module package publication. |
+| S6-03, B3 / validation gap | Persistence suites were outside the automatic gate. | Manual revision-bound persistence/browser checks supplied R1 evidence; automatic gating remains follow-up. |
+| S7-01 / measured cost | Saved-month query count grew with categories. | Recorded optimization follow-up; original measurements are not rerun-release benchmarks. |
+| S7-02 / medium resilience gap | Pool timeout did not bound executing lock/query work. | Disabled production statement/lock deadlines documented; policy work retained as follow-up. |
+| S7-03 / validation gap | Sustained constrained-host capacity was unverified. | Limited release measurements recorded; representative sustained capacity remains follow-up. |
+| S8-02, B1 / acceptance gap | Earlier records lacked current operational acceptance. | R1 accepted: actual backup/mail/recovery and live checks recorded. Full replacement-host timing and later expiry/billing observations remain follow-ups. |
 | B2 / product proposal | Browser-local guest data lacks a portable backup path. | Decide intended public use and evaluate export/restore as a separate product decision. |
 | B4 / usability proposal | Single-account sign-in expectations are unclear. | Clarify visitor-facing access/storage wording and verify comprehension if consequential. |
 
@@ -237,15 +260,15 @@ S2-01 and S3-01 describe one confirmed-save problem at different evidence stages
 
 ## 14. Release implications and proposed order
 
-The proposed next release focuses on the reproduced UI, projection and delivery defects, together with the missing acceptance evidence. This sequence reflects the observed cases rather than a new delivery commitment.
+The 10 November release completed the selected correctness fixes and private R1 acceptance. Its documented follow-up boundary separates later reliability/delivery improvements from completed release gates. [E11]
 
-Corrective work requires regression assertions for the intended behavior, alongside the existing stale-version, account-isolation, pinned-history and unknown-outcome controls. The acceptability of limited history transfer and browser-local guest storage depends on the intended audience. Merging a finding's report does not resolve the underlying finding.
+The released fixes have regression coverage alongside stale-version, account-isolation, pinned-history and unknown-outcome controls. Limited history transfer and browser-local guest storage retain their documented R1 scope. Further changes require their own acceptance evidence.
 
 Release verification should align automatic checks with persistence and workflow claims, publisher rejection cases, effective Maven provenance and retained candidate bytes. No line-coverage target or architecture rewrite follows from these findings.
 
 The existing release-preparation plan orders dependencies as build parent, ORM, Budget and app/authentication/WAR. Reviewed coordinates are parent 0.1.0, ORM 0.1.0, Budget 0.2.0 and app/authentication 0.1.0. Proposed tags and versions still require approved release commits and checks that the registry coordinates are unused. Fixes may require changed versions/pins. The existing GitLab Maven decision is retained; no alternate registry is silently selected. [E9]
 
-Operational acceptance requires deployed-artifact correspondence, workload and backup capacity measurements, verified off-VM recovery material and a completed recovery exercise. Publication of the report is separate from software package releases and production cutover.
+The accepted deployment records artifact correspondence, verified backup/recovery material and completed live acceptance. Sustained workload and full lost-host timing remain explicitly bounded follow-ups. Report publication and Maven package publication remain separate from the completed production activation.
 
 ## 15. Assistance, authorship and accountability
 
@@ -254,29 +277,29 @@ Anton Serdyuchenko defined the review scope and publication objectives and is re
 | Activity | Author contribution | AI assistance / execution |
 | --- | --- | --- |
 | Scope and progression | Defined the review scope and publication objectives. | Developed the review sequence and performed the recorded technical analysis. |
-| Technical evidence | Provided deployment-context information, including the unavailable manifest. | Developed and executed probes, diagnosed fixture failures and documented evidence limits. |
+| Technical evidence | Provided review context and editorial decisions. | Developed and executed probes, diagnosed fixture failures and documented evidence limits. |
 | Review records | Review progression and merges are recorded in the project history. | Prepared review documents and verified GitHub merge status. |
 | Consolidation | Report authorship and editorial review. | Reconciled findings, prepared document sources and checked compilation and layout. |
 
 Contribution percentages, causal productivity effects and individual performance were not measured. Multiple AI review passes do not constitute external expert review or independent reproduction. ChatGPT/Codex are assistance systems, not authors.
 
-Final factual review, licensing and attribution, and the publication decision remain the author's responsibility. Production release acceptance and independent reproduction are not established by this publication candidate.
+Final factual review, licensing and attribution, and the publication decision remain the author's responsibility. Private R1 acceptance is documented by the 10 November project records. Independent reproduction and peer review are separate from that release decision.
 
 ## 16. Limitations
 
 **Study and product scope.** One project and a bounded set of synthetic workflows were reviewed. There is no representative user study, commercial experiment, control group or blinded independent assessment. Architecture adequacy is assessed against the selected design, not proved superior to alternatives.
 
-**Runtime correspondence.** Exact reviewed source and local artifact bytes are known. The running public service's commit, bytes, effective roles, configuration and infrastructure remain unmatched. A source finding must not be asserted to describe today's production bytes without that comparison.
+**Runtime correspondence.** The original review did not identify deployed bytes. The 10 November release record subsequently identifies both the initial deployment and accepted A_R/B_R candidate and reports selected live-control checks. This manuscript inspected those primary records rather than repeating protected administration. Original findings and measurements must retain their original revision boundaries.
 
 **Coverage and failure models.** Passing selected tests does not enumerate every race, corrupted state, browser/platform or attack. Artificial bridge/driver/port decorators and synthetic malformed rows are disclosed. Backend termination, container stop/start and explicit JVM restart exercise different failure models from real post-commit packet loss, power loss or complete host recovery.
 
 **Measurement.** No predefined service-level objectives or statistical protocol were supplied. The exploratory sample count, warm cache/JIT state, single host, finite bursts and partial memory accounting do not establish stable p95, maximum throughput, leak freedom or the planned VM's suitability.
 
-**Operations.** Moto lifecycle readback is not elapsed provider expiration. Local SMTP is not actual authenticated/TLS mailbox delivery. Calendar parsing is not a running timer, and ordinary container processes are not systemd PID 1 or an installed sandbox. A private key protected within a disposable container is not proof of off-VM independent custody.
+**Operations.** Earlier emulator/local-SMTP/calendar checks have narrower scope than the later recorded provider/mailbox/timer checks. The release evidence adds actual scheduled-backup and recovery observations, while elapsed retention expiration, a full billing period and complete replacement-host/DNS-cutover timing remain unobserved. A short available-equipment recovery is not a full infrastructure-rebuild measurement.
 
 **Reproduction and drift.** No independent person/host reproduced the entire review. Maven/browser caches and public dependency/package repositories were reused. Image IDs and artifact hashes improve traceability but do not guarantee future network availability or full hermetic reconstruction.
 
-**Records and assistance.** Total review effort, AI usage/cost and real operating cost were not established for this study. Repeated suite runs are not independent trials. The initial business record is consolidated from the recorded assisted review; its live journeys were not repeated for this manuscript. Private operator records were not audited in the eight-step public review.
+**Records and assistance.** Total review effort, AI usage/cost and real operating cost were not established for this study. Repeated suite runs are not independent trials. The initial business record is consolidated from the recorded assisted review; its live journeys were not repeated for this manuscript. Protected operator details remain private; the manuscript's release update uses the approved sanitized records.
 
 ## 17. Reproducibility and future validation
 
@@ -286,7 +309,7 @@ Use disposable synthetic environments and the pinned runtime sources, not a curr
 
 A passing characterization should be expected to change after a fix. Regression tests for accepted fixes must assert the intended corrected behavior rather than merely duplicate the old failure. Preserve negative controls and transaction semantics when reducing query count or introducing deadlines.
 
-For a later publication version, report the actual fix revisions, updated dependencies, changed acceptance decisions and which cases were rerun. Retain individual performance runs and measurement boundaries before drawing comparative conclusions. New production-readiness statements require current protected manifest/configuration, provider and recovery evidence with an approved sanitized public summary.
+This revision adds the actual fix/release revisions and reported reruns in E11. Further publication revisions should retain the same revision-specific accounting. Retain individual performance runs and measurement boundaries before drawing comparative conclusions. New production-readiness statements require current protected manifest/configuration, provider and recovery evidence with an approved sanitized public summary.
 
 ## 18. Evidence table and revision anchors
 
@@ -305,8 +328,9 @@ A, B, O and D denote the full commits in Section 3. The report links to D for th
 | E8 | [08-deployment-recovery.md](https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/08-deployment-recovery.md), [results](https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-8/results.json) and [reproduction](https://github.com/finance-lab-project/app/tree/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-8): public requests, operating controls and encrypted schema recovery. |
 | E9 | [release-preparation.md](https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/release-preparation.md): proposed dependency/version mapping and acceptance/publication prerequisites. |
 | E10 | [Candidate CI run](https://github.com/finance-lab-project/app/actions/runs/42349683701), [PR #12](https://github.com/finance-lab-project/app/pull/12), [issue #6](https://github.com/finance-lab-project/app/issues/6): dated CI and mutable prior implementation/acceptance context, as inspected in the step reports. |
+| E11 | release-update-2026-11-10.md and release-evidence-2026-11-10.json in this bundle; [accepted app PR #12](https://github.com/finance-lab-project/app/pull/12), [closed release issue #6](https://github.com/finance-lab-project/app/issues/6), [Budget fix PR #10](https://github.com/finance-lab-project/budget/pull/10), [fix PR #11](https://github.com/finance-lab-project/budget/pull/11), [immutable verification record](https://github.com/finance-lab-project/app/blob/d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37/docs/r1-verification.md), exact-candidate CI status and fresh public GET results. |
 
-The supplied evidence-manifest.json records report/dataset paths, D-pinned URLs and SHA-256 values. It supports checking retrieval without replacing the source and reproduction instructions. Evidence E0 is retained with this publication because the initial review preceded the step-by-step GitHub reports.
+The supplied evidence-manifest.json records the 37 original D-pinned files and the separately retained release supplement/verification record, with source revisions and hashes. It supports checking retrieval without replacing the source and reproduction instructions. Evidence E0 is retained with this publication because the initial review preceded the step-by-step GitHub reports.
 
 ## References
 
@@ -314,7 +338,7 @@ The supplied evidence-manifest.json records report/dataset paths, D-pinned URLs 
 - **R2.** HikariCP. [Configuration: connectionTimeout](https://github.com/brettwooldridge/HikariCP#frequently-used). Pool-acquisition semantics; consulted during Step 7, 8 November 2026.
 - **R3.** PostgreSQL 18. [Client connection defaults: statement_timeout and lock_timeout](https://www.postgresql.org/docs/18/runtime-config-client.html#GUC-STATEMENT-TIMEOUT). Timeout semantics; consulted during Step 7, 8 November 2026.
 - **R4.** PostgreSQL 18. [pg_restore](https://www.postgresql.org/docs/18/app-pgrestore.html). Single-transaction import boundary; consulted during Step 8, 8 November 2026.
-- **R5.** Zenodo. [Create new upload](https://help.zenodo.org/docs/deposit/create-new-upload/) and [Resource types](https://help.zenodo.org/docs/deposit/describe-records/resource-type/). Deposit preparation guidance; accessed 8 November 2026.
+- **R5.** Zenodo. [Create new upload](https://help.zenodo.org/docs/deposit/create-new-upload/) and [Resource types](https://help.zenodo.org/docs/deposit/describe-records/resource-type/). Deposit preparation guidance; checked again 10 November 2026.
 - **R6.** Creative Commons. [Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/). License for this report and document sources; accessed 8 November 2026.
 
 ## Appendix A. Proposed Zenodo deposit metadata
@@ -327,13 +351,13 @@ The supplied evidence-manifest.json records report/dataset paths, D-pinned URLs 
 
 **Version and language:** 1.0; English.
 
-**Dates and status:** Review observations 7-8 November 2026; report preparation 8 November 2026. The actual public release date must be supplied when publishing. This is a publication candidate; no Zenodo draft, reserved DOI or published record is asserted.
+**Dates and status:** Original review 7-8 November 2026; report prepared 8 November and revised with release evidence on 10 November 2026. The actual public release date must be supplied when publishing. This is a publication candidate; its DOI is not yet included in the files.
 
 **License:** CC BY 4.0 for this report, its Markdown/LaTeX sources and document metadata. The app, Budget and ORM snapshots' code licensing decisions remain separate and unresolved in the review.
 
 **Description:** Use the Abstract, followed by the technical-report/pilot-study classification, synthetic-data statement and AI-assistance disclosure. The metadata draft omits publication date and DOI instead of inventing them.
 
-**Related identifiers:** Documents the A/B/O software snapshots and references the D review evidence and the related engineering report R1. No version relationship is assigned between the two reports.
+**Related identifiers:** Documents the original A/B/O and accepted A_R/B_R software revisions; references the D review evidence and related engineering report R1. No version relationship is assigned between the two reports.
 
 **Deposit files:** PDF, standalone main.tex and equivalent report.md; retain business-review.md, evidence-manifest.json and metadata-draft.json with the source bundle. SHA256SUMS identifies the prepared files. Final DOI/date changes require rebuilding the PDF and updating the checksums before deposit.
 
@@ -341,7 +365,7 @@ A Zenodo deposit would archive the report; it would not perform software release
 
 ## Appendix B. Accepted artifact digests
 
-These digests identify local/CI artifacts compared in the review, not bytes independently read from the production server.
+The first table identifies the frozen artifacts compared on 7-8 November. The second lists the changed artifacts in the accepted 10 November candidate; other digests remain as above. E11 retains the complete deployed manifest. The manuscript revision did not independently read the protected server filesystem.
 
 | Artifact | SHA-256 |
 | --- | --- |
@@ -352,3 +376,13 @@ These digests identify local/CI artifacts compared in the review, not bytes inde
 | build-parent/pom.xml | aa61d398a42e3df231b696532a545872296bba8d039b453cf5ad98f5b284a34f |
 | Nested orm-0.1.0.jar | f172af011a04d74549cb917f2bab8feb4bd79ad1594fdee8b71815db2f1145e4 |
 | Nested budget-0.2.0.jar | b24dfb9fb4d2a9a8ff1f2edcef7984b1b14f1e0542654c37f251752bb62fb730 |
+
+**Changed artifacts in the accepted deployed candidate - 10 November 2026**
+
+Password4j, jetty-auth.xml, the build parent and ORM retain the baseline digests above. The full accepted manifest is retained in E11.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| application/target/finance-lab.war | b14e206910217d8da34aa99f7b181cd0b3316c2ea281fad95a73347f9cc21746 |
+| authentication/target/authentication-0.1.0.jar | d495826a88685a35d1eb349d29c795e9cb9c4a3833e61c63d4bdf41d09d677c6 |
+| Nested budget-0.2.0.jar | 4b7ae3103841016c75a3b82271d950d34d15ca85e3ecd8f7c2cefed18f72337d |

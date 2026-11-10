@@ -28,7 +28,7 @@
 \fancyhf{}
 \fancyhead[L]{\small\color{ink}Finance Lab MVP review}
 \fancyhead[R]{\small\color{ink}Technical report - v1.0}
-\fancyfoot[L]{\footnotesize Anton Serdyuchenko - 8 November 2026}
+\fancyfoot[L]{\footnotesize Anton Serdyuchenko - 10 November 2026}
 \fancyfoot[R]{\footnotesize\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \renewcommand{\footrulewidth}{0pt}
@@ -50,17 +50,17 @@
 {\small ORCID: \href{https://orcid.org/0000-0001-7770-2201}{0000-0001-7770-2201}\par}
 \vspace{6mm}
 {\large Version 1.0 - publication candidate\par}
-{\large Report prepared 8 November 2026\par}
+{\large Report revised 10 November 2026\par}
 {\large Review observations: 7-8 November 2026\par}
 \vspace{5mm}
-{\small Prepared for Zenodo; no DOI has been reserved.\par}
+{\small Prepared for Zenodo publication.\par}
 \vfill
 \begin{minipage}{0.91\textwidth}
 \hrule\vspace{5mm}
-This AI-assisted engineering review records a bounded software snapshot and
-synthetic checks. It has not undergone peer review. Observed behavior,
-recommendations and missing evidence are kept distinct. Commercial validation
-and production release acceptance are not established.
+This report records the technical review and subsequent release evidence.
+The private Budget R1 application was accepted and deployed on Yandex Cloud
+on 10 November 2026. Synthetic checks are distinguished from the recorded
+production acceptance. The report has not undergone peer review.
 \par\vspace{3mm}
 {\small \copyright\ 2026 Anton Serdyuchenko. The report, its Markdown and LaTeX
 sources, and document metadata use
@@ -74,7 +74,7 @@ separate.}
 \section*{Abstract}
 \pdfbookmark[1]{Abstract}{review1}
 
-This report consolidates the product review and eight technical review steps of Finance Lab's first Budget MVP, recorded on 7-8 November 2026. The reviewed system is a Java/\allowbreak{}Vaadin modular monolith with a PostgreSQL Anchor Modeling schema, a custom JDBC mapper, a browser-local guest planner and one configured authenticated account. Exact application, Budget and ORM revisions define the runtime baseline; a separate merged documentation revision anchors the review evidence. Recorded normal workflows support precise money handling, explicit saves, historical views and category archiving. Targeted probes reproduced a confirmed-save/\allowbreak{}read-refresh defect, a rapid dialog-reuse race, an incremental history-transfer limitation and missing initial-category integrity validation. Delivery checks found reproducible accepted binaries alongside Bash 3.2 publication-guard and inherited Maven metadata defects, with persistence integration suites outside the automatic gate. No new reportable security vulnerability was found within the recorded review scope. Local measurements retained 707 latency samples: saved-month reads used 60 prepared statements at 10 categories and 260 at 50, while browser RPC p95 increased from 44.42 to 144.17 milliseconds. Controlled database and explicit JVM restarts preserved selected confirmed state. An isolated encrypted recovery drill preserved data fingerprints for all 24 Budget tables, owners, grants and selected historical projections. Deployed artifact correspondence, constrained-host capacity, provider backup behavior and complete timed operational recovery remain unverified. The report provides a traceable basis for corrective releases and acceptance work; it does not establish market demand, general security, sustainable capacity, independent reproduction or production readiness.
+This report consolidates the product assessment and eight technical review steps of Finance Lab's Budget MVP, recorded on 7-8 November 2026, with a release-evidence update on 10 November. The system is a Java/\allowbreak{}Vaadin modular monolith with PostgreSQL Anchor Modeling, a custom JDBC mapper, browser-local guest storage and one configured authenticated account. The original review identified confirmed-save acknowledgement, dialog-lifecycle and category-integrity defects, an interrupted-history-transfer limitation, and delivery and operational evidence gaps. Local measurements retained 707 latency samples: saved-month reads used 60 prepared statements at 10 categories and 260 at 50; browser RPC p95 increased from 44.42 to 144.17 milliseconds. An isolated encrypted recovery drill preserved all 24 Budget table fingerprints, object ownership, grants and selected historical projections. Subsequent release records document fixes for the three correctness defects, successful revision-bound verification and approved production deployment on Yandex Cloud on 10 November. All 13 issues in app, Budget and ORM were closed, including the R1 tracker and delivery acceptance. The accepted release has a new app/\allowbreak{}Budget revision and recorded deployed artifact identity. The original measurements remain tied to their frozen baseline. Query/\allowbreak{}deadline, automatic-CI, sustained-capacity and full replacement-host recovery observations remain documented follow-ups within the accepted R1 scope. This engineering case study does not establish market demand, general security, independent reproduction or sustainable capacity beyond the reported checks.
 
 \textbf{Keywords:} personal finance; Budget MVP; modular monolith; Vaadin; PostgreSQL; Anchor Modeling; custom ORM; reproducibility; resilience; software review; synthetic data; AI-assisted engineering.
 
@@ -83,7 +83,7 @@ This report consolidates the product review and eight technical review steps of 
 
 Finance Lab supports monthly financial planning: recording income, spending and investments, calculating the remaining balance, explicitly saving a month and inspecting earlier versions. The implemented access model supports one configured account. Guests can work with browser-local data; authenticated storage provides PostgreSQL persistence and cross-browser access for that account. [E0, E2]
 
-The review assesses the implemented planning workflow and its technical foundations. It covers source identity, module boundaries, workflow correctness, persistence integrity, security, delivery, performance and operational recovery. The findings draw on the initial functional review and eight versioned technical reports.
+The review assesses the implemented planning workflow and its technical foundations. It covers source identity, module boundaries, workflow correctness, persistence integrity, security, delivery, performance and operational recovery. The findings draw on the initial functional review and eight versioned technical reports. A dated 10 November supplement records subsequent fixes and accepted production deployment. [E11]
 
 The reviewed runtime is a Java/\allowbreak{}Vaadin modular monolith with PostgreSQL storage and a custom JDBC mapper. The source revisions and system boundary are defined in Section 3. [E1, E2]
 
@@ -92,15 +92,15 @@ The product assessment examines the implemented workflow and selected usability 
 \section*{2. Methodology and evidence handling}
 \pdfbookmark[1]{2. Methodology and evidence handling}{review3}
 
-The review is a descriptive engineering case study of one project, performed with substantial AI assistance. It combines source inspection, existing implementation suites, targeted external probes, public read-only requests and isolated synthetic failure/\allowbreak{}recovery experiments. Observations occurred on 7-8 November; this synthesis inspected the merged reports on 8 November. Application tests were not rerun merely to write the consolidated report.
+The review is a descriptive engineering case study of one project, performed with substantial AI assistance. It combines source inspection, existing implementation suites, targeted external probes, public read-only requests and isolated synthetic failure/\allowbreak{}recovery experiments. Original review observations occurred on 7-8 November. The 10 November revision inspected release records, issue closure, exact-candidate CI status and current anonymous HTTPS responses. Protected production checks and application suites were not rerun for this manuscript revision.
 
-Four evidence classes are retained. \textbf{Recorded public behavior} describes the initial guest journeys and later anonymous HTTP requests. \textbf{Frozen source and completed local checks} describe exact code, artifacts and disposable fixtures. \textbf{Prior implementation evidence} includes the candidate verification record in open PR \#12; it is not relabeled as a fresh review run. \textbf{Unverified operational or product claims} include actual deployed identity, private host/\allowbreak{}provider settings, demand and human release acceptance.
+Four evidence classes are retained. \textbf{Recorded public behavior} describes the initial guest journeys and later anonymous HTTP requests. \textbf{Frozen source and completed local checks} describe exact code, artifacts and disposable fixtures. \textbf{Release evidence} includes the subsequently merged PR \#12, its accepted candidate manifest and the closed R1 acceptance records. \textbf{Remaining evidence limits} concern the explicitly retained follow-ups, market demand and verification beyond the reported release checks. [E11]
 
 The technical reports retain original finding IDs, test methods, failed pilot controls, corrected fixtures and limits. Passing a characterization assertion means that the named defective or limited behavior was reproduced. It does not show that the product now meets the intended requirement. Reused suites are identified by their original step; no aggregate passing-test total is constructed by adding reruns of the same cases.
 
 The runtime baseline is distinct from the review-document snapshot. Merged review PRs \#13-\#20 add reports and external fixtures; merge status is a version-control observation, not evidence of deployment, independent validation or resolution of the findings. Review snapshot D contains the complete eight-step record after PR \#20. [E1-E8]
 
-Public artifacts contain synthetic amounts and labels, source revisions and sanitized outcomes. Real passwords, cookies, recovery keys, financial records, private operator paths and provider credentials are excluded. A deployment manifest was unavailable in the reviewed evidence; public page appearance cannot identify server archive bytes.
+Public artifacts contain synthetic amounts and labels, source revisions and sanitized outcomes. Real passwords, cookies, recovery keys, financial records, private operator paths and provider credentials are excluded. A deployment manifest was unavailable during the original review. The 10 November records subsequently establish both the previous and accepted deployed identities; public page appearance alone is not the source of that correspondence. [E11]
 
 \section*{3. Reviewed system and recorded environments}
 \pdfbookmark[1]{3. Reviewed system and recorded environments}{review4}
@@ -116,7 +116,20 @@ O: ORM & \href{https://github.com/finance-lab-project/orm/tree/8daaf91d07d2e30b5
 D: merged review & \href{https://github.com/finance-lab-project/app/tree/7edfb504d98ebe88df51a92124e217573addbd41/docs/review}{app review evidence} - {\small\path{7edfb504d98ebe88df51a92124e217573addbd41}} \\ \addlinespace[3pt]
 \end{longtable}}
 
-Budget's main branch had a different commit ID from B in Step 1, but the two trees were identical. That observation is not a source-content mismatch. The parent POM and both vendored parent copies were also identical. The accepted WAR contains Budget 0.2.0 and ORM 0.1.0; app/\allowbreak{}authentication and the separately publishable build parent declare 0.1.0. Declared Maven coordinates are not proof that packages or releases were published. [E1, E6]
+The original measurements use A/\allowbreak{}B/\allowbreak{}O. The accepted 10 November release uses the following later app and Budget revisions, with ORM unchanged. Release records also matched the previous deployment to A and its original WAR digest. [E11]
+
+{\fontsize{9.5}{11.5}\selectfont
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.72\textwidth}@{}}\toprule
+\textbf{Accepted release} & \textbf{Exact source revision} \\ \midrule\endfirsthead
+\toprule\textbf{Accepted release} & \textbf{Exact source revision} \\ \midrule\endhead
+\bottomrule\endfoot
+A\_R: deployed app candidate & \href{https://github.com/finance-lab-project/app/tree/d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37}{app} - {\small\path{d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37}} \\ \addlinespace[3pt]
+B\_R: deployed Budget & \href{https://github.com/finance-lab-project/budget/tree/a0645781b1d5e25536b4651749a372d6fd906315}{Budget} - {\small\path{a0645781b1d5e25536b4651749a372d6fd906315}} \\ \addlinespace[3pt]
+\end{longtable}}
+
+Budget PR \#11 merged as {\small\path{9551d917d69dcf415fe51a7eda4ae669a2756ec7}}, followed by app PR \#12 as {\small\path{43d51524ad1c8938b57624b1a9ee393da72d42e4}}. The deployed source is the tested candidate A\_R, rather than the merge identifier. Appendix B retains both artifact manifests.
+
+Budget's main branch had a different commit ID from B in Step 1, but the two trees were identical. That observation is not a source-content mismatch. The parent POM and both vendored parent copies were also identical. The baseline WAR contains Budget 0.2.0 and ORM 0.1.0; app/\allowbreak{}authentication and the separately publishable build parent declare 0.1.0. Declared Maven coordinates are not proof that packages or releases were published. [E1, E6]
 
 {\fontsize{9.5}{11.5}\selectfont
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.72\textwidth}@{}}\toprule
@@ -148,7 +161,7 @@ The original business review raised four release/\allowbreak{}product concerns. 
 \textbf{ID /\allowbreak{} original priority} & \textbf{Recorded concern and bounded implication} \\ \midrule\endfirsthead
 \toprule\textbf{ID /\allowbreak{} original priority} & \textbf{Recorded concern and bounded implication} \\ \midrule\endhead
 \bottomrule\endfoot
-B1 /\allowbreak{} high & Production acceptance was unconfirmed in available release records. Complete and reconcile the existing acceptance evidence; this overlaps S1-01 and S8-01/\allowbreak{}S8-02 rather than establishing a separate production defect. \\ \addlinespace[3pt]
+B1 /\allowbreak{} high & Acceptance was unconfirmed in the initial review records. The 10 November accepted release resolves this R1 acceptance gap; the dated observation overlaps S1-01 and S8-01/\allowbreak{}S8-02. [E11] \\ \addlinespace[3pt]
 B2 /\allowbreak{} medium & Guest data remains in a browser profile, and clearing it can remove the only copy. If ongoing public guest use is intended, evaluate export/\allowbreak{}restore before encouraging reliance on it. This is a conditional product proposal, not a promise to add a feature. \\ \addlinespace[3pt]
 B3 /\allowbreak{} medium & Budget/\allowbreak{}ORM integration regression checks depended on manual execution. Step 6 confirmed the automatic-gate gap as S6-03. \\ \addlinespace[3pt]
 B4 /\allowbreak{} low & The sign-in wording could suggest cross-device access without clearly explaining the single-account access model. Clarifying access expectations is a usability recommendation; no user-comprehension study was performed. \\ \addlinespace[3pt]
@@ -156,7 +169,7 @@ B4 /\allowbreak{} low & The sign-in wording could suggest cross-device access wi
 
 Browser-local storage and the single-account boundary are documented design choices. The concern is the fit between visitor expectations, durability requirements and the intended product audience. The review does not infer that guest storage is encrypted, portable or an account backup.
 
-The product evidence favors a reliability and clarity release around the existing planner before broadening scope. This is an inference from the observed failure modes and evidence gaps, not proof that a particular roadmap maximizes adoption or revenue. No demand, willingness-to-pay, active-user or production-use outcome is claimed.
+The product evidence favors a reliability and clarity release around the existing planner before broadening scope. This is an inference from the observed failure modes and evidence gaps, not proof that a particular roadmap maximizes adoption or revenue. No demand, willingness-to-pay or active-user outcome was measured. Production deployment and private R1 acceptance are documented in the later release evidence. [E11]
 
 \section*{5. Architecture and module boundaries}
 \pdfbookmark[1]{5. Architecture and module boundaries}{review6}
@@ -167,7 +180,7 @@ The main dependency direction is coherent. App owns assembly, authentication, ro
 
 A monthly save, catalog save or initialization enters its own write callback. Current and historical reads use read-only snapshot callbacks and materialize values before returning. Guest transfer orchestrates catalog matching and revision replay in Budget's UI adapter, with separate transactions per replayed revision and final snapshot. It is not an atomic transaction spanning all months.
 
-Two boundary findings remain. S2-01 concerns the shared planner reducing a confirmed Saved/\allowbreak{}Unchanged result to saved=true, then depending on another read to complete the UI flow; Step 3 confirms its consequence as S3-01. S2-02 is a low-priority dependency declaration problem: app directly uses ORM/\allowbreak{}Hikari classes while obtaining them transitively through Budget. Neither finding requires replacing the modular monolith or custom ORM.
+The original review recorded two boundary findings. S2-01 concerned the shared planner reducing a confirmed Saved/\allowbreak{}Unchanged result to saved=true, then depending on another read to complete the UI flow; Step 3 confirmed its consequence as S3-01. It is fixed in B\_R. S2-02 remains a documented low-priority dependency follow-up: app directly uses ORM/\allowbreak{}Hikari classes while obtaining them transitively through Budget. Neither finding requires replacing the modular monolith or custom ORM.
 
 \section*{6. End-to-end workflow correctness}
 \pdfbookmark[1]{6. End-to-end workflow correctness}{review7}
@@ -176,13 +189,13 @@ Step 3 completed 119 Budget unit cases, 29 PostgreSQL integration cases, seven a
 
 The recorded checks cover decimal bounds, zero versus unset, explicit saving, no-op history, local reload, account saves, historical labels and read-only history. Two authenticated sessions exercised stale month/\allowbreak{}catalog versions. Guest transfer checked preview/\allowbreak{}confirmation, conflict behavior and retention when clearing the local copy fails. These bounded controls are more informative than an undifferentiated green test count.
 
-\textbf{S3-01 /\allowbreak{} S2-01: confirmed save followed by failed refresh.} After a real authenticated save returned saved=true, a browser bridge wrapper rejected the following month read. The editor displayed a read error, disabled Save, retained dirty state and returned failure to navigation despite the confirmed commit. The finding concerns acknowledgement and recovery semantics; it does not show that the database lost the save. A follow-up should retain confirmed revision metadata and distinguish confirmed save from refresh failure.
+\textbf{S3-01 /\allowbreak{} S2-01: confirmed save followed by failed refresh.} After a real authenticated save returned saved=true, a browser bridge wrapper rejected the following month read. The editor displayed a read error, disabled Save, retained dirty state and returned failure to navigation despite the confirmed commit. The finding concerns acknowledgement and recovery semantics; it does not show that the database lost the save. Budget PR \#10 subsequently retained confirmed revision metadata and separated the refresh warning from save acknowledgement; the fix is included in B\_R. [E11]
 
-\textbf{S3-02: rapid dialog reuse.} After a dirty navigation prompt was cancelled, immediately reopening it allowed a queued close event from the first prompt to consume the new listener. The next Discard response then had no effective listener and did not navigate. A comparison that waited for the earlier dialog to close worked normally. The finding is a specific event-lifecycle race, not a claim that every dirty-navigation decision fails.
+\textbf{S3-02: rapid dialog reuse.} After a dirty navigation prompt was cancelled, immediately reopening it allowed a queued close event from the first prompt to consume the new listener. The next Discard response then had no effective listener and did not navigate. A comparison that waited for the earlier dialog to close worked normally. The finding is a specific event-lifecycle race. Budget PR \#11 subsequently serialized dialog reuse and passed the deterministic regression; the fix is included in B\_R. [E11]
 
 \textbf{S3-03: interrupted history transfer.} A synthetic source history contained income values 100, 200 and 300. When the second save failed before delegation, or returned Unknown before delegation, the stored prefix was 100; an explicit preview/\allowbreak{}confirmed retry produced account history 100, 300. When the second save committed and then returned Unknown, retry produced 100, 200, 300. No automatic write retry occurred.
 
-Once a prefix exists, the implementation follows the existing-month merge path instead of restarting full replay. The final value can therefore arrive without reconstructing a missing middle account revision. Browser originals and the source payload remain preserved. This is a recovery limitation, not evidence of lost latest data or a broken promise of atomic multi-month transfer. Resumable full-history replay is a later product/\allowbreak{}contract decision.
+Once a prefix exists, the implementation follows the existing-month merge path instead of restarting full replay. The final value can therefore arrive without reconstructing a missing middle account revision. Browser originals and the source payload remain preserved. This is a recovery limitation, not evidence of lost latest data or a broken promise of atomic multi-month transfer. Resumable full-history replay remains a documented follow-up rather than a private R1 requirement. [E11]
 
 \section*{7. PostgreSQL and custom ORM integrity}
 \pdfbookmark[1]{7. PostgreSQL and custom ORM integrity}{review8}
@@ -195,7 +208,7 @@ Deferred reverse foreign keys enforce required Budget/\allowbreak{}line structur
 
 Probes initialized and saved a normal catalog, then added one owned category through runtime INSERT rights without disabling constraints. A bare category and a future name/\allowbreak{}position pair without status were silently hidden. Three initial facts spaced one microsecond apart were accepted. Visible name/\allowbreak{}position without status correctly failed, and a valid later category behaved correctly in current versus pinned historical views. Normal saves write the initial facts atomically; these probes do not show ordinary saves creating corruption.
 
-The ORM's passing malformed-category tests use a separate test projection helper. A targeted fix belongs in Budget's production reader with strict assertions against that reader, preserving the valid-later-category control. Passing a helper's tests cannot substitute for exercising its production consumer.
+The ORM's passing malformed-category tests use a separate test projection helper. Budget PR \#11 subsequently fixed the production reader using initial-coordinate checks in the existing category query, without extra per-category round trips. The release verification records malformed-fact cases and the valid-later-category control. Passing the earlier test helper alone had not exercised this production consumer. [E11]
 
 Real backend-termination probes also distinguished failure outcomes. A statement failure before commit was NOT\_COMMITTED; terminating the backend before the commit call failed was UNKNOWN, even though an external read observed zero rows in that fixture. Each callback ran once, no write replay occurred, active leases returned to zero and subsequent pooled reads worked. A true wire-level lost acknowledgement after server commit was not tested; that path remains a driver-wrapper injection.
 
@@ -208,7 +221,7 @@ Seven app unit cases, the packaged security/\allowbreak{}browser case, two plann
 
 Stored HTML/\allowbreak{}SQL-looking category text round-tripped literally, created no injected element and executed no script. Invalid Vaadin RPC tokens were rejected; logout denied replay of the old session. The source derives identity from the container principal, renews session/\allowbreak{}token state, uses secure cookie attributes and an Argon2id verifier file with restricted permissions. Missing account configuration failed closed in the local verifier.
 
-No new reportable security vulnerability was found within those source and test boundaries. This is not certification of the deployed service, assurance against every attack or a current dependency-advisory inventory. The global login cooldown is a documented availability/\allowbreak{}guessing tradeoff; sustained session exhaustion was not measured. Plaintext browser-profile guest storage remains a disclosed boundary. Effective host grants, provider IAM, key custody and current public deployment settings were not attested.
+No new reportable security vulnerability was found within those source and test boundaries. This is not certification of the deployed service, assurance against every attack or a current dependency-advisory inventory. The global login cooldown is a documented availability/\allowbreak{}guessing tradeoff; sustained session exhaustion was not measured. Plaintext browser-profile guest storage remains a disclosed boundary. These deployed controls were outside Step 5's attestation. The later R1 record documents selected host/\allowbreak{}listener/\allowbreak{}grant, backup-access and public-deployment checks; this does not turn the earlier source review into a general security certification. [E11]
 
 \section*{9. Builds, tests and delivery}
 \pdfbookmark[1]{9. Builds, tests and delivery}{review10}
@@ -262,14 +275,14 @@ Five fresh-context guest page loads had p50/\allowbreak{}maximum 52.06/\allowbre
 
 All 707 raw latency samples and 397 half-second Jetty RSS samples are retained. Percentiles use nearest rank, including the field named median\_ms. Peak sampled Jetty RSS was 350.17 MiB; that excludes the client harness, browser, database, Docker VM, proxy and OS and can miss short peaks. One 424,629-byte pg\_dump took 182.78 ms with two overlapping reads; it did not include encryption, upload or restore.
 
-S7-01 records category-dependent projection cost as an optimization candidate, not an SLO breach. S7-03 records the unverified combined constrained-Linux capacity boundary. Warm caches, sequential profiles, a single host, small samples and finite bursts prevent statistical tail, saturation, soak or production sizing claims.
+S7-01 records category-dependent projection cost as an optimization candidate, not an SLO breach. S7-03 records the limit of that local capacity evidence. The release record retains limited constrained-Linux and selected-VM observations, with sustained representative load left as a follow-up. [E11] Warm caches, sequential profiles, a single host, small samples and finite bursts prevent statistical tail, saturation, soak or production sizing claims.
 
 \section*{11. Controlled failure and resilience findings}
 \pdfbookmark[1]{11. Controlled failure and resilience findings}{review12}
 
 \textbf{S7-02: executing-work deadlines.} The app configures four pool connections and a 5,000 ms connection-acquisition timeout. The fixture reported PostgreSQL statement\_timeout=0 and lock\_timeout=0; direct JDBC network/\allowbreak{}query timeouts were zero. A held catalog lock produced a real PostgreSQL lock wait while an authenticated save remained pending beyond 6.5 seconds. After release it returned Saved at 6,683.80 ms and added exactly one revision. [E7]
 
-Hikari's acquisition limit bounds waiting for a pool connection, not work already executing. PostgreSQL's zero statement/\allowbreak{}lock settings disable those limits. The finding is a medium resilience gap in the reviewed defaults; actual deployed overrides remain unverified. No agreed response target was demonstrated breached, and all four connections were not deliberately exhausted. Timeout/\allowbreak{}cancellation policy must preserve transaction cleanup and UNKNOWN outcome handling rather than add automatic write replay. [R2, R3]
+Hikari's acquisition limit bounds waiting for a pool connection, not work already executing. PostgreSQL's zero statement/\allowbreak{}lock settings disable those limits. The finding is a medium resilience gap in the reviewed defaults. The 10 November record documents disabled production statement/\allowbreak{}lock deadlines as an accepted follow-up; a new timeout policy was not a remaining R1 blocker. [E11] No agreed response target was demonstrated breached, and all four connections were not deliberately exhausted. Timeout/\allowbreak{}cancellation policy must preserve transaction cleanup and UNKNOWN outcome handling rather than add automatic write replay. [R2, R3]
 
 {\fontsize{9.5}{11.5}\selectfont
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.72\textwidth}@{}}\toprule
@@ -299,37 +312,55 @@ The backup user could not read the private age identity. A closed local mail rel
 
 The combined drill container took 18.936 seconds, excluding image building. The local fetch/\allowbreak{}new-cluster/\allowbreak{}negative-case/\allowbreak{}retry/\allowbreak{}SQL-validation phase took 2.345 seconds. These are not operational RTOs. They omit provisioning, real provider transfer, full application startup/\allowbreak{}verification, human work, DNS/\allowbreak{}proxy cutover and acceptance. The added phase applied SQL directly; it did not run Flyway's ledger, SCRAM login or a recovered browser journey.
 
-S8-01 retains the deployed provenance/\allowbreak{}control gap, including S1-01. S8-02 retains absent fresh evidence for the actual weekly job, independently recoverable off-VM key/\allowbreak{}bundle and verified receipt, live provider expiration, real inbox delivery, complete timed recovery, billing period and human release acceptance. It does not assert that private operational work or records do not exist. Issue \#6 was open when inspected in Step 8.
+\textbf{10 November release and acceptance update}
 
-The runbook's approximate seven-day-plus-completion loss window depends on successful weekly backups; missed jobs enlarge it. Its four-hour recovery target starts when the operator begins recovery and extends through verified access/\allowbreak{}cutover. Neither target is established by the tiny local drill. Source rollback procedures distinguish keeping the database with a compatible previous app from restoring a separate cluster for incompatible schema. A rollback that would discard subsequent committed writes requires an explicit decision about the acceptable data-loss window.
+The later records supersede the original deployment-identity and R1-acceptance gaps. App issue \#6 and tracker \#1 are closed. The inspected app, Budget and ORM listings contain 13 closed issues and no open issues. The approved private Budget R1 release is active on Yandex Cloud, with no outstanding blockers within its agreed scope. [E11]
+
+{\fontsize{9.5}{11.5}\selectfont
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.72\textwidth}@{}}\toprule
+\textbf{Recorded release evidence} & \textbf{Completed result} \\ \midrule\endfirsthead
+\toprule\textbf{Recorded release evidence} & \textbf{Completed result} \\ \midrule\endhead
+\bottomrule\endfoot
+Fixes and candidate verification & S2-01/\allowbreak{}S3-01, S3-02 and S4-01 fixed in B\_R; 119 Budget unit, 34 PostgreSQL and 15 Chromium tests reported. Assembled-app checks and both inspected exact-candidate CI runs passed at A\_R. \\ \addlinespace[3pt]
+Activation and data preservation & Verified backup and mailbox receipt preceded activation. Readiness interval 5.08 seconds; all 24 Budget table fingerprints matched before/\allowbreak{}after restart and acceptance. \\ \addlinespace[3pt]
+Live application and selected-VM checks & Configured-account planner/\allowbreak{}category/\allowbreak{}history reads, session/\allowbreak{}logout and protected/\allowbreak{}public access passed. Separate synthetic selected-VM saves, category history and PostgreSQL/\allowbreak{}Jetty restart readback passed. \\ \addlinespace[3pt]
+Actual backup and recovery & Scheduled 8 November backup, delivered report, provider object and independent download matched. A real-provider download/\allowbreak{}decrypt/\allowbreak{}clean-restore/\allowbreak{}application check took 24.13 seconds with available recovery equipment. \\ \addlinespace[3pt]
+Operating controls & App, proxy, PostgreSQL and persistent weekly timer active; boot configuration and restricted listeners recorded. The configured 28-day expiry and one-day multipart cleanup were checked. \\ \addlinespace[3pt]
+\end{longtable}}
+
+The manuscript update independently inspected the public closure/\allowbreak{}release records and successful CI status. Four fresh anonymous requests again returned HTTP redirect 308, login/\allowbreak{}guest 200 and protected access 401. Private administration and authenticated production acceptance were not repeated for this editorial update.
+
+The 24.13-second recovery excludes replacement-VM provisioning and DNS cutover. Actual retention expiration and a full billing period remain later observations; sustained capacity, log byte limits, query/\allowbreak{}deadline policy and the other documented engineering items remain follow-ups. These limits do not reopen the accepted R1 release gates. [E11]
+
+The runbook's approximate seven-day-plus-completion loss window depends on successful weekly backups; missed jobs enlarge it. Its four-hour recovery target starts when the operator begins recovery and extends through verified access/\allowbreak{}cutover. The tiny local drill alone does not establish either target; the accepted release also records the real-provider exercise and its stated timing boundary. Source rollback procedures distinguish keeping the database with a compatible previous app from restoring a separate cluster for incompatible schema. A rollback that would discard subsequent committed writes requires an explicit decision about the acceptable data-loss window.
 
 \clearpage
 \section*{13. Consolidated findings and disposition}
 \pdfbookmark[1]{13. Consolidated findings and disposition}{review14}
 
-Original IDs remain usable across the reports. Source/\allowbreak{}runtime defects, limitations, cost observations and missing evidence are not combined into one severity score. All findings below remain unresolved for the frozen runtime; preparing report metadata only addresses this document's own publication preparation.
+Original IDs remain usable across the reports. Source/\allowbreak{}runtime defects, limitations, cost observations and missing evidence are not combined into one severity score. The original findings describe the frozen review runtime. Their current dispositions below reflect the accepted 10 November release: the three correctness defects are fixed, deployment/\allowbreak{}acceptance evidence is recorded, and the remaining items are documented follow-ups. [E11]
 
 {\fontsize{9.5}{11.5}\selectfont
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.35\textwidth}@{}}\toprule
-\textbf{IDs /\allowbreak{} class} & \textbf{Consolidated finding} & \textbf{Disposition for a later release} \\ \midrule\endfirsthead
-\toprule\textbf{IDs /\allowbreak{} class} & \textbf{Consolidated finding} & \textbf{Disposition for a later release} \\ \midrule\endhead
+\textbf{IDs /\allowbreak{} original class} & \textbf{Consolidated review finding} & \textbf{Disposition on 10 November} \\ \midrule\endfirsthead
+\toprule\textbf{IDs /\allowbreak{} original class} & \textbf{Consolidated review finding} & \textbf{Disposition on 10 November} \\ \midrule\endhead
 \bottomrule\endfoot
-S1-01, S8-01 /\allowbreak{} evidence gap & Deployed source, bytes and effective controls are unidentified by this review. & Compare a protected deployed manifest/\allowbreak{}configuration record with the accepted candidate; publish a sanitized summary. \\ \addlinespace[3pt]
-S1-02 /\allowbreak{} evidence gap & Successful CI exposes hashes without retained candidate binaries. & Retain exact retrievable artifacts, manifest and runtime references. \\ \addlinespace[3pt]
-S1-03 /\allowbreak{} delivery evidence & Declared coordinates do not establish tags, releases or registry packages. & Verify approved remote project/\allowbreak{}version state and retain readback evidence before publication. \\ \addlinespace[3pt]
-S1-04 /\allowbreak{} metadata gap & Source snapshots lack explicit code licensing/\allowbreak{}citation files. & Select software licensing and attribution before publication. This report's CC BY 4.0 and author metadata do not relicense code. \\ \addlinespace[3pt]
-S2-01 = S3-01 /\allowbreak{} medium defect & Refresh failure obscures an already confirmed save. & Preserve revision acknowledgement and test post-commit read failure against the shared planner. \\ \addlinespace[3pt]
-S2-02 /\allowbreak{} low defect & App's direct ORM/\allowbreak{}Hikari usage is declared only transitively. & Align direct build dependencies with composition ownership. \\ \addlinespace[3pt]
-S3-02 /\allowbreak{} medium defect & Rapid unsaved-dialog reuse can ignore Discard. & Correct event/\allowbreak{}listener lifecycle and keep the ordinary-navigation control. \\ \addlinespace[3pt]
-S3-03 /\allowbreak{} recovery limitation & Retrying partial history replay can omit a middle account revision while retaining latest value/\allowbreak{}originals. & Document latest-only retry; choose whether resumable history is required. \\ \addlinespace[3pt]
-S4-01 /\allowbreak{} medium defect & Production catalog projection omits required initial-fact validation. & Validate the three malformed fixtures in Budget's real reader, preserving valid history. \\ \addlinespace[3pt]
-S6-01 /\allowbreak{} medium defect & Bash 3.2 publisher guards allow invalid fixtures to reach local deployment. & Use explicit rejection/\allowbreak{}supported shell and verify all four negative guard cases. \\ \addlinespace[3pt]
-S6-02 /\allowbreak{} low defect & Effective module POM source/\allowbreak{}SCM metadata points under app. & Correct module metadata and compare published POM, JAR and provenance. \\ \addlinespace[3pt]
-S6-03, B3 /\allowbreak{} validation gap & Persistence integration and review probes are outside the automatic gate. & Gate relevant suites and turn accepted fixes' characterization cases into strict regression checks. \\ \addlinespace[3pt]
-S7-01 /\allowbreak{} measured cost & Saved-month prepared statements grow with categories. & Evaluate bulk projection within Budget while retaining owner/\allowbreak{}snapshot/\allowbreak{}as-of semantics. \\ \addlinespace[3pt]
-S7-02 /\allowbreak{} medium resilience gap & Pool acquisition timeout does not bound executing lock/\allowbreak{}query work. & Select/\allowbreak{}test execution and cancellation policy without automatic unknown-outcome writes. \\ \addlinespace[3pt]
-S7-03 /\allowbreak{} validation gap & Combined constrained-Linux CPU/\allowbreak{}memory/\allowbreak{}disk/\allowbreak{}backup headroom is unverified. & Measure the accepted workload on comparable approved resources. \\ \addlinespace[3pt]
-S8-02, B1 /\allowbreak{} acceptance gap & Current provider scheduling, retention, recovery and human acceptance are unverified. & Inspect fresh operational evidence and time complete off-VM recovery through app access. \\ \addlinespace[3pt]
+S1-01, S8-01 /\allowbreak{} evidence gap & Deployment identity and selected controls were unknown in the original review. & Resolved for R1 by the accepted deployed manifest and selected live-control checks. [E11] \\ \addlinespace[3pt]
+S1-02 /\allowbreak{} evidence gap & Original CI exposed hashes without retained candidate binaries. & R1 has a retained off-VM bundle/\allowbreak{}manifest. Automatic CI artifact retention remains separate follow-up work. \\ \addlinespace[3pt]
+S1-03 /\allowbreak{} delivery evidence & Coordinates alone did not establish hosted releases/\allowbreak{}packages. & Private VM R1 released; Maven/\allowbreak{}tag/\allowbreak{}package publication remains a separate activity. \\ \addlinespace[3pt]
+S1-04 /\allowbreak{} metadata gap & Source snapshots lacked explicit code licensing/\allowbreak{}citation files. & Software-publication licensing remains separate; this report's license does not relicense code. \\ \addlinespace[3pt]
+S2-01 = S3-01 /\allowbreak{} medium defect & Refresh failure obscured an already confirmed save. & Fixed by Budget PR \#10 and included in B\_R; acknowledgement and refresh warning remain distinct. \\ \addlinespace[3pt]
+S2-02 /\allowbreak{} low defect & Direct ORM/\allowbreak{}Hikari usage was declared transitively. & Documented follow-up; revision-bound assembly passed R1 verification. \\ \addlinespace[3pt]
+S3-02 /\allowbreak{} medium defect & Rapid dialog reuse could ignore Discard. & Fixed by Budget PR \#11; deterministic browser regression passed in B\_R. \\ \addlinespace[3pt]
+S3-03 /\allowbreak{} recovery limitation & Partial replay retry can omit a middle account revision. & Accepted R1 limit: latest value and browser originals preserved; resumable history not promised. \\ \addlinespace[3pt]
+S4-01 /\allowbreak{} medium defect & Initial category facts were not validated by the production projection. & Fixed by Budget PR \#11, with malformed-fact and valid-history regression coverage in B\_R. \\ \addlinespace[3pt]
+S6-01 /\allowbreak{} medium defect & Bash 3.2 guards allowed invalid publication fixtures. & Follow-up before the corresponding Maven publication; separate from the private VM release. \\ \addlinespace[3pt]
+S6-02 /\allowbreak{} low defect & Effective module POM source/\allowbreak{}SCM metadata pointed under app. & Follow-up before module package publication. \\ \addlinespace[3pt]
+S6-03, B3 /\allowbreak{} validation gap & Persistence suites were outside the automatic gate. & Manual revision-bound persistence/\allowbreak{}browser checks supplied R1 evidence; automatic gating remains follow-up. \\ \addlinespace[3pt]
+S7-01 /\allowbreak{} measured cost & Saved-month query count grew with categories. & Recorded optimization follow-up; original measurements are not rerun-release benchmarks. \\ \addlinespace[3pt]
+S7-02 /\allowbreak{} medium resilience gap & Pool timeout did not bound executing lock/\allowbreak{}query work. & Disabled production statement/\allowbreak{}lock deadlines documented; policy work retained as follow-up. \\ \addlinespace[3pt]
+S7-03 /\allowbreak{} validation gap & Sustained constrained-host capacity was unverified. & Limited release measurements recorded; representative sustained capacity remains follow-up. \\ \addlinespace[3pt]
+S8-02, B1 /\allowbreak{} acceptance gap & Earlier records lacked current operational acceptance. & R1 accepted: actual backup/\allowbreak{}mail/\allowbreak{}recovery and live checks recorded. Full replacement-host timing and later expiry/\allowbreak{}billing observations remain follow-ups. \\ \addlinespace[3pt]
 B2 /\allowbreak{} product proposal & Browser-local guest data lacks a portable backup path. & Decide intended public use and evaluate export/\allowbreak{}restore as a separate product decision. \\ \addlinespace[3pt]
 B4 /\allowbreak{} usability proposal & Single-account sign-in expectations are unclear. & Clarify visitor-facing access/\allowbreak{}storage wording and verify comprehension if consequential. \\ \addlinespace[3pt]
 \end{longtable}}
@@ -339,15 +370,15 @@ S2-01 and S3-01 describe one confirmed-save problem at different evidence stages
 \section*{14. Release implications and proposed order}
 \pdfbookmark[1]{14. Release implications and proposed order}{review15}
 
-The proposed next release focuses on the reproduced UI, projection and delivery defects, together with the missing acceptance evidence. This sequence reflects the observed cases rather than a new delivery commitment.
+The 10 November release completed the selected correctness fixes and private R1 acceptance. Its documented follow-up boundary separates later reliability/\allowbreak{}delivery improvements from completed release gates. [E11]
 
-Corrective work requires regression assertions for the intended behavior, alongside the existing stale-version, account-isolation, pinned-history and unknown-outcome controls. The acceptability of limited history transfer and browser-local guest storage depends on the intended audience. Merging a finding's report does not resolve the underlying finding.
+The released fixes have regression coverage alongside stale-version, account-isolation, pinned-history and unknown-outcome controls. Limited history transfer and browser-local guest storage retain their documented R1 scope. Further changes require their own acceptance evidence.
 
 Release verification should align automatic checks with persistence and workflow claims, publisher rejection cases, effective Maven provenance and retained candidate bytes. No line-coverage target or architecture rewrite follows from these findings.
 
 The existing release-preparation plan orders dependencies as build parent, ORM, Budget and app/\allowbreak{}authentication/\allowbreak{}WAR. Reviewed coordinates are parent 0.1.0, ORM 0.1.0, Budget 0.2.0 and app/\allowbreak{}authentication 0.1.0. Proposed tags and versions still require approved release commits and checks that the registry coordinates are unused. Fixes may require changed versions/\allowbreak{}pins. The existing GitLab Maven decision is retained; no alternate registry is silently selected. [E9]
 
-Operational acceptance requires deployed-artifact correspondence, workload and backup capacity measurements, verified off-VM recovery material and a completed recovery exercise. Publication of the report is separate from software package releases and production cutover.
+The accepted deployment records artifact correspondence, verified backup/\allowbreak{}recovery material and completed live acceptance. Sustained workload and full lost-host timing remain explicitly bounded follow-ups. Report publication and Maven package publication remain separate from the completed production activation.
 
 \clearpage
 \section*{15. Assistance, authorship and accountability}
@@ -361,31 +392,31 @@ Anton Serdyuchenko defined the review scope and publication objectives and is re
 \toprule\textbf{Activity} & \textbf{Author contribution} & \textbf{AI assistance /\allowbreak{} execution} \\ \midrule\endhead
 \bottomrule\endfoot
 Scope and progression & Defined the review scope and publication objectives. & Developed the review sequence and performed the recorded technical analysis. \\ \addlinespace[3pt]
-Technical evidence & Provided deployment-context information, including the unavailable manifest. & Developed and executed probes, diagnosed fixture failures and documented evidence limits. \\ \addlinespace[3pt]
+Technical evidence & Provided review context and editorial decisions. & Developed and executed probes, diagnosed fixture failures and documented evidence limits. \\ \addlinespace[3pt]
 Review records & Review progression and merges are recorded in the project history. & Prepared review documents and verified GitHub merge status. \\ \addlinespace[3pt]
 Consolidation & Report authorship and editorial review. & Reconciled findings, prepared document sources and checked compilation and layout. \\ \addlinespace[3pt]
 \end{longtable}}
 
 Contribution percentages, causal productivity effects and individual performance were not measured. Multiple AI review passes do not constitute external expert review or independent reproduction. ChatGPT/\allowbreak{}Codex are assistance systems, not authors.
 
-Final factual review, licensing and attribution, and the publication decision remain the author's responsibility. Production release acceptance and independent reproduction are not established by this publication candidate.
+Final factual review, licensing and attribution, and the publication decision remain the author's responsibility. Private R1 acceptance is documented by the 10 November project records. Independent reproduction and peer review are separate from that release decision.
 
 \section*{16. Limitations}
 \pdfbookmark[1]{16. Limitations}{review17}
 
 \textbf{Study and product scope.} One project and a bounded set of synthetic workflows were reviewed. There is no representative user study, commercial experiment, control group or blinded independent assessment. Architecture adequacy is assessed against the selected design, not proved superior to alternatives.
 
-\textbf{Runtime correspondence.} Exact reviewed source and local artifact bytes are known. The running public service's commit, bytes, effective roles, configuration and infrastructure remain unmatched. A source finding must not be asserted to describe today's production bytes without that comparison.
+\textbf{Runtime correspondence.} The original review did not identify deployed bytes. The 10 November release record subsequently identifies both the initial deployment and accepted A\_R/\allowbreak{}B\_R candidate and reports selected live-control checks. This manuscript inspected those primary records rather than repeating protected administration. Original findings and measurements must retain their original revision boundaries.
 
 \textbf{Coverage and failure models.} Passing selected tests does not enumerate every race, corrupted state, browser/\allowbreak{}platform or attack. Artificial bridge/\allowbreak{}driver/\allowbreak{}port decorators and synthetic malformed rows are disclosed. Backend termination, container stop/\allowbreak{}start and explicit JVM restart exercise different failure models from real post-commit packet loss, power loss or complete host recovery.
 
 \textbf{Measurement.} No predefined service-level objectives or statistical protocol were supplied. The exploratory sample count, warm cache/\allowbreak{}JIT state, single host, finite bursts and partial memory accounting do not establish stable p95, maximum throughput, leak freedom or the planned VM's suitability.
 
-\textbf{Operations.} Moto lifecycle readback is not elapsed provider expiration. Local SMTP is not actual authenticated/\allowbreak{}TLS mailbox delivery. Calendar parsing is not a running timer, and ordinary container processes are not systemd PID 1 or an installed sandbox. A private key protected within a disposable container is not proof of off-VM independent custody.
+\textbf{Operations.} Earlier emulator/\allowbreak{}local-SMTP/\allowbreak{}calendar checks have narrower scope than the later recorded provider/\allowbreak{}mailbox/\allowbreak{}timer checks. The release evidence adds actual scheduled-backup and recovery observations, while elapsed retention expiration, a full billing period and complete replacement-host/\allowbreak{}DNS-cutover timing remain unobserved. A short available-equipment recovery is not a full infrastructure-rebuild measurement.
 
 \textbf{Reproduction and drift.} No independent person/\allowbreak{}host reproduced the entire review. Maven/\allowbreak{}browser caches and public dependency/\allowbreak{}package repositories were reused. Image IDs and artifact hashes improve traceability but do not guarantee future network availability or full hermetic reconstruction.
 
-\textbf{Records and assistance.} Total review effort, AI usage/\allowbreak{}cost and real operating cost were not established for this study. Repeated suite runs are not independent trials. The initial business record is consolidated from the recorded assisted review; its live journeys were not repeated for this manuscript. Private operator records were not audited in the eight-step public review.
+\textbf{Records and assistance.} Total review effort, AI usage/\allowbreak{}cost and real operating cost were not established for this study. Repeated suite runs are not independent trials. The initial business record is consolidated from the recorded assisted review; its live journeys were not repeated for this manuscript. Protected operator details remain private; the manuscript's release update uses the approved sanitized records.
 
 \section*{17. Reproducibility and future validation}
 \pdfbookmark[1]{17. Reproducibility and future validation}{review18}
@@ -396,7 +427,7 @@ Use disposable synthetic environments and the pinned runtime sources, not a curr
 
 A passing characterization should be expected to change after a fix. Regression tests for accepted fixes must assert the intended corrected behavior rather than merely duplicate the old failure. Preserve negative controls and transaction semantics when reducing query count or introducing deadlines.
 
-For a later publication version, report the actual fix revisions, updated dependencies, changed acceptance decisions and which cases were rerun. Retain individual performance runs and measurement boundaries before drawing comparative conclusions. New production-readiness statements require current protected manifest/\allowbreak{}configuration, provider and recovery evidence with an approved sanitized public summary.
+This revision adds the actual fix/\allowbreak{}release revisions and reported reruns in E11. Further publication revisions should retain the same revision-specific accounting. Retain individual performance runs and measurement boundaries before drawing comparative conclusions. New production-readiness statements require current protected manifest/\allowbreak{}configuration, provider and recovery evidence with an approved sanitized public summary.
 
 \clearpage
 \section*{18. Evidence table and revision anchors}
@@ -420,9 +451,10 @@ E7 & \href{https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a
 E8 & \href{https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/08-deployment-recovery.md}{08-deployment-recovery.md}, \href{https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/evidence/step-8/results.json}{results} and \href{https://github.com/finance-lab-project/app/tree/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/reproductions/step-8}{reproduction}: public requests, operating controls and encrypted schema recovery. \\ \addlinespace[3pt]
 E9 & \href{https://github.com/finance-lab-project/app/blob/7edfb504d98ebe88df51a92124e217573addbd41/docs/review/release-preparation.md}{release-preparation.md}: proposed dependency/\allowbreak{}version mapping and acceptance/\allowbreak{}publication prerequisites. \\ \addlinespace[3pt]
 E10 & \href{https://github.com/finance-lab-project/app/actions/runs/42349683701}{Candidate CI run}, \href{https://github.com/finance-lab-project/app/pull/12}{PR \#12}, \href{https://github.com/finance-lab-project/app/issues/6}{issue \#6}: dated CI and mutable prior implementation/\allowbreak{}acceptance context, as inspected in the step reports. \\ \addlinespace[3pt]
+E11 & release-update-2026-11-10.md and release-evidence-2026-11-10.json in this bundle; \href{https://github.com/finance-lab-project/app/pull/12}{accepted app PR \#12}, \href{https://github.com/finance-lab-project/app/issues/6}{closed release issue \#6}, \href{https://github.com/finance-lab-project/budget/pull/10}{Budget fix PR \#10}, \href{https://github.com/finance-lab-project/budget/pull/11}{fix PR \#11}, \href{https://github.com/finance-lab-project/app/blob/d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37/docs/r1-verification.md}{immutable verification record}, exact-candidate CI status and fresh public GET results. \\ \addlinespace[3pt]
 \end{longtable}}
 
-The supplied evidence-manifest.json records report/\allowbreak{}dataset paths, D-pinned URLs and SHA-256 values. It supports checking retrieval without replacing the source and reproduction instructions. Evidence E0 is retained with this publication because the initial review preceded the step-by-step GitHub reports.
+The supplied evidence-manifest.json records the 37 original D-pinned files and the separately retained release supplement/\allowbreak{}verification record, with source revisions and hashes. It supports checking retrieval without replacing the source and reproduction instructions. Evidence E0 is retained with this publication because the initial review preceded the step-by-step GitHub reports.
 
 \section*{References}
 \pdfbookmark[1]{References}{review20}
@@ -432,11 +464,10 @@ The supplied evidence-manifest.json records report/\allowbreak{}dataset paths, D
 \item \textbf{R2.} HikariCP. \href{https://github.com/brettwooldridge/HikariCP\#frequently-used}{Configuration: connectionTimeout}. Pool-acquisition semantics; consulted during Step 7, 8 November 2026.
 \item \textbf{R3.} PostgreSQL 18. \href{https://www.postgresql.org/docs/18/runtime-config-client.html\#GUC-STATEMENT-TIMEOUT}{Client connection defaults: statement\_timeout and lock\_timeout}. Timeout semantics; consulted during Step 7, 8 November 2026.
 \item \textbf{R4.} PostgreSQL 18. \href{https://www.postgresql.org/docs/18/app-pgrestore.html}{pg\_restore}. Single-transaction import boundary; consulted during Step 8, 8 November 2026.
-\item \textbf{R5.} Zenodo. \href{https://help.zenodo.org/docs/deposit/create-new-upload/}{Create new upload} and \href{https://help.zenodo.org/docs/deposit/describe-records/resource-type/}{Resource types}. Deposit preparation guidance; accessed 8 November 2026.
+\item \textbf{R5.} Zenodo. \href{https://help.zenodo.org/docs/deposit/create-new-upload/}{Create new upload} and \href{https://help.zenodo.org/docs/deposit/describe-records/resource-type/}{Resource types}. Deposit preparation guidance; checked again 10 November 2026.
 \item \textbf{R6.} Creative Commons. \href{https://creativecommons.org/licenses/by/4.0/}{Attribution 4.0 International}. License for this report and document sources; accessed 8 November 2026.
 \end{itemize}
 
-\clearpage
 \section*{Appendix A. Proposed Zenodo deposit metadata}
 \pdfbookmark[1]{Appendix A. Proposed Zenodo deposit metadata}{review21}
 
@@ -448,22 +479,23 @@ The supplied evidence-manifest.json records report/\allowbreak{}dataset paths, D
 
 \textbf{Version and language:} 1.0; English.
 
-\textbf{Dates and status:} Review observations 7-8 November 2026; report preparation 8 November 2026. The actual public release date must be supplied when publishing. This is a publication candidate; no Zenodo draft, reserved DOI or published record is asserted.
+\textbf{Dates and status:} Original review 7-8 November 2026; report prepared 8 November and revised with release evidence on 10 November 2026. The actual public release date must be supplied when publishing. This is a publication candidate; its DOI is not yet included in the files.
 
 \textbf{License:} CC BY 4.0 for this report, its Markdown/\allowbreak{}LaTeX sources and document metadata. The app, Budget and ORM snapshots' code licensing decisions remain separate and unresolved in the review.
 
 \textbf{Description:} Use the Abstract, followed by the technical-report/\allowbreak{}pilot-study classification, synthetic-data statement and AI-assistance disclosure. The metadata draft omits publication date and DOI instead of inventing them.
 
-\textbf{Related identifiers:} Documents the A/\allowbreak{}B/\allowbreak{}O software snapshots and references the D review evidence and the related engineering report R1. No version relationship is assigned between the two reports.
+\textbf{Related identifiers:} Documents the original A/\allowbreak{}B/\allowbreak{}O and accepted A\_R/\allowbreak{}B\_R software revisions; references the D review evidence and related engineering report R1. No version relationship is assigned between the two reports.
 
 \textbf{Deposit files:} PDF, standalone main.tex and equivalent report.md; retain business-review.md, evidence-manifest.json and metadata-draft.json with the source bundle. SHA256SUMS identifies the prepared files. Final DOI/\allowbreak{}date changes require rebuilding the PDF and updating the checksums before deposit.
 
 A Zenodo deposit would archive the report; it would not perform software release acceptance or provide peer-review validation.
 
+\clearpage
 \section*{Appendix B. Accepted artifact digests}
 \pdfbookmark[1]{Appendix B. Accepted artifact digests}{review22}
 
-These digests identify local/\allowbreak{}CI artifacts compared in the review, not bytes independently read from the production server.
+The first table identifies the frozen artifacts compared on 7-8 November. The second lists the changed artifacts in the accepted 10 November candidate; other digests remain as above. E11 retains the complete deployed manifest. The manuscript revision did not independently read the protected server filesystem.
 
 {\fontsize{9.5}{11.5}\selectfont
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.72\textwidth}@{}}\toprule
@@ -477,5 +509,19 @@ config/\allowbreak{}jetty-auth.xml & {\small\path{fd8b7ab5d9393f7e1e945e6df0f384
 build-parent/\allowbreak{}pom.xml & {\small\path{aa61d398a42e3df231b696532a545872296bba8d039b453cf5ad98f5b284a34f}} \\ \addlinespace[3pt]
 Nested orm-0.1.0.jar & {\small\path{f172af011a04d74549cb917f2bab8feb4bd79ad1594fdee8b71815db2f1145e4}} \\ \addlinespace[3pt]
 Nested budget-0.2.0.jar & {\small\path{b24dfb9fb4d2a9a8ff1f2edcef7984b1b14f1e0542654c37f251752bb62fb730}} \\ \addlinespace[3pt]
+\end{longtable}}
+
+\textbf{Changed artifacts in the accepted deployed candidate - 10 November 2026}
+
+Password4j, jetty-auth.xml, the build parent and ORM retain the baseline digests above. The full accepted manifest is retained in E11.
+
+{\fontsize{9.5}{11.5}\selectfont
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.72\textwidth}@{}}\toprule
+\textbf{Artifact} & \textbf{SHA-256} \\ \midrule\endfirsthead
+\toprule\textbf{Artifact} & \textbf{SHA-256} \\ \midrule\endhead
+\bottomrule\endfoot
+application/\allowbreak{}target/\allowbreak{}finance-lab.war & {\small\path{b14e206910217d8da34aa99f7b181cd0b3316c2ea281fad95a73347f9cc21746}} \\ \addlinespace[3pt]
+authentication/\allowbreak{}target/\allowbreak{}authentication-0.1.0.jar & {\small\path{d495826a88685a35d1eb349d29c795e9cb9c4a3833e61c63d4bdf41d09d677c6}} \\ \addlinespace[3pt]
+Nested budget-0.2.0.jar & {\small\path{4b7ae3103841016c75a3b82271d950d34d15ca85e3ecd8f7c2cefed18f72337d}} \\ \addlinespace[3pt]
 \end{longtable}}
 \end{document}

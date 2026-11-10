@@ -1,87 +1,92 @@
 # Finance Lab MVP review - publication candidate
 
-Prepared 8 November 2026, version 1.0. Combined product assessment and
-eight-step technical review of the Budget MVP, prepared for Zenodo deposit.
+Version 1.0. Original review: 7-8 November 2026. Revised: 10 November 2026.
+
+The report combines the product assessment and eight technical steps with the
+later accepted Budget R1 deployment on Yandex Cloud. It records the released
+app/Budget revisions, deployed checksums, completed issue closure, fixed findings
+and approved follow-up boundary. Original measurements remain version-specific.
 
 ## Files
 
-- main.tex: standalone LaTeX source; open this folder in a LaTeX editor.
-- finance-lab-mvp-review.pdf: visually checked 16-page A4 export.
-- report.md: equivalent text/Markdown manuscript.
-- business-review.md: retained initial product review (E0), with its limits.
-- metadata-draft.json: proposed Zenodo field values; not submitted or a
-  prevalidated API request. Actual publication date and DOI are omitted.
-- evidence-manifest.json: exact runtime/review revisions, 37 evidence file
-  paths, Git blob IDs and SHA-256 values.
-- finance-lab-mvp-review-source.zip: document sources/metadata under report/
-  and all 37 original merged review files under evidence/docs/review/.
-- SHA256SUMS: prepared-file digests, excluding the checksum file itself.
+- main.tex: standalone LaTeX source.
+- finance-lab-mvp-review.pdf: visually checked 18-page A4 export.
+- report.md: equivalent manuscript.
+- business-review.md: retained original product review, E0.
+- release-update-2026-11-10.md: dated release-status supplement, E11.
+- release-evidence-2026-11-10.json: captured issue/PR records, inspected CI status
+  and new anonymous public request results.
+- metadata-draft.json: proposed Zenodo field values, without an invented DOI or
+  publication date; not a submitted/prevalidated API request.
+- evidence-manifest.json: original 37 review files and one separately retained
+  immutable release-verification file, with revisions and hashes.
+- finance-lab-mvp-review-source.zip: eight document-source/metadata files under
+  report/, 37 frozen review files and one release-verification file under evidence/.
+- SHA256SUMS: ten prepared-file checksums, excluding the checksum file itself.
 
-The PDF and source ZIP are supplied alongside the document sources. The ZIP
-contains six document-source/metadata files and the 37 evidence files; the PDF
-is a separate export. The source archive preserves reports, raw results, external reproduction
-fixtures and the synthetic screenshot from review snapshot
-7edfb504d98ebe88df51a92124e217573addbd41. Each archived evidence file was checked
-against that snapshot's Git blob ID. Runtime A/B/O source repositories are
-linked by full commit, rather than copied as complete software distributions.
+The original evidence is from 7edfb504d98ebe88df51a92124e217573addbd41.
+The accepted app candidate is d64b16c86fb2dbd3f820dbb39fb78fd1fbc3fe37,
+Budget is a0645781b1d5e25536b4651749a372d6fd906315, and ORM is unchanged.
+The full runtime repositories are linked by revision, not copied into this archive.
 
 ## Build and validation
 
-The export used Tectonic 0.17.0. Its LaTeX packages/fonts were fetched on first
-use and cached; the document is standalone but a first build needs the TeX
-bundle. The desktop LaTeX compiler also successfully checked the final source.
-
-From this folder (or the source archive's report/ folder):
+The export uses Tectonic 0.17.0, with public TeX packages/fonts cached after first
+use. The desktop LaTeX compiler also checks the saved source. From this folder,
+or the source archive's report/ folder:
 
     mkdir -p build
-    SOURCE_DATE_EPOCH=1794096000 tectonic --keep-logs --keep-intermediates --outdir build main.tex
+    SOURCE_DATE_EPOCH=1794268800 tectonic --keep-logs --keep-intermediates --outdir build main.tex
 
-The output is build/main.pdf. The supplied export has been named
-finance-lab-mvp-review.pdf. The fixed epoch is 8 November 2026 00:00 UTC;
-it controls document-build metadata, not the timestamps of the review runs.
-Recheck rendered pages and update SHA256SUMS after changing the manuscript,
-metadata, DOI or export. TeX tool/bundle differences can change PDF bytes.
+The output is build/main.pdf; the delivery export is named
+finance-lab-mvp-review.pdf. The fixed epoch is 10 November 2026 00:00 UTC and
+controls document-build metadata, not review/release experiment timestamps.
+Changes to the DOI, manuscript or export require refreshed checksums and ZIP.
+Tool/bundle differences may change PDF bytes.
 
-Validation completed for this candidate:
+Validation for this revision covers compilation, rendered-page review, PDF
+metadata/link/digest checks, original finding IDs, all archived source blobs,
+ZIP content and prepared-file checksums. Application suites and protected
+production checks were not rerun for this manuscript update. The reported
+release tests are attributed to the captured project records; the two successful
+candidate CI statuses and current public responses were freshly inspected.
 
-- Final command-line compilation: exit 0, no TeX warnings.
-- Desktop-editor compilation: success for the final source.
-- All 16 pages rendered and visually inspected; text bounds and A4 geometry
-  checked, including the wrapped artifact paths and checksum table.
-- Step 7's 25 latency groups / 707 samples and 397 RSS samples verified;
-  Step 8's 24 tables / 47 synthetic rows checked from the retained results.
-- All 37 archived evidence files match the immutable Git blob identifiers.
-- Finding IDs and evidence links checked; S2-01/S3-01 remain one defect.
-- Prepared source/metadata/archives checked for private host paths and secrets.
-- Application tests were not rerun to prepare this manuscript.
+## Reserve a DOI
 
-## Zenodo handoff
+1. Sign in to [Zenodo](https://zenodo.org/) and choose **+ → New upload**.
+2. Use this report's title, creator and Report type from metadata-draft.json.
+3. Under the DOI question, select **No**, then **Get a DOI now!**.
+4. Copy the DOI, complete required fields and choose **Save draft**.
 
-Use a new Report record for this work. The prior report's DOI is a reference,
-not this report's DOI or an IsNewVersionOf relation. Copy the proposed field
-values from metadata-draft.json; set the real publication date when releasing.
-If a DOI is reserved for this new object, insert it in the source/metadata,
-rebuild the PDF and update the bundle/checksums before uploading.
+Reservation is registered on publication. Keep the draft; add its DOI to the
+sources/metadata and rebuild before uploading the final files.
+[Official instructions](https://help.zenodo.org/docs/deposit/create-new-upload/).
 
-The creator and ORCID match the referenced report. No affiliation is asserted.
-The description uses the Abstract plus classification, synthetic-data and
-AI-assistance disclosures. Upload the PDF and sources; the source archive also
-retains the evidence. No Zenodo draft or published record was created by this
-preparation, and publication/release acceptance is not implied by a GitHub merge.
+This is a new report record. The earlier report's DOI is a bibliographic
+reference; no version relationship is assigned. No Zenodo draft, reservation or
+publication was created by this document preparation.
 
-## Attribution and license scope
+## Release status and limits
 
-Copyright 2026 Anton Serdyuchenko. The new report, its Markdown/LaTeX sources,
-business-review narrative and document metadata use
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The layout and evidence
-conventions adapt the author's earlier CC BY 4.0 report with new content;
-that reference is credited on the cover and in R1.
+The R1 tracker and delivery issue are closed. The approved private Budget R1
+release is deployed and accepted on Yandex Cloud, with no outstanding blockers
+within the agreed scope. S2-01/S3-01, S3-02 and S4-01 are fixed in the accepted
+Budget pin. Actual backup/mail/recovery, selected-VM and live acceptance checks
+are documented in E11.
 
-This document license does not relicense the app, Budget, ORM or archived
-reproduction code. Archived review evidence retains its upstream status.
-Software code licensing/publication decisions remain unresolved in the review.
+Sustained capacity, full replacement-VM/DNS-cutover timing, later retention
+expiration/billing observations and the other documented engineering items are
+follow-ups. They do not reopen R1 acceptance. Market demand was not measured.
 
-OpenAI ChatGPT/Codex assisted the review, probes, synthesis and typesetting.
-Anton Serdyuchenko is the author; no peer review or independent reproduction
-is claimed. Current deployed identity and production operational acceptance
-remain unverified by the reviewed evidence.
+## Attribution and license
+
+Copyright 2026 Anton Serdyuchenko. This report, its Markdown/LaTeX sources,
+retained narratives and document metadata use
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The LaTeX presentation adapts the author's
+[earlier CC BY 4.0 report](https://doi.org/10.5281/zenodo.23293506); content is new.
+
+The document license does not relicense the application, modules or archived
+reproduction code, which retain their upstream status. OpenAI ChatGPT/Codex
+assisted the review and preparation; Anton Serdyuchenko is the author. No peer
+review or independent full reproduction is claimed.
