@@ -1,9 +1,16 @@
 # Finance Lab App
 
-Java/Vaadin modular monolith without Spring, backed by PostgreSQL Anchor Modeling and a custom ORM. Public source repositories; the first deployed application is private and single-user.
+Finance Lab supports personal monthly budget planning and expense tracking.
+The next iteration starts from the revised product needs and Budget v1 scope;
+its delivery approach and technology choices remain open.
+
+The existing implementation is a Java/Vaadin modular monolith without Spring,
+backed by PostgreSQL Anchor Modeling and a custom ORM. Public source repositories;
+the first deployed application is private and single-user.
 
 ## Start here
 
+- [Product needs and revised Budget v1 scope](docs/product-scope.md)
 - [MVP technical review and evidence](docs/review/README.md)
 - [Guest, sign-in, cloud transfer and privacy](docs/guest-and-cloud.md)
 - [Architecture and agreed contracts](docs/architecture.md)

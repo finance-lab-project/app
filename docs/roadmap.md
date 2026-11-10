@@ -1,5 +1,11 @@
 # Current Finance Lab release plan
 
+**Product scope revised on 2026-11-10:** the [Budget v1 product scope](product-scope.md)
+is the starting point for the next product iteration. This page records delivery
+of the existing implementation. Its stack, repository layout and earlier feature
+contracts do not determine the revised scope; the next delivery sequence will be
+planned separately.
+
 Updated 2026-11-10. The eleven implementation prerequisites are closed and the initial private deployment is running. The completion candidate integrates the confirmed-save, dialog and category-integrity fixes. Remaining R1 work is candidate verification, approved activation and human acceptance. Exact results and the accepted follow-ups are linked from the [R1 verification record](r1-verification.md).
 
 ## Agreed first-release scope
