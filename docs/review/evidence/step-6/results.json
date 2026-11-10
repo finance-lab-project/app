@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "observation_date": "2026-11-08",
+  "timezone": "Europe/Moscow",
+  "source_baseline": {
+    "app": "f78682778eebed86730ec457f63c96648f19370d",
+    "budget": "43d86d28965a241cd45f7938c1adfb2ec50f8132",
+    "orm": "8daaf91d07d2e30b563322b22a0c6da7545578e5"
+  },
+  "environment": {
+    "os_architecture": "macOS arm64",
+    "java": "27.0.1.0.3",
+    "maven": "3.10.0",
+    "node": "24.22.2",
+    "npm": "11.19.1",
+    "jetty": "12.1.14",
+    "maven_help_review_plugin": "3.5.1",
+    "dependency_cache": "Previously prepared isolated cache; not a new empty-cache dependency-resolution test."
+  },
+  "new_local_checks": {
+    "schema_version": 1,
+    "source_baseline": {
+      "app": "f78682778eebed86730ec457f63c96648f19370d",
+      "budget": "43d86d28965a241cd45f7938c1adfb2ec50f8132",
+      "orm": "8daaf91d07d2e30b563322b22a0c6da7545578e5"
+    },
+    "verified_baseline_sha256": {
+      "application/target/finance-lab.war": "a2a81f71a567587934cf7c830b3adf2b4c10d4fa1e9004f9fc60fbfdba27307a",
+      "authentication/target/authentication-0.1.0.jar": "661f6f65ccbde13e31cc432870ce16bb8e0e466cede7b8235bce8dd505645a24",
+      "authentication/target/lib/password4j-1.8.4.jar": "d1406a158533b65bda7c20cebf7bf2a9a0626f8931fd1dc3d39243af5849edf5",
+      "config/jetty-auth.xml": "fd8b7ab5d9393f7e1e945e6df0f384c4ac96a8da878d3dbc0ffaf28773cfb494",
+      "build-parent/pom.xml": "aa61d398a42e3df231b696532a545872296bba8d039b453cf5ad98f5b284a34f"
+    },
+    "parent_copies_byte_identical": true,
+    "libraries": {
+      "orm": {
+        "version": "0.1.0",
+        "first_sha256": "f172af011a04d74549cb917f2bab8feb4bd79ad1594fdee8b71815db2f1145e4",
+        "second_sha256": "f172af011a04d74549cb917f2bab8feb4bd79ad1594fdee8b71815db2f1145e4",
+        "byte_identical": true,
+        "matches_nested_war_bytes": true,
+        "manifest_repository": "https://github.com/finance-lab-project/orm",
+        "manifest_revision": "8daaf91d07d2e30b563322b22a0c6da7545578e5",
+        "effective_project_url": "https://github.com/finance-lab-project/app/orm",
+        "effective_scm": {
+          "url": "https://github.com/finance-lab-project/app/orm",
+          "connection": "scm:git:https://github.com/finance-lab-project/app.git/orm",
+          "tag": "v0.1.0"
+        },
+        "tests_rerun": false
+      },
+      "budget": {
+        "version": "0.2.0",
+        "first_sha256": "b24dfb9fb4d2a9a8ff1f2edcef7984b1b14f1e0542654c37f251752bb62fb730",
+        "second_sha256": "b24dfb9fb4d2a9a8ff1f2edcef7984b1b14f1e0542654c37f251752bb62fb730",
+        "byte_identical": true,
+        "matches_nested_war_bytes": true,
+        "manifest_repository": "https://github.com/finance-lab-project/budget",
+        "manifest_revision": "43d86d28965a241cd45f7938c1adfb2ec50f8132",
+        "effective_project_url": "https://github.com/finance-lab-project/app/budget",
+        "effective_scm": {
+          "url": "https://github.com/finance-lab-project/app/budget",
+          "connection": "scm:git:https://github.com/finance-lab-project/app.git/budget",
+          "tag": "v0.1.0"
+        },
+        "tests_rerun": false
+      }
+    },
+    "publisher_cases": [
+      {
+        "case": "missing_tag",
+        "intended_acceptance": false,
+        "observed_acceptance": true,
+        "exit_code": 0,
+        "deployment_goal_invocations": 1,
+        "guard_violation_reproduced": true,
+        "local_artifact_written": true,
+        "deployed_pom_matches_frozen_parent": true
+      },
+      {
+        "case": "mismatched_tag",
+        "intended_acceptance": false,
+        "observed_acceptance": true,
+        "exit_code": 0,
+        "deployment_goal_invocations": 1,
+        "guard_violation_reproduced": true,
+        "local_artifact_written": true,
+        "deployed_pom_matches_frozen_parent": true
+      },
+      {
+        "case": "unapproved_endpoint",
+        "intended_acceptance": false,
+        "observed_acceptance": true,
+        "exit_code": 0,
+        "deployment_goal_invocations": 1,
+        "guard_violation_reproduced": true,
+        "local_artifact_written": true,
+        "deployed_pom_matches_frozen_parent": true
+      },
+      {
+        "case": "dirty_checkout",
+        "intended_acceptance": false,
+        "observed_acceptance": true,
+        "exit_code": 0,
+        "deployment_goal_invocations": 1,
+        "guard_violation_reproduced": true,
+        "local_artifact_written": true,
+        "deployed_pom_matches_frozen_parent": false
+      },
+      {
+        "case": "clean_matching_tag",
+        "intended_acceptance": true,
+        "observed_acceptance": true,
+        "exit_code": 0,
+        "deployment_goal_invocations": 1,
+        "guard_violation_reproduced": false,
+        "local_artifact_written": true,
+        "deployed_pom_matches_frozen_parent": true
+      }
+    ],
+    "shell": {
+      "version": "GNU bash, version 3.2.57(1)-release (arm64-apple-darwin26)",
+      "failed_conditional_exit_code": 0,
+      "failed_conditional_stops_script": false
+    },
+    "parent_publication": {
+      "destination": "temporary file registry; no hosted write",
+      "pom_byte_identical": true,
+      "provenance_matches_source_and_digest": true,
+      "hosted_registry_auth_or_immutability_tested": false
+    },
+    "tracked_sources_unchanged": true,
+    "tests_note": "Existing test results are reused from review Steps 3-5. Library builds intentionally skip tests; this checks new artifact reproducibility, not a new test-suite run.",
+    "modern_shell_control": {
+      "image": "postgres:18.6",
+      "version": "GNU bash, version 5.2.37(1)-release (aarch64-unknown-linux-gnu)",
+      "failed_conditional_exit_code": 1,
+      "conditional_continued": false,
+      "full_publisher_tested_in_this_shell": false,
+      "database_started": false
+    },
+    "observation_date": "2026-11-08",
+    "timezone": "Europe/Moscow"
+  },
+  "remote_observations": {
+    "github": {
+      "app": {
+        "tags": 0,
+        "releases": 0
+      },
+      "budget": {
+        "tags": 0,
+        "releases": 0,
+        "actions_runs": 0
+      },
+      "orm": {
+        "tags": 0,
+        "releases": 0,
+        "actions_runs": 0
+      }
+    },
+    "baseline_ci": {
+      "id": 42349683701,
+      "head_sha": "f78682778eebed86730ec457f63c96648f19370d",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/finance-lab-project/app/actions/runs/42349683701",
+      "retained_artifacts": 0
+    },
+    "previous_review_pr_ci": {
+      "id": 42447963551,
+      "head_sha": "872904ce44a970477ff9ce05b45d44f4b7dbab95",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/finance-lab-project/app/actions/runs/42447963551"
+    },
+    "registry": {
+      "selected_by_reviewed_docs": "GitLab Maven Package Registry",
+      "docs_describe": "unprovisioned",
+      "actual_project_identified_in_reviewed_sources": false,
+      "hosted_authentication_or_contents_verified": false,
+      "hosted_duplicate_controls_verified": false
+    }
+  },
+  "reused_checks": [
+    {
+      "source": "Step 3 evidence/step-3/results.json",
+      "scope": "Budget",
+      "unit_cases": 119,
+      "postgresql_integration_cases": 29,
+      "rerun_in_step_6": false
+    },
+    {
+      "source": "Step 4 evidence/step-4/results.json",
+      "scope": "ORM and schema",
+      "unit_cases": 6,
+      "postgresql_integration_cases": 75,
+      "sql_checks": 112,
+      "rerun_in_step_6": false
+    },
+    {
+      "source": "Step 5 evidence/step-5/results.json",
+      "scope": "App assembly and authentication",
+      "unit_cases": 7,
+      "packaged_war_cases": 1,
+      "planner_journeys": 2,
+      "authentication_phase_runs": 4,
+      "security_probes": 5,
+      "two_clean_builds_byte_identical": true,
+      "rerun_in_step_6": false
+    }
+  ],
+  "ci_gate": {
+    "checked_in_app_workflow": true,
+    "checked_in_budget_orm_workflows_at_frozen_refs": false,
+    "app_bootstrap_uses_skipITs_for_modules": true,
+    "orm_postgresql_suite_in_gate": false,
+    "budget_postgresql_suite_in_gate": false,
+    "sql_112_harness_in_gate": false,
+    "review_characterization_probes_in_gate": false,
+    "line_or_branch_coverage_measurement_found": false,
+    "claim": "Source-to-command mapping, not a fabricated coverage percentage. Public Actions observations are date-specific."
+  },
+  "findings": [
+    {
+      "id": "S6-01",
+      "priority": "medium",
+      "area": "publication guards",
+      "status": "reproduced; not fixed",
+      "summary": "On native Bash 3.2.57, four standalone failing conditionals do not stop the publisher; each negative case reaches real Maven deployment into the forced local registry."
+    },
+    {
+      "id": "S6-02",
+      "priority": "low",
+      "area": "library POM metadata",
+      "status": "reproduced; not fixed",
+      "summary": "Effective project/SCM URLs inherit app/orm and app/budget rather than each module repository. JAR manifest repository/revision remain correct."
+    },
+    {
+      "id": "S6-03",
+      "priority": "release validation gap",
+      "area": "CI gate",
+      "status": "source/runtime inventory established; not fixed",
+      "summary": "The checked-in app workflow tests the assembly but skips 75 ORM and 29 Budget PostgreSQL integration cases while bootstrapping dependencies; no module workflow/Actions run was observed."
+    }
+  ],
+  "carried_forward": [
+    "S1-02: No retained CI binary candidate was returned for the baseline run.",
+    "S1-03: No public tags/releases observed; actual hosted registry state remains unverified.",
+    "S1-04: No root LICENSE/CITATION.cff/.zenodo.json in the reviewed trees; owner publication decisions remain open.",
+    "Earlier S2/S3/S4 correctness findings remain unchanged."
+  ],
+  "limitations": [
+    "No real publication, hosted tag, release, deployment or production connection occurred.",
+    "The modern Bash 5.2.37 comparison tests conditional handling only; the complete publisher was exercised on native Bash 3.2.57.",
+    "Four successful negative-case characterizations reproduce guard defects; they are not acceptance passes.",
+    "No full hosted-registry/empty-cache module-consumer test, advisory audit, measured load or operational recovery was performed."
+  ],
+  "reproduction": {
+    "runner": "docs/review/reproductions/step-6/check.py",
+    "sha256": "f7c5a3b36db6a50bcf92cc7d0bcd4de7e94e552f94b736dbaebc2454bac65ce5"
+  }
+}
