@@ -1,6 +1,6 @@
 # Current Finance Lab release plan
 
-Updated 2026-11-07. The Java/Vaadin Budget candidate is assembled. The remaining R1 work is approval, live verification on Yandex Cloud and human acceptance. The checked artifacts, test results and pending operator observations are in the [R1 verification record](r1-verification.md).
+Updated 2026-11-10. The eleven implementation prerequisites are closed and the initial private deployment is running. The completion candidate integrates the confirmed-save, dialog and category-integrity fixes. Remaining R1 work is candidate verification, approved activation and human acceptance. Exact results and the accepted follow-ups are linked from the [R1 verification record](r1-verification.md).
 
 ## Agreed first-release scope
 
@@ -32,7 +32,7 @@ The [architecture](architecture.md) records the agreed contracts. The [build dec
 | `budget` | [Build the Russian monthly planner, category settings and history views](https://github.com/finance-lab-project/budget/issues/4) | [Merged PR #8](https://github.com/finance-lab-project/budget/pull/8) |
 | `app` | [Implement the configured single-account login and session boundary](https://github.com/finance-lab-project/app/issues/4) | [Merged PR #9](https://github.com/finance-lab-project/app/pull/9) |
 | `app` | [Prepare the single-VM deployment and weekly backup/restore runbook](https://github.com/finance-lab-project/app/issues/5) | [Merged PR #10](https://github.com/finance-lab-project/app/pull/10) |
-| `app` | [Verify and release the private Budget R1 on Yandex Cloud](https://github.com/finance-lab-project/app/issues/6) | [Candidate checked, cloud acceptance pending](r1-verification.md) |
+| `app` | [Verify and release the private Budget R1 on Yandex Cloud](https://github.com/finance-lab-project/app/issues/6) | [Completion candidate and release acceptance](r1-verification.md#r1-completion-candidate--10-november-2026) |
 | `portfolio` | [Later — Review Portfolio requirements and module boundary](https://github.com/finance-lab-project/portfolio/issues/1) | Later; outside R1 |
 | `fire` | [Later — Review FIRE requirements and calculation contracts](https://github.com/finance-lab-project/fire/issues/1) | Later; outside R1 |
 
